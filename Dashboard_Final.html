@@ -1,0 +1,2918 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard NIBU</title>
+  <!-- LIBRERÍAS EXTERNAS -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+  <!-- LIBRERÍA PARA CAPTURA DE PANTALLA -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <style>
+:root{
+  --primary:#C3002F;
+  --primary-dark:#8A0020;
+  --accent:#D71A28;
+  --ok:#4CAF50;
+  --warn:#FFC107;
+  --bad:#F44336;
+  --bg:#F4F4F4;
+  --card:#FFFFFF;
+  --table-head:#1a1a1a;
+  --muted:#FAFAFA;
+  --text:#111111;
+  --border-radius-card: 16px;
+  --border-radius-btn: 10px;
+  --card-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  --card-shadow-hover: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html,body{
+  height:100%;
+}
+
+.brand-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  margin-top: 10px;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.header-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.nibu-logo {
+  height: 50px;
+  max-width: 150px;
+  width: auto;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.nibu-logo:hover {
+  transform: scale(1.05);
+}
+
+.view-toggle-btn {
+    background: #2E2E2E;
+    color: white;
+    border: 2px solid #2E2E2E;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+.view-toggle-btn:hover {
+    background: #000;
+    transform: translateY(-2px);
+}
+
+/* Botón específico para Screenshot */
+.screenshot-btn {
+    background: #1976D2;
+    border-color: #1976D2;
+}
+.screenshot-btn:hover {
+    background: #115293;
+}
+
+/* ESTILO PARA BOTÓN DESHABILITADO */
+.screenshot-btn:disabled, button:disabled {
+    background-color: #ccc !important;
+    border-color: #999 !important;
+    color: #666 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.view-label {
+    font-size: 12px;
+    background: var(--primary);
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 8px;
+}
+
+@media (max-width: 768px) {
+  .nibu-logo {
+    height: 40px;
+    max-width: 120px;
+  }
+  
+  /* Ocultar botón de captura en móviles */
+  .screenshot-btn {
+      display: none !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .brand-header {
+    flex-direction: column;
+    gap: 10px;
+    padding: 8px;
+  }
+  .nibu-logo {
+    height: 36px;
+    max-width: 110px;
+  }
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  color: var(--text);
+  background-color: #f8f9fa;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1{
+  color:#003366;
+  margin: 16px 0 8px;
+  font-size: clamp(20px, 3.2vw, 28px);
+  text-align:center;
+}
+
+.separacion{
+  display:none;
+  justify-content:center;
+  align-items:center;
+  background:#ffffff;
+  border-left:6px solid var(--primary);
+  color:var(--primary-dark);
+  padding:12px 0;
+  margin-top:24px;
+  border-radius:var(--border-radius-btn);
+  box-shadow:var(--card-shadow);
+}
+
+.instructions-box{
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: var(--border-radius-card);
+  padding: 0;
+  margin: 20px auto;
+  max-width: 900px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.06);
+  overflow: hidden;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.instructions-header{
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: white;
+  padding: 24px 32px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.instructions-icon{
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.instructions-header h2{
+  color: white;
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  border: none;
+  padding: 0;
+  text-align: left;
+}
+
+.instructions-content{
+  padding: 32px;
+}
+
+.instructions-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.instruction-step{
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.step-number{
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 18px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0,82,204,0.3);
+}
+
+.step-content h3{
+  color: var(--primary-dark);
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 6px 0;
+}
+
+.step-content p{
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.instructions-footer{
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.footer-icon{
+  width: 24px;
+  height: 24px;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.instructions-footer p{
+  margin: 0;
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.5;
+}
+
+.separacion h1{
+  margin:0;
+  font-size:1.6em;
+  letter-spacing:0.5px;
+}
+
+.wrapper{
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px 24px;
+}
+
+.controls{
+  display:flex;
+  flex-wrap: wrap;
+  gap:12px;
+  align-items:center;
+  justify-content:center;
+  margin: 8px 0 12px;
+  background: #f8f8f8;
+  padding: 15px;
+  border-radius: 12px;
+}
+
+button{
+  background: var(--primary);
+  color:#fff;
+  border:0;
+  padding:10px 16px;
+  border-radius:var(--border-radius-btn);
+  cursor:pointer;
+  transition: all .3s ease;
+  font-weight:600;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(195,0,47,0.25);
+}
+
+button:hover{ 
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(195,0,47,0.3);
+}
+
+button:active{
+  transform: translateY(0);
+}
+
+select,input[type="file"],input[type="text"]{
+  padding:8px 10px;
+  border-radius:var(--border-radius-btn);
+  border:1px solid #d1d5db;
+  background:#fff;
+  max-width:100%;
+  font-size: 14px;
+  transition: border-color .2s ease;
+}
+
+select:focus, input[type="file"]:focus, input[type="text"]:focus{
+  outline: none;
+  border-color: var(--primary);
+}
+
+select{
+  font-weight: 600;
+  color: var(--primary-dark);
+}
+
+#status, #status_V2{
+  text-align:center;
+  min-height: 22px;
+  font-weight:600;
+  margin-top: 8px;
+  white-space: pre-line;
+}
+
+.error{ 
+  color:#b71c1c; 
+}
+
+.section{
+  margin: 18px 0;
+}
+
+.scroller{
+  display:flex;
+  gap:16px;
+  overflow-x:auto;
+  padding-bottom:10px;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) #e5e7eb;
+}
+
+.scroller::-webkit-scrollbar {
+  height: 8px;
+}
+
+.scroller::-webkit-scrollbar-track {
+  background: #e5e7eb;
+  border-radius: 4px;
+}
+
+.scroller::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 4px;
+}
+
+.scroller::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-dark);
+}
+
+.card{
+  background: var(--card);
+  border-radius: var(--border-radius-card);
+  box-shadow: var(--card-shadow);
+  padding: 20px;
+  scroll-snap-align: start;
+  transition: all .3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-top: 10px solid var(--primary);
+  flex: 0 0 300px;
+  min-width: 300px;
+  max-width: 300px;
+  width: 300px;
+}
+
+.card:hover{
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-2px);
+}
+
+.card canvas{
+  width: 100% !important;
+  max-width: 300px !important;
+  height: auto !important;
+  margin: 0 auto;
+}
+
+.card p{
+  margin: 8px 0;
+  font-size: 14px;
+  color: var(--text);
+  text-align: center;
+}
+
+.card p strong{
+  font-weight: 700;
+}
+
+.card p span[id$="TargetLabel"], .card p span[id$="TargetLabel_V2"]{
+  font-weight: 600;
+  color: var(--primary-dark);
+}
+
+.tables{
+  display:grid;
+  gap:16px;
+  grid-template-columns: repeat(auto-fill, minmax(260px,1fr));
+}
+
+.tables-container{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* ====== ESTILOS MEJORADOS PARA TABLAS ====== */
+
+.table-container{ 
+  background: #ffffff;
+  border-radius: var(--border-radius-card);
+  box-shadow: var(--card-shadow);
+  padding: 0;
+  transition: all .3s ease;
+  overflow: hidden; 
+  border: 1px solid #e5e7eb;
+}
+
+/* --- CORRECCIÓN PARA TABLA NRC DENTRO DEL SCROLLER --- */
+.scroller .table-container {
+  flex: 0 0 300px;
+  min-width: 300px;
+  max-width: 300px;
+  width: 300px;
+  height: fit-content; 
+}
+
+.table-container:hover{
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  transform: translateY(-3px);
+  border-color: var(--primary);
+}
+
+table{ 
+  width:100%; 
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+th{
+  background: var(--table-head);
+  color: #ffffff;
+  padding: 14px 12px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+   
+}
+
+.subheader td{
+  background: #f3f4f6;
+  color: #4b5563;
+  font-weight: 700;
+  font-size: 12px;
+   
+  letter-spacing: 0.8px;
+  padding: 10px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+td{
+  text-align: center;
+  border-top: 1px solid #f3f4f6;
+  padding: 14px 10px;
+  color: #374151;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+tbody tr:hover {
+    background-color: #fef2f2;
+}
+
+/* NUEVOS ESTILOS PARA MINI GAUGE EN TABLA NRC */
+.mini-gauge-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    position: relative;
+    height: 40px;
+}
+
+.mini-gauge-container canvas {
+    width: 35px !important;
+    height: 35px !important;
+}
+
+.mini-gauge-text {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* Ajuste de padding de celda para que quepa la mini gráfica */
+#nrcTableCard tbody td, #nrcTableCard_V2 tbody td {
+    padding: 8px 10px;
+}
+
+/* Styling for the GamePlan Quarter Bar */
+.quarter-bar-container {
+    width: 80%;
+    height: 18px;
+    background: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 4px auto;
+    display: flex;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.quarter-segment {
+    height: 100%;
+    display: inline-block;
+    transition: width 0.5s ease-out;
+}
+
+.quarter-fill-v1, .quarter-fill-v2 {
+    background-color: #105cd4;
+}
+
+.quarter-label {
+    font-weight: 700;
+    font-size: 12px;
+    margin-top: 4px;
+    color: #105cd4;
+}
+
+
+/* ====== MEDIA QUERIES AJUSTADOS PARA TABLA EN SCROLLER ====== */
+@media (max-width: 1024px){
+  .card, #totalChartCard, #trainingCombinedBarChartCard,
+  #totalChartCard_V2, 
+  .scroller .table-container {
+    flex: 0 0 300px !important;
+    min-width: 300px !important;
+    max-width: 300px !important;
+    width: 300px !important;
+  }
+}
+
+@media (max-width: 768px){
+  .card, #totalChartCard, #trainingCombinedBarChartCard,
+  #totalChartCard_V2,
+  .scroller .table-container { 
+    flex: 0 0 280px !important;
+    min-width: 280px !important;
+    max-width: 280px !important;
+    width: 280px !important;
+    padding: 16px; 
+  }
+  .table-container{ 
+    padding: 0; 
+  }
+}
+
+@media (max-width: 640px){
+  .card, #totalChartCard, #trainingCombinedBarChartCard,
+  #totalChartCard_V2,
+  .scroller .table-container { 
+    flex: 0 0 260px !important;
+    min-width: 260px !important;
+    max-width: 260px !important;
+    width: 260px !important;
+  }
+  .tables-container{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    overflow: auto;
+  }
+   
+  .card canvas {
+    max-width: 260px !important;
+  }
+   
+  button{ 
+    padding: 9px 14px;
+    font-size: 13px;
+  }
+   
+  .controls{
+    gap: 8px;
+  }
+   
+  h1{
+    font-size: 20px;
+  }
+   
+  #totalChartCard::after, #totalChartCard_V2::after{
+    animation-duration: 8s;
+  }
+   
+  #totalInfo strong, #totalInfo_V2 strong{
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px){
+  .wrapper{
+    padding: 0 12px 20px;
+  }
+   
+  .card, #totalChartCard, #trainingCombinedBarChartCard,
+  #totalChartCard_V2,
+  .scroller .table-container {
+    flex: 0 0 240px !important;
+    min-width: 240px !important;
+    max-width: 240px !important;
+    width: 240px !important;
+  }
+   
+  .card canvas {
+    max-width: 240px !important;
+  }
+   
+  .scroller{
+    gap: 12px;
+  }
+}
+
+@media (max-width: 360px){
+  .card, #totalChartCard, #trainingCombinedBarChartCard,
+  #totalChartCard_V2,
+  .scroller .table-container {
+    flex: 0 0 220px !important;
+    min-width: 220px !important;
+    max-width: 220px !important;
+    width: 220px !important;
+    padding: 10px;
+  }
+}
+
+.hint{ 
+  color:#6b7280; 
+  font-size:12px; 
+  text-align:center; 
+  margin-top:6px;
+  font-style: italic;
+}
+
+#debugInfo, #debugInfo_V2{
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: var(--border-radius-btn);
+  padding: 16px;
+  margin-top: 20px;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  color: #374151;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card, .table-container{
+  animation: fadeIn 0.3s ease-out;
+}
+
+.hidden{
+  display: none !important;
+}
+
+.text-center{
+  text-align: center;
+}
+
+.dual-section-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.graficas{
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  overflow: auto;
+  padding: 12px 0;
+}
+
+.section-block {
+  background: none;
+  overflow: hidden;
+}
+
+.section-block .section {
+  margin: 0;
+}
+
+/* --- LAYOUTS SCROLLERS --- */
+
+.section-block .scroller {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) #e5e7eb;
+}
+
+.section-block .scroller::-webkit-scrollbar {
+  height: 8px;
+}
+
+.section-block .scroller::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 4px;
+}
+
+.section-block .scroller::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-dark);
+}
+
+.section-block .card {
+  scroll-snap-align: start;
+  flex: 0 0 auto;
+}
+
+#totalChartCard, #totalChartCard_V2{
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #ffffff 0%, #fffbf0 100%);
+  border: 2px solid #ffd700;
+  box-shadow: 
+    0 4px 16px rgba(255, 215, 0, 0.15),
+    0 0 20px rgba(255, 215, 0, 0.1);
+  transition: all 0.3s ease;
+  flex: 0 0 300px;
+  min-width: 300px;
+  max-width: 300px;
+  width: 300px;
+}
+
+#totalChartCard::before, #totalChartCard_V2::before{
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(90deg, #ffd700, #ffed4e, #ffd700);
+  background-size: 200% 200%;
+  border-radius: var(--border-radius-card);
+  z-index: -1;
+  opacity: 0.6;
+  animation: gentleGradient 4s ease infinite;
+}
+
+#totalChartCard::after, #totalChartCard_V2::after{
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -100%;
+  width: 50%;
+  height: 200%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transform: skewX(-20deg);
+  animation: gentleShine 6s ease-in-out infinite;
+}
+
+#totalChartCard canvas, #totalChartCard_V2 canvas{
+  position: relative;
+  z-index: 1;
+}
+
+#totalChartCard p, #totalChartCard_V2 p{
+  position: relative;
+  z-index: 1;
+  font-weight: 600;
+}
+
+#totalInfo strong, #totalInfo_V2 strong{
+  font-size: 24px;
+  color: #b8860b;
+  text-shadow: 0 1px 2px rgba(255, 215, 0, 0.3);
+}
+
+#totalChartCard:hover, #totalChartCard_V2:hover{
+  transform: translateY(-3px);
+  box-shadow: 
+    0 6px 24px rgba(255, 215, 0, 0.25),
+    0 0 30px rgba(255, 215, 0, 0.15);
+}
+
+@keyframes gentleGradient {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes gentleShine {
+  0% {
+    left: -100%;
+  }
+  50%, 100% {
+    left: 150%;
+  }
+}
+
+#trainingCombinedBarChartCard {
+  flex: 0 0 340px;
+  min-width: 340px;
+  max-width: 380px;
+  width: 100%;
+  height: auto;
+}
+
+#trainingCombinedBarChartCard canvas {
+  width: 100% !important;
+  height: 360px !important; 
+  max-width: 400px !important;
+  aspect-ratio: 4 / 3;
+}
+
+.graficas-scroll {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  overflow-x: auto;
+  gap: 20px;
+  scroll-snap-type: x mandatory;
+}
+
+.subgrupo {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  scroll-snap-align: start;
+}
+
+.graficas-linea {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+}
+
+.titulo-grupo {
+  width: 100%;
+  background: #fff;
+  border-left: 6px solid var(--primary);
+  color: var(--primary-dark);
+  text-align: center;
+  padding: 10px 0;
+  border-radius: var(--border-radius-btn);
+  box-shadow: var(--card-shadow);
+  margin-bottom: 10px;
+}
+
+.titulo-grupo h1 {
+  margin: 0;
+  font-size: 1.6em;
+  letter-spacing: 0.5px;
+}
+
+/* =========================================================================
+   ESTILOS OPTIMIZADOS PARA MODO CAPTURA (FULL VIEW HD - FIXED LAYOUT)
+   ========================================================================= */
+body.screenshot-mode {
+    background-color: #ffffff;
+    overflow: hidden !important;
+}
+
+body.screenshot-mode html {
+    overflow: hidden !important;
+}
+
+/* Ocultar elementos innecesarios */
+body.screenshot-mode .brand-header,
+body.screenshot-mode .controls,
+body.screenshot-mode .instructions-box,
+body.screenshot-mode #status,
+body.screenshot-mode #status_V2 {
+    display: none !important;
+}
+
+/* FIX: Desactivar animaciones y scrollbars */
+body.screenshot-mode *,
+body.screenshot-mode *:before,
+body.screenshot-mode *:after {
+    animation: none !important;
+    transition: none !important;
+}
+
+body.screenshot-mode .scroller,
+body.screenshot-mode .graficas-scroll,
+body.screenshot-mode .section-block .scroller {
+    overflow: visible !important;
+    -webkit-overflow-scrolling: auto !important;
+}
+
+body.screenshot-mode .scroller::-webkit-scrollbar,
+body.screenshot-mode .graficas-scroll::-webkit-scrollbar {
+    display: none !important;
+}
+
+/* =========================================================================
+   UNIFORMIDAD DE TAMAÑOS Y ESTILOS EN MODO CAPTURA
+   ========================================================================= */
+
+/* Normalizar altura de todas las tarjetas */
+body.screenshot-mode .card,
+body.screenshot-mode .table-container,
+body.screenshot-mode #totalChartCard,
+body.screenshot-mode #totalChartCard_V2 {
+    min-height: 320px !important;
+    height: 320px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    padding: 20px !important;
+}
+
+/* Contenedor del canvas centrado y con altura fija */
+body.screenshot-mode .card > canvas,
+body.screenshot-mode #totalChartCard canvas,
+body.screenshot-mode #totalChartCard_V2 canvas {
+    max-height: 180px !important;
+    height: 180px !important;
+    width: 100% !important;
+    max-width: 220px !important;
+    margin: 10px auto !important;
+    display: block !important;
+}
+
+/* Información de texto centrada y con tamaño uniforme */
+body.screenshot-mode .card p {
+    font-size: 13px !important;
+    margin: 4px 0 !important;
+    text-align: center !important;
+    line-height: 1.4 !important;
+}
+
+body.screenshot-mode .card p strong {
+    font-size: 18px !important;
+    display: block !important;
+    margin-bottom: 2px !important;
+}
+
+/* Tablas con altura uniforme */
+body.screenshot-mode .table-container table {
+    height: 100% !important;
+}
+
+body.screenshot-mode .table-container th {
+    font-size: 13px !important;
+    padding: 12px 8px !important;
+}
+
+body.screenshot-mode .table-container td {
+    font-size: 12px !important;
+    padding: 10px 8px !important;
+}
+
+/* Training Combined Bar Chart - Tamaño uniforme */
+body.screenshot-mode #trainingCombinedBarChartCard {
+    min-height: 320px !important;
+    height: 320px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 20px !important;
+}
+
+body.screenshot-mode #trainingCombinedBarChartCard canvas {
+    max-height: 240px !important;
+    height: 240px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    object-fit: contain !important;
+}
+
+/* Total Achievement Card - Estilo especial pero altura uniforme */
+body.screenshot-mode #totalChartCard,
+body.screenshot-mode #totalChartCard_V2 {
+    min-height: 320px !important;
+    height: 320px !important;
+    background: linear-gradient(135deg, #ffffff 0%, #fffbf0 100%) !important;
+    border: 2px solid #b8860b !important;
+}
+
+/* Mini gauge en tabla NRC */
+body.screenshot-mode .mini-gauge-container canvas {
+    width: 35px !important;
+    height: 35px !important;
+}
+
+/* Barra de progreso GamePlan uniforme */
+body.screenshot-mode .quarter-bar-container {
+    height: 18px !important;
+    width: 85% !important;
+    margin: 6px auto !important;
+}
+
+/* ==========================================================================
+   LAYOUT DEFAULT (ESCRITORIO/TABLET > 768px) - 3 COLUMNAS
+   ==========================================================================
+*/
+body.screenshot-mode .wrapper {
+    width: 1200px !important;
+    max-width: 1200px !important; 
+    margin: 0 auto !important;
+    padding: 30px 40px !important;
+    background: white;
+    box-sizing: border-box;
+    overflow: visible !important;
+}
+
+/* Títulos uniformes y profesionales */
+body.screenshot-mode h1 {
+    font-size: 22px !important;
+    margin: 0 0 24px 0 !important;
+    text-align: left !important;
+    border-bottom: 3px solid var(--primary);
+    padding-bottom: 12px;
+    font-weight: 600 !important;
+    color: #1a1a1a !important;
+}
+
+/* --- GRIDS ESCRITORIO CON ESPACIADO UNIFORME --- */
+
+/* Fila 1: Customer Experience (3-5 elementos dependiendo de la vista) */
+body.screenshot-mode #chartsRow1 {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 20px !important;
+    width: 100% !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    margin-bottom: 30px !important;
+}
+
+body.screenshot-mode #chartsRow1_V2 {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 20px !important;
+    width: 100% !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    margin-bottom: 30px !important;
+}
+
+/* Fila 2: Brand Power (3 Columnas) */
+body.screenshot-mode .tables-container {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 20px !important;
+    width: 100% !important;
+    overflow: visible !important;
+    margin-bottom: 30px !important;
+}
+
+/* Fila 3: Sustainable + Total (Layout Complejo) */
+body.screenshot-mode .contenedor-total,
+body.screenshot-mode .section-block {
+    display: block !important;
+    width: 100% !important;
+    overflow: visible !important;
+}
+
+body.screenshot-mode .graficas-scroll {
+    display: grid !important;
+    grid-template-columns: 3fr 1fr !important;
+    gap: 20px !important;
+    align-items: start !important;
+    overflow: visible !important;
+}
+
+body.screenshot-mode .subgrupo:first-child { 
+    width: 100% !important; 
+}
+
+body.screenshot-mode .subgrupo:first-child .graficas-linea {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 20px !important;
+}
+
+body.screenshot-mode .subgrupo:last-child { 
+    width: 100% !important; 
+    height: 100% !important; 
+}
+
+body.screenshot-mode .subgrupo:last-child .graficas-linea {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+}
+
+/* Estilos base para todas las tarjetas */
+body.screenshot-mode .card,
+body.screenshot-mode .table-container,
+body.screenshot-mode #totalChartCard,
+body.screenshot-mode #totalChartCard_V2,
+body.screenshot-mode .scroller .table-container,
+body.screenshot-mode #trainingCombinedBarChartCard {
+    flex: unset !important;
+    width: 100% !important;
+    min-width: unset !important;
+    max-width: unset !important;
+    margin: 0 !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
+    border: 1px solid #e0e0e0 !important;
+    border-radius: 12px !important;
+    page-break-inside: avoid;
+    background: white !important;
+}
+
+/* Eliminar efectos especiales del Total Achievement */
+body.screenshot-mode #totalChartCard::before,
+body.screenshot-mode #totalChartCard::after,
+body.screenshot-mode #totalChartCard_V2::before,
+body.screenshot-mode #totalChartCard_V2::after { 
+    display: none !important; 
+}
+
+/* Títulos de grupo con estilo consistente */
+body.screenshot-mode .titulo-grupo {
+    background: linear-gradient(135deg, #f8f8f8 0%, #f0f0f0 100%) !important;
+    border-left: 4px solid var(--primary) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06) !important;
+    margin-bottom: 16px !important;
+    padding: 12px 20px !important;
+}
+
+body.screenshot-mode .titulo-grupo h1 {
+    font-size: 18px !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-weight: 600 !important;
+    color: var(--primary-dark) !important;
+}
+
+/* Barra de herramientas flotante para screenshot */
+#screenshotToolbar {
+    display: none;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 9999;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    border: 1px solid #e0e0e0;
+    flex-direction: row;
+    gap: 10px;
+}
+
+body.screenshot-mode #screenshotToolbar {
+    display: flex;
+}
+
+.tool-btn {
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.btn-exit { background: #ffebee; color: #d32f2f; }
+.btn-exit:hover { background: #ffcdd2; }
+
+.btn-download { background: #e3f2fd; color: #1976d2; }
+.btn-download:hover { background: #bbdefb; }
+
+.btn-copy { background: #e8f5e9; color: #388e3c; }
+.btn-copy:hover { background: #c8e6c9; }
+
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+</head>
+<body>
+
+    <!-- BARRA FLOTANTE DE HERRAMIENTAS (Solo visible en modo captura) -->
+    <div id="screenshotToolbar">
+        <button class="tool-btn btn-exit" onclick="toggleScreenshotMode()">
+            Exit
+        </button>
+        <button class="tool-btn btn-download" onclick="captureDashboard('download')">
+            Download Status
+        </button>
+        <button class="tool-btn btn-copy" onclick="captureDashboard('copy')">
+            Copy to Clipboard
+        </button>
+    </div>
+
+    <div class="brand-header">
+      <!-- Importante: crossorigin="anonymous" para permitir exportación del canvas -->
+      <img src="https://i.imgur.com/55NkFxP.png" alt="NIBU Logo" class="nibu-logo" crossorigin="anonymous">
+      
+      <!-- CONTENEDOR DE BOTONES DE CABECERA -->
+      <div class="header-buttons">
+          <!-- AÑADIDO: id y disabled para control JS -->
+          <button id="screenshotBtn" onclick="toggleScreenshotMode()" class="view-toggle-btn screenshot-btn" disabled>
+              📷 Screenshot view (Full View)
+          </button>
+          
+          <button onclick="toggleView()" class="view-toggle-btn">
+            🔄 Change report: <span id="viewLabel" class="view-label">Report Full Year</span> 
+          </button>
+      </div>
+    </div>
+
+  <div class="wrapper">
+    
+    <!-- ============================== VISTA 1 ============================== -->
+    <div id="vista1">
+        <h1 id="mainTitle">Indicators by Country (Reporte Full Year)</h1> <!-- CAMBIA NOMBRE AQUI -->
+
+        <div class="controls">
+            <input type="file" id="excelFile" accept=".xlsx,.xls" />
+            <input type="text" id="excelURL" placeholder="🔗 Paste Excel URL (optional)" style="width:260px;">
+            <button id="loadExcel">📂 Load Report: Full Year</button>
+            <select id="countrySelect">
+                <option value="">Select a Country</option>
+            </select>
+        </div>
+        <div id="status"></div>
+
+        <div id="instructionsBox" class="instructions-box">
+        <div class="instructions-header">
+            <svg class="instructions-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+            </svg>
+            <h2>Quick Start Guide (Report Full Year)</h2> <!-- CAMBIA NOMBRE AQUI -->
+        </div>
+        
+        <div class="instructions-content">
+            <div class="instructions-grid">
+            <div class="instruction-step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                <h3>Select Data Source</h3>
+                <p>Select the excel file named: Annual_V1 </p>
+                </div>
+            </div>
+            
+            <div class="instruction-step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                <h3>Load Data</h3>
+                <p>Click "📂 Load Report: Full Year" to import and process your data</p>
+                </div>
+            </div>
+            
+            <div class="instruction-step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                <h3>Select Country</h3>
+                <p>Choose a country from the dropdown to view specific metrics</p>
+                </div>
+            </div>
+            
+            <div class="instruction-step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                <h3>Analyze Results</h3>
+                <p>Explore interactive charts and performance indicators</p>
+                </div>
+            </div>
+            </div>
+            
+        
+        </div>
+        </div>
+
+        <div class="separacion hidden">
+        <h1>Customer Experience</h1>
+        </div>
+        <div class="section">
+        <div class="scroller" id="chartsRow1">
+            
+            <div class="card hidden" id="csiChartCard">
+            <canvas id="csiGauge"></canvas>
+            <p id="csiInfo"></p>
+            <p>Target: <span id="csiTargetLabel"></span></p>
+            </div>
+
+            <div class="card hidden" id="ssiChartCard">
+            <canvas id="ssiGauge"></canvas>
+            <p id="ssiInfo"></p>
+            <p>Target: <span id="ssiTargetLabel"></span></p>
+            </div>
+
+            <div class="card hidden" id="scChartCard">
+            <canvas id="scGauge"></canvas>
+            <p id="scInfo"></p>
+            <p>Target: <span id="scTargetLabel"></span></p>
+            </div>
+
+            <div class="card hidden" id="trelChartCard">
+            <canvas id="trelGauge"></canvas>
+            <p id="trelInfo"></p>
+            <p>Target: <span id="trelTargetLabel"></span></p>
+            </div>
+
+            <div class="card hidden" id="trainingCombinedBarChartCard">
+            <canvas id="trainingCombinedBarChart"></canvas>
+            </div>
+            
+
+            <div class="table-container hidden" id="nrcTableCard">
+            <table class="info-table">
+                <thead>
+                <tr><th colspan="2">NRC Implementation</th></tr>
+                <tr class="subheader"><td>Target</td><td>Status</td></tr>
+                </thead>
+                <tbody>
+                <tr><td id="nrcTargetCell"></td><td id="nrcStatusCell"></td></tr>
+                <!-- Fila para la mini gráfica -->
+                <tr><td id="nrcExtraTargetCell"></td><td id="nrcExtraStatusCell"></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+        </div>
+        </div>
+
+        <div class="separacion hidden">
+        <h1>Brand Power</h1>
+        </div>
+        <!--ESTA ES LA SECCION DE LAS TABLAS-->
+        <div class="section tables tables-container"> 
+
+        <div class="table-container hidden" id="leadTableCard">
+            <table class="info-table">
+            <thead>
+                <tr><th colspan="2">Lead Management</th></tr>
+                <tr class="subheader"><td>Target</td><td>Status</td></tr>
+            </thead>
+            <tbody>
+                <tr><td id="leadTargetCell"></td><td id="leadRealCell"></td></tr>
+            </tbody>
+            </table>
+        </div>
+
+        <div class="table-container hidden" id="shareTableCard">
+            <table class="info-table">
+            <thead>
+                <tr><th colspan="2">Share of Investment</th></tr>
+                <tr class="subheader"><td>Target</td><td>Status</td></tr>
+                
+            </thead>
+            <tbody>
+                <tr><td id="shareTargetCell"></td><td id="shareRealCell"></td></tr>
+            </tbody>
+            </table>
+        </div>
+
+        <!-- USAMOS LA TABLA PARA MOSTRAR EL BAR DE CUARTOS -->
+        <div class="table-container hidden" id="gameplanTableCard">
+            <table class="info-table">
+            <thead>
+                <tr><th colspan="2">GamePlan 360</th></tr>
+                <tr class="subheader"><td>Target</td><td>Status</td></tr>
+            </thead>
+            <tbody>
+                <tr><td id="gameplanTargetCell"></td><td id="gameplanRealCell"></td></tr>
+            </tbody>
+            </table>
+        </div>
+        
+        </div>
+
+        <div class="contenedor-total">
+        <div class="section-block">
+            <div class="scroller graficas-scroll">
+
+            <div class="subgrupo">
+                <div class="separacion titulo-grupo">
+                <h1>Sustainable Growth</h1>
+                </div>
+                <div class="graficas-linea">
+                <div class="card hidden" id="sellInChartCard">
+                    <canvas id="sellInGauge"></canvas>
+                    <p id="sellInInfo"></p>
+                    <p>Target: <span id="sellInTargetLabel"></span></p>
+                </div>
+                <div class="card hidden" id="retentionChartCard">
+                    <canvas id="retentionGauge"></canvas>
+                    <p id="retentionInfo"></p>
+                    <p>Target: <span id="retentionTargetLabel"></span></p>
+                </div>
+                <div class="card hidden" id="retailChartCard">
+                    <canvas id="retailGauge"></canvas>
+                    <p id="retailInfo"></p>
+                    <p>Target: <span id="retailTargetLabel"></span></p>
+                </div>
+                </div>
+            </div>
+
+            <div class="subgrupo">
+                <div class="separacion titulo-grupo">
+                <h1>Total Achievement</h1>
+                </div>
+                <div class="graficas-linea">
+                <div class="card hidden" id="totalChartCard">
+                    <canvas id="totalGauge"></canvas>
+                    <p id="totalInfo"></p>
+                    <p>Target: <span id="totalTargetLabel">100%</span></p>
+                </div>
+                </div>
+            </div>
+
+            </div>
+        </div>
+        </div>
+
+        <div id="debugInfo" class="hidden"></div>
+    </div>
+
+    <!-- ============================== VISTA 2 (COPIA EXACTA CON SUFIJOS _V2) ============================== -->
+    <div id="vista2" class="hidden">
+        <h1 id="mainTitle_V2">Indicators by Country (Report Year To Date)</h1> <!-- CAMBIA NOMBRE AQUI -->
+
+        <div class="controls">
+            <input type="file" id="excelFile_V2" accept=".xlsx,.xls" />
+            <input type="text" id="excelURL_V2" placeholder="🔗 Paste Excel URL (optional)" style="width:260px;">
+            <button id="loadExcel_V2">📂 Load Report: Year To Date</button>
+            <select id="countrySelect_V2">
+                <option value="">Select a Country</option>
+            </select>
+        </div>
+        <div id="status_V2"></div>
+
+        <div id="instructionsBox_V2" class="instructions-box">
+            <div class="instructions-header">
+                <svg class="instructions-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                </svg>
+                <h2>Quick Start Guide (Year To date)</h2> <!-- CAMBIA NOMBRE AQUI -->
+            </div>
+            
+            <div class="instructions-content">
+                <div class="instructions-grid">
+                <div class="instruction-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                    <h3>Select "Annual_V2"</h3>
+                    <p>Select the excel file named: Annual_V2</p>
+                    </div>
+                </div>
+                <!-- Same steps, just visual guide -->
+                <div class="instruction-step"><div class="step-number">2</div><div class="step-content"><h3>Load Data</h3><p>Click "Load Report: Year To date"</p></div></div>
+                <div class="instruction-step"><div class="step-number">3</div><div class="step-content"><h3>Select Country</h3><p>Select a country from the dropdown menu</p></div></div>
+                <div class="instruction-step"><div class="step-number">4</div><div class="step-content"><h3>Analyze</h3><p>View Year To date KPI´s</p></div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="separacion hidden separacion_V2">
+            <h1>Customer Experience</h1>
+        </div>
+        <div class="section">
+            <div class="scroller" id="chartsRow1_V2">
+                
+                <div class="card hidden" id="csiChartCard_V2">
+                <canvas id="csiGauge_V2"></canvas>
+                <p id="csiInfo_V2"></p>
+                <p>Target: <span id="csiTargetLabel_V2"></span></p>
+                </div>
+
+                <div class="card hidden" id="ssiChartCard_V2">
+                <canvas id="ssiGauge_V2"></canvas>
+                <p id="ssiInfo_V2"></p>
+                <p>Target: <span id="ssiTargetLabel_V2"></span></p>
+                </div>
+
+                <div class="card hidden" id="scChartCard_V2">
+                <canvas id="scGauge_V2"></canvas>
+                <p id="scInfo_V2"></p>
+                <p>Target: <span id="scTargetLabel_V2"></span></p>
+                </div>
+
+                <div class="card hidden" id="trelChartCard_V2">
+                <canvas id="trelGauge_V2"></canvas>
+                <p id="trelInfo_V2"></p>
+                <p>Target: <span id="trelTargetLabel_V2"></span></p>
+                </div>
+
+                <!-- ELIMINADA GRAFICA TRAINING BAR CHART EN V2 -->
+                
+
+                <div class="table-container hidden" id="nrcTableCard_V2">
+                <table class="info-table">
+                    <thead>
+                    <tr><th colspan="2">NRC Implementation</th></tr>
+                    <tr class="subheader"><td>Target</td><td>Status</td></tr>
+                    </thead>
+                    <tbody>
+                    <tr><td id="nrcTargetCell_V2"></td><td id="nrcStatusCell_V2"></td></tr>
+                    <!-- Fila para la mini gráfica -->
+                    <tr><td id="nrcExtraTargetCell_V2"></td><td id="nrcExtraStatusCell_V2"></td></tr>
+                    </tbody>
+                </table>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="separacion hidden separacion_V2">
+            <h1>Brand Power</h1>
+        </div>
+        
+        <div class="section tables tables-container"> 
+
+            <div class="table-container hidden" id="leadTableCard_V2">
+                <table class="info-table">
+                <thead>
+                    <tr><th colspan="2">Lead Management</th></tr>
+                    <tr class="subheader"><td>Target</td><td>Status</td></tr>
+                </thead>
+                <tbody>
+                    <tr><td id="leadTargetCell_V2"></td><td id="leadRealCell_V2"></td></tr>
+                </tbody>
+                </table>
+            </div>
+
+            <div class="table-container hidden" id="shareTableCard_V2">
+                <table class="info-table">
+                <thead>
+                    <tr><th colspan="2">Share of Investment</th></tr>
+                    <tr class="subheader"><td>Target</td><td>Status</td></tr>
+                </thead>
+                <tbody>
+                    <tr><td id="shareTargetCell_V2"></td><td id="shareRealCell_V2"></td></tr>
+                </tbody>
+                </table>
+            </div>
+
+            <!-- USAMOS LA TABLA PARA MOSTRAR EL BAR DE CUARTOS -->
+            <div class="table-container hidden" id="gameplanTableCard_V2">
+                <table class="info-table">
+                <thead>
+                    <tr><th colspan="2">GamePlan 360</th></tr>
+                    <tr class="subheader"><td>Target</td><td>Status</td></tr>
+                </thead>
+                <tbody>
+                    <tr><td id="gameplanTargetCell_V2"></td><td id="gameplanRealCell_V2"></td></tr>
+                </tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <div class="contenedor-total">
+            <div class="section-block">
+                <div class="scroller graficas-scroll">
+
+                <div class="subgrupo">
+                    <div class="separacion titulo-grupo separacion_V2">
+                    <h1>Sustainable Growth</h1>
+                    </div>
+                    <div class="graficas-linea">
+                    <div class="card hidden" id="sellInChartCard_V2">
+                        <canvas id="sellInGauge_V2"></canvas>
+                        <p id="sellInInfo_V2"></p>
+                        <p>Target: <span id="sellInTargetLabel_V2"></span></p>
+                    </div>
+                    <div class="card hidden" id="retentionChartCard_V2">
+                        <canvas id="retentionGauge_V2"></canvas>
+                        <p id="retentionInfo_V2"></p>
+                        <p>Target: <span id="retentionTargetLabel_V2"></span></p>
+                    </div>
+                    <div class="card hidden" id="retailChartCard_V2">
+                        <canvas id="retailGauge_V2"></canvas>
+                        <p id="retailInfo_V2"></p>
+                        <p>Target: <span id="retailTargetLabel_V2"></span></p>
+                    </div>
+                    </div>
+                </div>
+
+                <div class="subgrupo">
+                    <div class="separacion titulo-grupo separacion_V2">
+                    <h1>Total Achievement</h1>
+                    </div>
+                    <div class="graficas-linea">
+                    <div class="card hidden" id="totalChartCard_V2">
+                        <canvas id="totalGauge_V2"></canvas>
+                        <p id="totalInfo_V2"></p>
+                        <p>Target: <span id="totalTargetLabel_V2">100%</span></p>
+                    </div>
+                    </div>
+                </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div id="debugInfo_V2" class="hidden"></div>
+    </div>
+    <!-- ============================== FIN VISTA 2 ============================== -->
+
+  </div>
+
+  <script>
+// ====================== FUNCIÓN MODO CAPTURA Y EXPORTACIÓN ======================
+function toggleScreenshotMode() {
+    document.body.classList.toggle('screenshot-mode');
+    // Forzar redibujado
+    window.dispatchEvent(new Event('resize'));
+    //una vez cerrado quitar el menu de exit 
+    const toolbar = document.getElementById('screenshotToolbar');
+    if (!document.body.classList.contains('screenshot-mode')) {
+        toolbar.style.display = 'none';
+
+    }
+    else {
+        toolbar.style.display = 'flex';
+    }
+}
+
+async function captureDashboard(action) {
+    // 1. Ocultar la barra de herramientas para que no salga en la foto
+    const toolbar = document.getElementById('screenshotToolbar');
+    toolbar.style.display = 'none';
+
+    // 2. Scroll al inicio para evitar cortes
+    window.scrollTo(0, 0);
+
+    try {
+        // 3. Seleccionar el elemento a capturar (wrapper principal)
+        const element = document.querySelector('.wrapper');
+        
+        // Esperar un momento para asegurar que los estilos se aplicaron
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        // 4. DETECCIÓN INTELIGENTE DE ANCHO (MÓVIL VS ESCRITORIO)
+        // Si estamos en móvil (< 768px), usamos el ancho de la ventana para una captura vertical.
+        // Si estamos en escritorio, forzamos los 1200px del diseño de 3 columnas.
+        const isMobile = window.innerWidth <= 768;
+        const captureWidth = isMobile ? window.innerWidth : 1200;
+
+        // Generar el canvas con html2canvas
+        const canvas = await html2canvas(element, {
+            scale: isMobile ? 2 : 3, // Escala ligeramente menor en móvil para ahorrar memoria
+            backgroundColor: '#ffffff',
+            useCORS: true,
+            logging: false,
+            width: captureWidth, // Ancho dinámico
+            windowWidth: captureWidth // Simular ancho de ventana correcto
+        });
+
+        if (action === 'download') {
+            // Descargar imagen
+            const link = document.createElement('a');
+            const date = new Date().toISOString().slice(0,10);
+            link.download = `NIBU_Dashboard_${date}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        } else if (action === 'copy') {
+            // Copiar al portapapeles
+            canvas.toBlob(blob => {
+                const item = new ClipboardItem({ 'image/png': blob });
+                navigator.clipboard.write([item]).then(() => {
+                    alert('✅ Image copied to clipboard!');
+                }).catch(err => {
+                    console.error('Error copying:', err);
+                    alert('❌ Failed to copy. Check permissions.');
+                });
+            });
+        }
+
+    } catch (error) {
+        console.error('Capture error:', error);
+        alert('❌ Error generating capture.');
+    } finally {
+        // 5. Restaurar la barra de herramientas
+        toolbar.style.display = 'flex';
+    }
+}
+// =================================================================
+
+// ====================== CONSTANTES DE NOMBRES (EDITA AQUI) ======================
+const VIEW_CONFIG = {
+    NAME_V1: "Report:  Full Year", // Nombre completo para Vista 1
+    NAME_V2: "Report:  Year To Date"        // Nombre completo para Vista 2
+};
+// ===============================================================================
+
+const CONFIG = {
+  SHEET_NAME: 'Data',
+  SHEET_NAME_V2: 'Sheet1', // Hoja para Vista 2
+  MAX_ROWS: 50,
+  // IDs for View 1
+  CHART_IDS_V1: [
+    'csiChartCard', 'ssiChartCard', 'scChartCard', 'trelChartCard',
+    'trainingCombinedBarChartCard',
+    'sellInChartCard', 'retentionChartCard', 'retailChartCard', 'totalChartCard',
+    'nrcTableCard', 'leadTableCard', 'shareTableCard', 'gameplanTableCard' // gameplanBatteryCard REMOVED
+  ],
+  // IDs for View 2 - REMOVIDO trainingCombinedBarChartCard_V2
+  CHART_IDS_V2: [
+    'csiChartCard_V2', 'ssiChartCard_V2', 'scChartCard_V2', 'trelChartCard_V2',
+    'sellInChartCard_V2', 'retentionChartCard_V2', 'retailChartCard_V2', 'totalChartCard_V2',
+    'nrcTableCard_V2', 'leadTableCard_V2', 'shareTableCard_V2', 'gameplanTableCard_V2' // gameplanBatteryCard_V2 REMOVED
+  ],
+  // Colores para escalas V2
+  SCALE_COLORS_V2: {
+    critical: '#b71c1c', // < 90% (Rojo Oscuro/Rojo)
+    bad: '#f44336',      // < 90% (Rojo Estándar)
+    warning: '#FFC107',  // 90% - 94% (Amarillo)
+    good: '#4CAF50',     // >= 95% (Verde)
+    gray: '#e0e0e0'
+  },
+  // Color Azul fijo para Vista 1
+  COLOR_V1_FILL: '#1976D2', // Azul
+  // Mantengo estos por compatibilidad si se usan directo
+  COLORS: {
+    success: '#4caf50',
+    warning: '#ffc107',
+    danger: '#f44336',
+    special: '#11ce30ff',
+    training: '#b0b0b0',
+    target: '#c62828',
+    gray: '#e0e0e0'
+  }
+};
+
+const formatters = {
+  percent: (v) => isNaN(v) ? 'NA' : `${v.toFixed(1)}%`,
+  intPercent: (v) => isNaN(v) ? 'NA' : `${Math.round(v)}%`,
+  currency: (v) => {
+    if (isNaN(v)) return 'NA';
+    try {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 0
+      }).format(v);
+    } catch (e) {
+      return `${v.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+    }
+  },
+  // NUEVO FORMATO: Porcentaje con 1 decimal
+  percent_1_decimal: (v) => isNaN(v) ? 'NA' : `${v.toFixed(1)}%`,
+  // NUEVO FORMATO: Unidad con 1 decimal
+  unity_1_decimal: (v) => isNaN(v) || v <= 0 ? 'NA' : v.toFixed(1),
+  // NUEVO FORMATO: Millones con 1 decimal
+  millions_1_decimal: (v) => isNaN(v) || v <= 0 
+    ? 'NA' 
+    : `${(v / 1_000_000).toFixed(1)} M`
+};
+
+// ESTADO SEPARADO
+const stateV1 = {
+  data: [],
+  charts: {
+    csi: null, ssi: null, sc: null, trel: null,
+    trainingCombined: null,
+    sellIn: null, retention: null, retail: null, total: null,
+    gameplanBattery: null // Mantenemos la referencia, aunque ya no es Chart.js
+  },
+  loadedFile: null
+};
+
+const stateV2 = {
+  data: [],
+  charts: {
+    csi: null, ssi: null, sc: null, trel: null,
+    trainingCombined: null,
+    sellIn: null, retention: null, retail: null, total: null,
+    gameplanBattery: null // Mantenemos la referencia, aunque ya no es Chart.js
+  },
+  loadedFile: null
+};
+
+// Logic for View Toggling
+function toggleView() {
+  const v1 = document.getElementById("vista1");
+  const v2 = document.getElementById("vista2");
+  const label = document.getElementById("viewLabel");
+
+  if (v1.classList.contains("hidden")) {
+    v1.classList.remove("hidden");
+    v2.classList.add("hidden");
+    label.textContent = VIEW_CONFIG.NAME_V1; // Usa nombre configurado
+  } else {
+    v1.classList.add("hidden");
+    v2.classList.remove("hidden");
+    label.textContent = VIEW_CONFIG.NAME_V2; // Usa nombre configurado
+  }
+}
+
+function mapRowToData(row) {
+  // === Lógica nueva para NRC Implementation ===
+  let processedNrc = "NA"; // Valor por defecto
+  const rawNrc = row[11];
+  
+  if (rawNrc !== undefined && rawNrc !== null) {
+      // Convertir a string y limpiar espacios
+      const strNrc = String(rawNrc).trim();
+      // Si no es cadena vacía y no es un guion, usamos el valor real
+      if (strNrc !== "" && strNrc !== "-") {
+          processedNrc = strNrc;
+      }
+  }
+  // ============================================
+
+  return {
+    country: String(row[1]).trim(),
+    csi: parseFloat(row[3]) * 100,
+    csi_target: parseFloat(row[2]) * 100,
+    ssi: parseFloat(row[7]) * 100,
+    ssi_target: parseFloat(row[6]) * 100,
+    SC: parseFloat(row[19]) * 100,
+    SC_target: parseFloat(row[18]) * 100,
+    TREL: parseFloat(row[15]) * 100,
+    TREL_target: parseFloat(row[16]) * 100,
+    nrcStatus: processedNrc, // Usamos la variable procesada
+    nrcTarget: String(row[10] || '').trim(),
+    nrcProgress: (parseFloat(row[56]) || 0) * 100, // <--- CAMBIA EL INDICE [12] POR LA COLUMNA DE PROGRESO NRC EN EXCEL V1
+    leadTarget: String(row[22] || '').trim(),
+    // Aseguramos que los datos Lead/Share/GamePlan sean porcentajes válidos para la barra de progreso
+    // CAMBIO: Si está vacío o no es número, devuelve 'NA' en lugar de '0%'
+    leadReal: row[23] !== '' && !isNaN(row[23])  
+      ? `${(parseFloat(row[23]) * 100).toFixed(1)}%` 
+      : 'NA',
+    shareTarget: 'Top 5 Competitors + Nissan',
+    // CAMBIO: Si está vacío o no es número, devuelve 'NA' en lugar de '0%'
+    shareReal: row[26] !== '' && !isNaN(row[26]) 
+      ? `${(parseFloat(row[26]) * 100).toFixed(1)}%` 
+      : 'NA',
+    gameplanTarget: 'Quarterly Template Format',
+    // CAMBIO: Si está vacío o no es número, devuelve 'NA' en lugar de '0%'
+    gameplanReal: row[28] !== '' && !isNaN(row[28]) 
+      ? `${(parseFloat(row[28]) * 100).toFixed(1)}%` 
+      : 'NA',
+    // CAMBIO: Quitar || 0 para permitir NaN si está vacío
+    sellIn: parseFloat(row[32]), 
+    sellInTarget: parseFloat(row[31]),
+    retention: parseFloat(row[36]),
+    retentionTarget: parseFloat(row[35]),
+    retailSales: parseFloat(row[40]),
+    retailSalesTarget: parseFloat(row[39]),
+    totalArchievement: parseFloat(row[55]) * 100,
+    realTRsales: (parseFloat(row[48]) || 0) * 100,
+    realTRAftersales: (parseFloat(row[52]) || 0) * 100,
+    TRsales: (parseFloat(row[47]) || 0) * 100,
+    TRAftersales: (parseFloat(row[51]) || 0) * 100
+  };
+}
+// AQUI SE LEEN LOS DATOS DE LOS EXCELS PARA VISTA 2
+// NEW: Mapeo específico para Vista 2 (Basado en Sheet1.csv)
+function mapRowToDataV2(row) {
+
+  // Validar que la fila tenga datos y no sea cabecera
+
+  if (!row[3] || row[3] === 'Market') return null;
+
+
+
+  return {
+
+    // Índices basados en el CSV proporcionado:
+
+    // Col D (3): Market, Col E (4): CSI...
+
+    country: String(row[1]).trim(),
+
+    
+
+    // Como el dato viene en % Cumplimiento (ej: 1.03), lo multiplicamos por 100
+
+    // y fijamos el Target en 100 para que el Gauge pinte correctamente.
+    
+    // CAMBIO: Quitar || 0 para permitir NaN si está vacío
+    csi: parseFloat(row[2]) * 100,
+
+    csi_target: parseFloat(row[14]) * 100,
+
+    
+
+    ssi: parseFloat(row[3]) * 100,
+
+    ssi_target: parseFloat(row[15]) * 100,
+
+    
+
+    //nrcStatus: (parseFloat(row[4]) * 100).toFixed(0) + '%',
+    nrcStatus : 'Signed',
+    nrcTarget: 'NRC PLAN',
+    nrcProgress: (parseFloat(row[23]) || 0) * 100, // <--- CAMBIA EL INDICE [4] POR LA COLUMNA DE PROGRESO NRC EN EXCEL V2
+
+    
+
+    // Solo hay una columna Training, la asignamos a TREL
+
+    TREL: parseFloat(row[5]) * 100,
+
+    TREL_target: 90,
+
+    
+
+    SC: parseFloat(row[22]) * 100,
+
+    SC_target: parseFloat(row[21]) * 100,
+
+    
+    // CAMBIO: Si está vacío o no es número, devuelve 'NA' en lugar de '0%'
+    leadReal: row[7] !== '' && !isNaN(row[7]) 
+      ? `${(parseFloat(row[7]) * 100).toFixed(1)}%` 
+      : 'NA',
+
+    leadTarget: '100%',
+
+    
+    // CAMBIO: Si está vacío o no es número, devuelve 'NA' en lugar de '0%'
+    shareReal: row[8] !== '' && !isNaN(row[8]) 
+      ? `${(parseFloat(row[8]) * 100).toFixed(1)}%` 
+      : 'NA',
+
+    shareTarget: '100%',
+
+    
+    // CAMBIO: Si está vacío o no es número, devuelve 'NA' en lugar de '0%'
+    gameplanReal: row[9] !== '' && !isNaN(row[9]) 
+      ? `${(parseFloat(row[9]) * 100).toFixed(1)}%` 
+      : 'NA',
+
+    gameplanTarget: '100%',
+
+    //ESTO ES EL SELL IN
+
+
+
+    sellIn: parseFloat(row[20]),
+
+    sellInTarget: parseFloat(row[19]),
+
+    
+
+    retention: parseFloat(row[18]),
+
+    retentionTarget: parseFloat(row[17]),
+
+    
+
+    retailSales: parseFloat(row[12]) * 100,
+
+    retailSalesTarget: 100,
+
+    
+
+    totalArchievement: parseFloat(row[13]) * 100,
+
+    
+    // Datos faltantes descartados (en 0)
+    realTRsales: 0, realTRAftersales: 0, TRsales: 0, TRAftersales: 0
+  };
+}
+
+function restartFadeAnimations(suffix) {
+    // suffix example: '' or '_V2'
+  const selector = suffix === '_V2' 
+    ? '#vista2 .card:not(.hidden), #vista2 .table-container:not(.hidden), #vista2 .separacion:not(.hidden)'
+    : '#vista1 .card:not(.hidden), #vista1 .table-container:not(.hidden), #vista1 .separacion:not(.hidden)';
+
+  const elements = document.querySelectorAll(selector);
+  elements.forEach(el => {
+    el.style.animation = 'none';
+    void el.offsetHeight;
+    el.style.animation = '';
+  });
+}
+
+function createCombinedTrainingChart(realSales, targetSales, realAftersales, targetAftersales, canvasId, existingChart) {
+  const ctx = document.getElementById(canvasId).getContext('2d');
+  if (existingChart) existingChart.destroy();
+
+  return new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Sales', 'Aftersales'],
+      datasets: [
+        {
+          label: 'Real (%)',
+          data: [realSales, realAftersales],
+          backgroundColor: ['#b0b0b0', '#a8a8a8'],
+          borderWidth: 0,
+          barThickness: 60,
+          borderRadius: 4
+        },
+        {
+          label: 'Target (%)',
+          data: [targetSales, targetAftersales],
+          type: 'line',
+          borderColor: '#c62828',
+          borderWidth: 2,
+          tension: 0.3,
+          pointRadius: 4,
+          pointBackgroundColor: '#c62828'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      indexAxis: 'y',
+      plugins: {
+        legend: { display: true, position: 'bottom' },
+        title: { display: true, text: 'Training e-Learning Completion', font: { size: 14, weight: 'bold' } }
+      },
+      scales: {
+        x: {
+          beginAtZero: true,
+          max: 110,
+          ticks: { callback: (v) => `${v}%` },
+          grid: { color: '#e0e0e0' }
+        },
+        y: { grid: { display: false } }
+      }
+    }
+  });
+}
+
+/**
+ * ACTUALIZADO: Crea una barra de progreso que refleja el porcentaje real (sin redondear a cuartos)
+ * y muestra solo el valor del porcentaje real en la etiqueta.
+ * @param {string} realValue El valor de cumplimiento (ej: '75.5%', '100.0%').
+ * @param {string} cellId El ID de la celda.
+ * @param {string} suffix Sufijo ('', '_V2').
+ */
+function drawQuarterBar(realValue, cellId, suffix) {
+    const cell = document.getElementById(cellId);
+    if (!cell) return;
+
+    // 1. Parsear el valor de porcentaje a número
+    const value = parseFloat(realValue.replace('%', '')) || 0;
+    
+    // 2. Usar el valor real (limitado a 100%) para el ancho de la barra
+    const fillPercentage = Math.min(100, Math.max(0, value));
+
+    // 3. La clase de color ahora es unificada a AZUL para ambas vistas
+    const fillColorClass = 'quarter-fill-v1'; // Color #105cd4 en CSS
+    
+    // 4. Creamos la visualización de la barra
+    // La etiqueta solo muestra el valor del Excel (ej: '75.5%')
+    const barHtml = `
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <div class="quarter-bar-container">
+                <div class="quarter-segment ${fillColorClass}" style="width: ${fillPercentage}%;"></div>
+            </div>
+            <div class="quarter-label">${realValue}</div>
+        </div>
+    `;
+
+    // 5. Inyectar el HTML en la celda
+    cell.innerHTML = barHtml;
+}
+
+
+async function loadExcelDataInternal(file, sheetName, mapperFn, startRow = 3, endRow = 50) {
+  const data = await file.arrayBuffer();
+  const workbook = XLSX.read(data, { type: 'array' });
+  
+  // Si no encuentra la hoja exacta, intenta usar la primera hoja disponible
+  let targetSheet = sheetName;
+  if (!workbook.SheetNames.includes(sheetName)) {
+      console.warn(`Sheet '${sheetName}' not found. Using first sheet: ${workbook.SheetNames[0]}`);
+      targetSheet = workbook.SheetNames[0];
+  }
+  
+  const sheet = workbook.Sheets[targetSheet];
+  const json = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+  
+  const processedData = [];
+  
+  // Ajustamos los valores por defecto si no se pasan en la llamada (V1)
+  const finalStartRow = startRow === 3 && arguments.length < 5 ? 3 : startRow;
+  const finalEndRow = endRow === 50 && arguments.length < 5 ? 100 : endRow; // Aumentado a 100 para V1 si no se pasa
+
+  // AQUI se itera sobre el rango de filas
+  for (let i = finalStartRow; i < Math.min(finalEndRow, json.length); i++) {
+    const row = json[i];
+    if (!row || row.length < 3) continue; // Basic check
+    
+    const mapped = mapperFn(row);
+    if (mapped) { // Only push if mapper returned valid object
+        processedData.push(mapped);
+    }
+  }
+  
+  if (processedData.length === 0) {
+    throw new Error('No valid data found in the sheet');
+  }
+  
+  return processedData;
+}
+
+async function loadExcelFromURLInternal(url, sheetName, mapperFn, startRow = 3, endRow = 50) {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Download error (${response.status})`);
+    const arrayBuffer = await response.arrayBuffer();
+    const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+    
+    let targetSheet = sheetName;
+    if (!workbook.SheetNames.includes(sheetName)) {
+        targetSheet = workbook.SheetNames[0];
+    }
+
+    const sheet = workbook.Sheets[targetSheet];
+    const json = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+    
+    const processedData = [];
+    
+    // Ajustamos los valores por defecto si no se pasan en la llamada (V1)
+    const finalStartRow = startRow === 3 && arguments.length < 5 ? 3 : startRow;
+    const finalEndRow = endRow === 50 && arguments.length < 5 ? 100 : endRow; // Aumentado a 100 para V1 si no se pasa
+    
+    // AQUI se itera sobre el rango de filas
+    for (let i = finalStartRow; i < Math.min(finalEndRow, json.length); i++) {
+      const row = json[i];
+      if (!row || row.length < 3) continue;
+      
+      const mapped = mapperFn(row);
+      if (mapped) processedData.push(mapped);
+    }
+    
+    if (processedData.length === 0) throw new Error('No valid data found');
+    return processedData;
+  } catch (err) {
+    throw new Error(`Could not read file from URL: ${err.message}`);
+  }
+}
+
+function populateCountrySelector(targetState, selectId) {
+  const select = document.getElementById(selectId);
+  select.innerHTML = '<option value="">Select a Country</option>';
+  
+  targetState.data.forEach(d => {
+    const option = document.createElement('option');
+    option.value = d.country;
+    option.textContent = d.country;
+    select.appendChild(option);
+  });
+}
+
+function calculateCompliance(value, target) {
+  // CAMBIO: Si value es NaN, retorna NaN para detectar valores vacíos.
+  if (isNaN(value)) return NaN;
+  // Como en V2 ya viene el % cumplimiento como valor, y target es 100,
+  // (value / 100) * 100 = value. Funciona igual para ambos casos.
+  return target > 0 ? (value / target) * 100 : 0;
+}
+
+// NUEVA LOGICA DE COLORES VISTA 2
+function getComplianceColorV2(compliance) {
+  if (isNaN(compliance)) return CONFIG.COLORS.gray; // Gris para NaN
+  if (compliance >= 95) return CONFIG.SCALE_COLORS_V2.good;        // >= 95% (Verde)
+  if (compliance >= 90) return CONFIG.SCALE_COLORS_V2.warning;    // 90% - 94% (Amarillo)
+  return CONFIG.SCALE_COLORS_V2.bad;                              // < 90% (Rojo)
+}
+
+// VISTA 1 LOGICA ORIGINAL (AZUL SOLICITADO)
+function getComplianceColorV1() {
+    return CONFIG.COLOR_V1_FILL; // Azul siempre
+}
+
+const GAUGE_MODES = {
+  // Modos originales (V1)
+  percent: {
+    getProgress: (value) => Math.max(0, Math.min(100, value)),
+    formatValue: (value) => isNaN(value) ? 'NA' : `${value.toFixed(1)}%`,
+    formatTarget: (target) => isNaN(target) ? 'NA' : `${target.toFixed(1)}%`
+  },
+  unity: {
+    getProgress: (value, target) => target > 0 ? Math.min(100, (value/target)*100) : 0,
+    // CAMBIO AQUI: Agregado toLocaleString para miles
+    formatValue: (value) => isNaN(value) ? 'NA' : value.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 }),
+    formatTarget: (target) => isNaN(target) || target <= 0 ? 'NA' : target.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
+  },
+  millions: {
+    getProgress: (value, target) => target > 0 ? Math.min(100, (value/target)*100) : 0,
+    formatValue: (value) => isNaN(value) ? 'NA' : `${(value / 1_000_000).toFixed(1)} M`,
+    formatTarget: (target) => isNaN(target) || target <= 0 
+      ? 'NA' 
+      : `${(target / 1_000_000).toFixed(1)} M`
+  },
+  UnityNotDecimals: {
+    getProgress: (value, target) => target > 0 ? Math.min(100, (value/target)*100) : 0,
+    // CAMBIO AQUI: Agregado toLocaleString para miles sin decimales
+    formatValue: (value) => isNaN(value) ? 'NA' : Math.round(value).toLocaleString('en-US'),
+    formatTarget: (target) => isNaN(target) || target <= 0 ? 'NA' : Math.round(target).toLocaleString('en-US')
+  },
+  
+  // Modos V2 (1 decimal solicitado)
+  percent_1D: {
+    getProgress: (value) => Math.max(0, Math.min(100, value)),
+    formatValue: (value) => isNaN(value) ? 'NA' : `${value.toFixed(1)}%`, 
+    formatTarget: (target) => isNaN(target) ? 'NA' : `${target.toFixed(1)}%`
+  },
+  unity_1D: {
+    getProgress: (value, target) => target > 0 ? Math.min(100, (value/target)*100) : 0,
+    // CAMBIO AQUI: Agregado toLocaleString para miles
+    formatValue: (value) => isNaN(value) ? 'NA' : value.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 }), 
+    formatTarget: (target) => isNaN(target) || target <= 0 ? 'NA' : target.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
+  },
+  millions_1D: {
+    getProgress: (value, target) => target > 0 ? Math.min(100, (value/target)*100) : 0,
+    formatValue: (value) => isNaN(value) ? 'NA' : `${(value / 1_000_000).toFixed(1)} M`, 
+    formatTarget: (target) => isNaN(target) || target <= 0 
+      ? 'NA' 
+      : `${(target / 1_000_000).toFixed(1)} M` 
+  }
+};
+function drawGauge(options) {
+  const {
+    canvasId, label, value, target, cumplimiento, country,
+    existingChart, infoId, targetId, mode = 'percent',
+    specialColor = null, hideLabels = false, suffix = ''
+  } = options;
+  
+  const ctx = document.getElementById(canvasId).getContext('2d');
+  if (existingChart) existingChart.destroy();
+  
+  const modeConfig = GAUGE_MODES[mode];
+  // Calculo base para el progreso (que se usa para el llenado visual)
+  // CAMBIO: Si cumplimiento es NaN, el progreso visual es 0 (vacío)
+  let progress = isNaN(cumplimiento) ? 0 : Math.min(100, Math.max(0, cumplimiento));
+
+  const valueText = modeConfig.formatValue(value);
+  const targetText = modeConfig.formatTarget(target);
+  
+  // Lógica de Color por Vista
+  let gaugeColor;
+  
+  // CAMBIO: Si es NaN (vacío), usar Gris.
+  if (isNaN(cumplimiento)) {
+      gaugeColor = CONFIG.COLORS.gray;
+  } else if (suffix === '_V2') {
+      // Vista 2: Semáforo basado en cumplimiento
+      gaugeColor = getComplianceColorV2(cumplimiento);
+  } else {
+      // Vista 1: Azul
+      gaugeColor = getComplianceColorV1();
+  }
+  
+  // Override if special color forced (e.g. total chart in V1 if needed, though V1 blue requested for all graphs filling)
+  // Nota: Si es NaN, mantenemos gris aunque haya specialColor para que se note vacío.
+  if (!isNaN(cumplimiento) && specialColor && suffix !== '_V2') {
+      // Keep V1 blue unless strictly special
+      // But requirement says "Para unicamente la vista 1 los colores de todas las gráficas (el llenado) esté en AZUL"
+      gaugeColor = CONFIG.COLOR_V1_FILL;
+  }
+
+  const remaining = Math.max(0, 100 - progress);
+  
+  const chart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      datasets: [{
+        data: [progress, remaining],
+        backgroundColor: [gaugeColor, CONFIG.COLORS.gray],
+        borderWidth: 0,
+        circumference: 180,
+        rotation: 270
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: { enabled: true },
+        title: {
+          display: true,
+          text: `${label}`,
+          font: { size: 16, weight: 'bold' }
+        }
+      }
+    }
+  });
+  
+  updateGaugeInfo(infoId, targetId, valueText, targetText, cumplimiento, gaugeColor, hideLabels, suffix);
+  
+  return chart;
+}
+
+/**
+ * NUEVA FUNCIÓN: Dibuja el gráfico de aguja pequeño para NRC en el canvas provisto.
+ * Se simplifica para solo dibujar y no manipular el HTML padre.
+ */
+function drawMiniGauge(canvasId, cumplimiento, suffix) {
+    const canvasEl = document.getElementById(canvasId);
+    if (!canvasEl) {
+        console.error(`Canvas ID ${canvasId} not found for mini gauge.`);
+        return;
+    }
+    
+    // Destruir cualquier instancia anterior para evitar duplicados si la celda se reutiliza.
+    if (canvasEl.chart) {
+      canvasEl.chart.destroy();
+    }
+
+    const ctx = canvasEl.getContext('2d');
+    
+    // Lógica de Color por Vista
+    let gaugeColor;
+    
+    if (suffix === '_V2') {
+        // === AQUÍ PUEDES EDITAR EL COLOR SOLO PARA LA MINI GRÁFICA DE VISTA 2 ===
+        // Cambia el valor entre comillas por el color que quieras (ej: '#FF0000' para rojo).
+        gaugeColor = '#1976D2'; 
+    } else {
+        gaugeColor = CONFIG.COLOR_V1_FILL; // Azul fijo para V1
+    }
+
+    const progress = Math.min(100, Math.max(0, cumplimiento));
+    const remaining = Math.max(0, 100 - progress);
+
+    const data = {
+        datasets: [{
+            data: [progress, remaining],
+            backgroundColor: [gaugeColor, CONFIG.COLORS.gray],
+            borderWidth: 0,
+            circumference: 180,
+            rotation: 270
+        }]
+    };
+
+    const options = {
+        responsive: false, 
+        maintainAspectRatio: false,
+        cutout: '70%', 
+        plugins: {
+            legend: { display: false },
+            tooltip: { enabled: false }
+        },
+        layout: { padding: 0 }
+    };
+    
+    // Creamos y almacenamos la referencia para poder destruirla si es necesario.
+    canvasEl.chart = new Chart(ctx, { type: 'doughnut', data, options });
+}
+
+function updateGaugeInfo(infoId, targetId, valueText, targetText, cumplimiento, color, hideLabels, suffix) {
+  const infoEl = document.getElementById(infoId);
+  
+  // IDs donde debemos ocultar el VALOR numérico de compliance (X.X%), pero mantener el label "Compliance:"
+  // Dejaremos solo Total V1 y Total V2 en esta lista, según tu solicitud actual.
+  const hideValueOnly = [
+      'totalInfo_V2',  // <-- TOTAL VISTA 2 (Ocultar % de Compliance)
+      'totalInfo',      // <-- TOTAL VISTA 1 (Ocultar % de Compliance)
+      //ocultar el valor  de compliance para retail sales v2  
+      'retailInfo_V2'  // <-- RETAIL SALES VISTA 2 (Ocultar % de Compliance)
+  ];
+
+  // Si hideLabels es true (actualmente no usado)
+  if (hideLabels) {
+    infoEl.innerHTML = `<strong style="font-size: 22px; color:${color};">${valueText}</strong>`;
+    document.getElementById(targetId).textContent = '';
+    return;
+  }
+  
+  // Usamos toFixed(1) para el porcentaje de cumplimiento
+  const compText = isNaN(cumplimiento) ? 'NA' : `${cumplimiento.toFixed(1)}%`;
+  
+  if (hideValueOnly.includes(infoId)) {
+     // Si el ID es uno de los totales: 
+     // Renderizamos el valor principal y luego "Compliance:" con un span vacío.
+     infoEl.innerHTML = `
+        <strong style="font-size: 22px; color:${color};">${valueText}</strong><br>
+        <strong>Fullfilment:</strong> <span style="color:${color};"></span>
+      `; 
+  } else {
+     // Comportamiento normal (Muestra Compliance con el valor numérico)
+     infoEl.innerHTML = `
+        <strong style="font-size: 22px; color:${color};">${valueText}</strong><br>
+        <strong>Fullfilment:</strong> <span style="color:${color};">${compText}</span>
+      `;
+  }
+  
+  // Ocultar Target EXCLUSIVAMENTE para Retail Sales V2, Total Achievement V1 y Total Achievement V2
+  const targetLabelElement = document.getElementById(targetId);
+  const targetContainer = targetLabelElement ? targetLabelElement.parentElement : null;
+
+  // Condición para ocultar el Target (V2 Retail, V1 Total, V2 Total)
+  const shouldHideTarget = (targetId === 'retailTargetLabel_V2' || targetId === 'totalTargetLabel_V2' || targetId === 'totalTargetLabel');
+  
+  if (targetContainer) {
+    targetContainer.style.display = 'block'; 
+    
+    if (shouldHideTarget) {
+      // Target se oculta limpiando el HTML, pero manteniendo el contenedor
+      targetContainer.innerHTML = '&nbsp;';
+    } else {
+      // Target se muestra con su valor normal (Esto incluye Service Campaign)
+      targetContainer.innerHTML = `Target: <span id="${targetId}">${targetText}</span>`;
+    }
+  }
+}
+
+// CORREGIDA: Ahora inyecta el canvas y llama a drawMiniGauge con un pequeño delay
+function updateTable(targetId, statusId, targetValue, statusValue, suffix, nrcProgressValue) {
+  document.getElementById(targetId).textContent = targetValue || '';
+  document.getElementById(statusId).textContent = statusValue || '';
+  
+  // Lógica para la fila de mini-gráfica NRC
+  const extraTargetCellId = 'nrcExtraTargetCell' + suffix;
+  const extraStatusCellId = 'nrcExtraStatusCell' + suffix;
+  const miniGaugeCanvasId = 'nrcMiniGauge' + suffix;
+
+  // Actualizar la fila principal de la tabla NRC
+  // No cambiamos esto ya que es donde se muestran los datos del Excel
+  // document.getElementById('nrcExtraTargetCell' + suffix) ya tiene su texto.
+  
+  if (document.getElementById(extraTargetCellId)) {
+      // 1. Actualizar Target con el label
+      document.getElementById(extraTargetCellId).textContent = 'Progress execution'; 
+      
+      // 2. Configuramos valores para el mini-gráfico
+      const cumplimiento = nrcProgressValue !== undefined ? nrcProgressValue : 0;
+      // Usamos toFixed(1) para la mini gráfica
+      const compText = `${cumplimiento.toFixed(1)}%`;
+      
+      // 3. Insertamos la estructura HTML (Canvas + Texto) en la celda de Status
+      const statusCell = document.getElementById(extraStatusCellId);
+      
+      // Limpiamos y preparamos el HTML para la gráfica
+      statusCell.innerHTML = '';
+
+      // Inyectamos la estructura con el canvas y el texto
+      // Nota: El color del texto lo pondrá drawMiniGauge pero aquí necesitamos placeholder.
+      // Usamos un color por defecto que se sobreescribirá o se verá bien.
+      statusCell.innerHTML = `
+          <div class="mini-gauge-container">
+              <canvas id="${miniGaugeCanvasId}" width="35" height="35"></canvas>
+              <span class="mini-gauge-text" id="${miniGaugeCanvasId}_text">${compText}</span>
+          </div>
+      `;
+      
+      // 4. Dibujar el Mini Gauge en el Canvas recién creado (usamos setTimeout para asegurar renderizado)
+      setTimeout(() => {
+           drawMiniGauge(miniGaugeCanvasId, cumplimiento, suffix);
+           // Actualizar color del texto basado en la lógica de drawMiniGauge si es necesario
+           // (Esto ya se maneja visualmente con la gráfica, el texto puede ser negro o del color de la barra)
+           // Para consistencia con versiones anteriores, el texto toma el color de la barra.
+           const textEl = document.getElementById(miniGaugeCanvasId + '_text');
+           if(textEl) {
+               let color;
+               if (suffix === '_V2') color = '#1976D2'; // Color personalizado V2
+               else color = CONFIG.COLOR_V1_FILL;
+               textEl.style.color = color;
+           }
+      }, 0);
+  }
+}
+
+// Modified renderDashboard to accept suffix ('' or '_V2') and a state object
+function renderDashboard(data, targetState, suffix) {
+  let {
+    country, csi, csi_target, ssi, ssi_target, SC, SC_target, TREL, TREL_target,
+    nrcStatus, nrcTarget, nrcProgress, leadTarget, leadReal, shareTarget, shareReal,
+    gameplanTarget, gameplanReal, sellIn, sellInTarget, retention, retentionTarget,
+    retailSales, retailSalesTarget, totalArchievement,
+    realTRsales, realTRAftersales, TRsales, TRAftersales
+  } = data;
+  
+  // =========================================================================
+  // ** MODIFICACIÓN SOLICITADA: Sobrescribir TARGETS de Brand Power para VISTA 2 **
+  // =========================================================================
+  if (suffix === '_V2') {
+      leadTarget = 'Montly report';
+      shareTarget = 'Top 5 Competitors + Nissan';
+      gameplanTarget = 'Quarterly Template Format';
+      // En V2, el target NRC es 100%, pero lo mantenemos para ser consistente.
+      // nrcTarget = '100%';
+  }
+  // =========================================================================
+  
+  // =========================================================================
+  
+  // =========================================================================
+  // Nota: Todos los Targets/Valores V2 usan ahora el modo con 1 decimal (_1D), excepto RetailSales que no tiene target.
+  let mode_csi = suffix === '_V2' ? 'percent_1D' : 'percent';
+  let mode_ssi = suffix === '_V2' ? 'percent_1D' : 'percent';
+  let mode_sc = suffix === '_V2' ? 'percent_1D' : 'percent';
+  let mode_trel = suffix === '_V2' ? 'percent_1D' : 'percent';
+  let mode_sellIn = suffix === '_V2' ? 'millions_1D' : 'millions';
+  let mode_retention = suffix === '_V2' ? 'unity_1D' : 'unity';
+  let mode_retail = suffix === '_V2' ? 'percent_1D' : 'UnityNotDecimals'; 
+  //let mode_retail = 'UnityNotDecimals'; // Retail Sales siempre sin decimales en valor real
+  let mode_total = suffix === '_V2' ? 'percent_1D' : 'percent';
+
+
+  const mainTitle = document.getElementById('mainTitle' + suffix);
+  if (mainTitle) {
+    // USE CONFIGURED NAMES
+    const viewName = suffix === '' ? VIEW_CONFIG.NAME_V1 : VIEW_CONFIG.NAME_V2;
+    mainTitle.textContent = `Dashboard NIBU - ${country} (${viewName})`;
+  }
+  
+  const compliance = {
+    csi: calculateCompliance(csi, csi_target),
+    ssi: calculateCompliance(ssi, ssi_target),
+    sc: calculateCompliance(SC, SC_target),
+    trel: calculateCompliance(TREL, TREL_target),
+    sellIn: calculateCompliance(sellIn, sellInTarget),
+    retention: calculateCompliance(retention, retentionTarget),
+    retail: calculateCompliance(retailSales, retailSalesTarget)
+  };
+  
+  targetState.charts.csi = drawGauge({
+    canvasId: 'csiGauge' + suffix, label: 'CSI', value: csi, target: csi_target,
+    cumplimiento: compliance.csi, country, existingChart: targetState.charts.csi,
+    infoId: 'csiInfo' + suffix, targetId: 'csiTargetLabel' + suffix, mode: mode_csi, suffix
+  });
+  
+  targetState.charts.ssi = drawGauge({
+    canvasId: 'ssiGauge' + suffix, label: 'SSI', value: ssi, target: ssi_target,
+    cumplimiento: compliance.ssi, country, existingChart: targetState.charts.ssi,
+    infoId: 'ssiInfo' + suffix, targetId: 'ssiTargetLabel' + suffix, mode: mode_ssi, suffix
+  });
+  
+  targetState.charts.sc = drawGauge({
+    canvasId: 'scGauge' + suffix, label: 'Service Campaign', value: SC, target: SC_target,
+    cumplimiento: compliance.sc, country, existingChart: targetState.charts.sc,
+    infoId: 'scInfo' + suffix, targetId: 'scTargetLabel' + suffix, mode: mode_sc, suffix
+  });
+  
+  targetState.charts.trel = drawGauge({
+    canvasId: 'trelGauge' + suffix, label: 'Training',
+    value: TREL, target: TREL_target, cumplimiento: compliance.trel,
+    country, existingChart: targetState.charts.trel,
+    infoId: 'trelInfo' + suffix, targetId: 'trelTargetLabel' + suffix, mode: mode_trel, suffix
+  });
+  
+  // RENDERIZADO CONDICIONAL DE GRAFICA TRAINING
+  if (suffix !== '_V2') {
+      targetState.charts.trainingCombined = createCombinedTrainingChart(
+        realTRsales, TRsales,
+        realTRAftersales, TRAftersales,
+        'trainingCombinedBarChart' + suffix,
+        targetState.charts.trainingCombined
+      );
+  }
+  
+  targetState.charts.sellIn = drawGauge({
+    canvasId: 'sellInGauge' + suffix, label: 'Sell-In', value: sellIn, target: sellInTarget,
+    cumplimiento: compliance.sellIn, country, existingChart: targetState.charts.sellIn,
+    infoId: 'sellInInfo' + suffix, targetId: 'sellInTargetLabel' + suffix, 
+    mode: mode_sellIn, suffix
+  });
+  
+  targetState.charts.retention = drawGauge({
+    canvasId: 'retentionGauge' + suffix, label: 'Retention',
+    value: retention, target: retentionTarget,
+    cumplimiento: compliance.retention, country, existingChart: targetState.charts.retention,
+    infoId: 'retentionInfo' + suffix, targetId: 'retentionTargetLabel' + suffix, mode: mode_retention, suffix
+  });
+  
+  targetState.charts.retail = drawGauge({
+    canvasId: 'retailGauge' + suffix, label: 'Retail Sales',
+    value: retailSales, target: retailSalesTarget,
+    cumplimiento: compliance.retail, country, existingChart: targetState.charts.retail,
+    infoId: 'retailInfo' + suffix, targetId: 'retailTargetLabel' + suffix, 
+    // Retail Sales V2 solo muestra el valor real con 1 decimal, Target se oculta en updateGaugeInfo
+    mode: mode_retail, suffix
+  });
+  let totalValue = "";
+  targetState.charts.total = drawGauge({
+    canvasId: 'totalGauge' + suffix, label: 'Total in %',
+    value: totalArchievement,
+    cumplimiento: totalArchievement, country, existingChart: targetState.charts.total,
+    infoId: 'totalInfo' + suffix, targetId: 'totalTargetLabel' + suffix,
+    mode: mode_total, specialColor: null, suffix 
+  });
+  
+  // Las tablas se actualizan con los posibles overrides de V2
+  updateTable('nrcTargetCell' + suffix, 'nrcStatusCell' + suffix, nrcTarget, nrcStatus, suffix, nrcProgress);
+  
+  // Aplicar la barra de cuartos a Lead Management, Share of Investment y GamePlan 360
+  
+  // 1. Lead Management
+  document.getElementById('leadTargetCell' + suffix).textContent = leadTarget;
+  drawQuarterBar(leadReal, 'leadRealCell' + suffix, suffix);
+  
+  // 2. Share of Investment
+  document.getElementById('shareTargetCell' + suffix).textContent = shareTarget;
+  drawQuarterBar(shareReal, 'shareRealCell' + suffix, suffix);
+  
+  // 3. GamePlan 360
+  document.getElementById('gameplanTargetCell' + suffix).textContent = gameplanTarget;
+  drawQuarterBar(gameplanReal, 'gameplanRealCell' + suffix, suffix);
+}
+
+function toggleDashboardVisibility(show, suffix) {
+  const CHART_IDS = suffix === '_V2' ? CONFIG.CHART_IDS_V2 : CONFIG.CHART_IDS_V1;
+  
+  CHART_IDS.forEach(id => {
+    const element = document.getElementById(id);
+    if (element) {
+      if (show) {
+        element.classList.remove('hidden');
+      } else {
+        element.classList.add('hidden');
+      }
+    }
+  });
+  
+  // Manejo especial para las separaciones porque son clases, no IDs únicos en V1
+  // En V1 son .separacion (sin V2). En V2 tienen .separacion_V2
+  const selector = suffix === '_V2' ? '.separacion.separacion_V2' : '.separacion:not(.separacion_V2)';
+  document.querySelectorAll(selector).forEach(sec => {
+    if (show) {
+      sec.classList.remove('hidden');
+      sec.style.display = 'flex';
+    } else {
+      sec.classList.add('hidden');
+      sec.style.display = 'none';
+    }
+  });
+  
+  const instructionsBox = document.getElementById('instructionsBox' + suffix);
+  if (instructionsBox) {
+    if (show) {
+      instructionsBox.classList.add('hidden');
+    } else {
+      instructionsBox.classList.remove('hidden');
+    }
+  }
+}
+
+function updateStatus(message, type = '', suffix = '') {
+  const statusElement = document.getElementById('status' + suffix);
+  if(statusElement) {
+    statusElement.textContent = message;
+    statusElement.className = type;
+  }
+}
+
+// ----- HANDLERS VIEW 1 -----
+
+function handleFileSelectV1(e) {
+  stateV1.loadedFile = e.target.files[0];
+  const message = stateV1.loadedFile 
+    ? `File selected: ${stateV1.loadedFile.name}`
+    : 'No file selected';
+  updateStatus(message, '', '');
+}
+
+async function handleLoadExcelV1() {
+  const url = document.getElementById('excelURL').value.trim();
+ 
+  if (!stateV1.loadedFile && !url) {
+    updateStatus('⚠️ Select a file or paste a URL.', 'error', '');
+    return;
+  }
+ 
+  updateStatus('⏳ Loading data...', '', '');
+  const debugDiv = document.getElementById('debugInfo');
+  if (debugDiv) {
+    debugDiv.style.display = 'none';
+    debugDiv.innerHTML = '';
+  }
+ 
+  try {
+    // Lectura de Excel para V1
+    if (url) {
+      // Usamos startRow=3 y endRow=100 (índices 3 y 100)
+      stateV1.data = await loadExcelFromURLInternal(url, CONFIG.SHEET_NAME, mapRowToData, 3, 100);
+      updateStatus('✅ Excel loaded from URL successfully.', '', '');
+    } else {
+      // Usamos startRow=3 y endRow=100 (índices 3 y 100)
+      stateV1.data = await loadExcelDataInternal(stateV1.loadedFile, CONFIG.SHEET_NAME, mapRowToData, 3, 100);
+      updateStatus('✅ Excel loaded successfully.', '', '');
+    }
+
+    // =================================================================
+
+    const statusDiv1 = document.getElementById('status'); // Nota: El ID para V1 es 'status' (sin sufijo)
+    // Limpiamos cualquier título previo para no duplicarlo si recargas
+    const existingTitle = statusDiv1.querySelector('h2');
+    if (existingTitle) existingTitle.remove();
+
+    const extraTitle1 = document.createElement('h2');
+    extraTitle1.textContent = "Period: As Of August"; // <--- TU TITULO AQUI
+    extraTitle1.style.color = "#333"; 
+    extraTitle1.style.marginTop = "10px";
+    extraTitle1.style.fontSize = "16px"; // Ajuste de tamaño recomendado
+    statusDiv1.appendChild(extraTitle1);
+
+      // <!-- TITULO AQUI -->
+ 
+    if (!stateV1.data || stateV1.data.length === 0) {
+      throw new Error('No valid data found in Excel file');
+    }
+ 
+    populateCountrySelector(stateV1, 'countrySelect');
+  } catch (err) {
+    console.error('Error loading Excel V1:', err);
+    updateStatus(`❌ Error: ${err.message}`, 'error', '');
+  }
+}
+
+function handleCountryChangeV1(e) {
+  const country = e.target.value;
+  const screenshotBtn = document.getElementById('screenshotBtn');
+  
+  if (!country) {
+    toggleDashboardVisibility(false, '');
+    const mainTitle = document.getElementById('mainTitle');
+    if (mainTitle) {
+      // USE CONFIGURED NAME
+      mainTitle.textContent = `Indicators by Country (${VIEW_CONFIG.NAME_V1})`;
+    }
+    // Deshabilitar botón si no hay país
+    if(screenshotBtn) screenshotBtn.disabled = true;
+    return;
+  }
+  
+  const countryData = stateV1.data.find(d => d.country === country);
+  
+  if (!countryData) {
+    updateStatus('⚠️ Country not found in data.', 'error', '');
+    if(screenshotBtn) screenshotBtn.disabled = true;
+    return;
+  }
+  
+  toggleDashboardVisibility(true, '');
+  renderDashboard(countryData, stateV1, '');
+  restartFadeAnimations('');
+  
+  // Habilitar botón al seleccionar país
+  if(screenshotBtn) screenshotBtn.disabled = false;
+}
+
+// ----- HANDLERS VIEW 2 -----
+
+function handleFileSelectV2(e) {
+  stateV2.loadedFile = e.target.files[0];
+  const message = stateV2.loadedFile 
+    ? `File selected: ${stateV2.loadedFile.name}`
+    : 'No file selected';
+  updateStatus(message, '', '_V2');
+}
+
+async function handleLoadExcelV2() {
+  const url = document.getElementById('excelURL_V2').value.trim();
+ 
+  if (!stateV2.loadedFile && !url) {
+    updateStatus('⚠️ Select a file or paste a URL.', 'error', '_V2');
+    return;
+  }
+ 
+  updateStatus('⏳ Loading data...', '', '_V2');
+  const debugDiv = document.getElementById('debugInfo_V2');
+  if (debugDiv) {
+    debugDiv.style.display = 'none';
+    debugDiv.innerHTML = '';
+  }
+ 
+  try {
+    // Lectura de Excel para V2
+    if (url) {
+      stateV2.data = await loadExcelFromURLInternal(
+        url, 
+        CONFIG.SHEET_NAME_V2, 
+        mapRowToDataV2,
+        2,  // <--- CAMBIA ESTE NUMERO (Fila inicial, 0 es la fila 1 de Excel)
+        17 // <-- AUMENTADO A 100
+      );
+      updateStatus('✅ Report Year Today loaded successfully.', '', '_V2');
+    } else {
+      stateV2.data = await loadExcelDataInternal(
+        stateV2.loadedFile, 
+        CONFIG.SHEET_NAME_V2, 
+        mapRowToDataV2,
+        2,  // <--- CAMBIA ESTE NUMERO (Fila inicial, 0 es la fila 1 de Excel)
+        17 // <-- AUMENTADO A 100
+      );
+      updateStatus('✅ Report Year Today loaded successfully.', '', '_V2');
+    }
+    
+    // =================================================================
+    // <!-- TITULO AQUI -->
+    // Para añadir un título debajo de "Excel V2 loaded successfully":
+    //
+    const statusDiv = document.getElementById('status_V2');
+    const extraTitle = document.createElement('h2');
+    extraTitle.textContent = "Period: Abril - September"; // <--- TU TITULO AQUI
+    extraTitle.style.color = "#333"; 
+    extraTitle.style.marginTop = "10px";
+    extraTitle.style.fontSize = "16px"; // Ajuste de tamaño recomendado
+    statusDiv.appendChild(extraTitle);
+
+    
+    // =================================================================
+ 
+    if (!stateV2.data || stateV2.data.length === 0) {
+      throw new Error('No valid data found in Excel file');
+    }
+ 
+    populateCountrySelector(stateV2, 'countrySelect_V2');
+  } catch (err) {
+    console.error('Error loading Excel V2:', err);
+    updateStatus(`❌ Error: ${err.message}`, 'error', '_V2');
+  }
+}
+
+function handleCountryChangeV2(e) {
+  const country = e.target.value;
+  const screenshotBtn = document.getElementById('screenshotBtn');
+  
+  if (!country) {
+    toggleDashboardVisibility(false, '_V2');
+    const mainTitle = document.getElementById('mainTitle_V2');
+    if (mainTitle) {
+      // USE CONFIGURED NAME
+      mainTitle.textContent = `Indicators by Country (${VIEW_CONFIG.NAME_V2})`;
+    }
+    // Deshabilitar botón si no hay país
+    if(screenshotBtn) screenshotBtn.disabled = true;
+    return;
+  }
+  
+  const countryData = stateV2.data.find(d => d.country === country);
+  
+  if (!countryData) {
+    updateStatus('⚠️ Country not found in data.', 'error', '_V2');
+    if(screenshotBtn) screenshotBtn.disabled = true;
+    return;
+  }
+  
+  toggleDashboardVisibility(true, '_V2');
+  renderDashboard(countryData, stateV2, '_V2');
+  restartFadeAnimations('_V2');
+  
+  // Habilitar botón al seleccionar país
+  if(screenshotBtn) screenshotBtn.disabled = false;
+}
+
+function initEventListeners() {
+  // Vista 1 Listeners
+  document.getElementById('excelFile').addEventListener('change', handleFileSelectV1);
+  document.getElementById('loadExcel').addEventListener('click', handleLoadExcelV1);
+  document.getElementById('countrySelect').addEventListener('change', handleCountryChangeV1);
+
+  // Vista 2 Listeners
+  document.getElementById('excelFile_V2').addEventListener('change', handleFileSelectV2);
+  document.getElementById('loadExcel_V2').addEventListener('click', handleLoadExcelV2);
+  document.getElementById('countrySelect_V2').addEventListener('change', handleCountryChangeV2);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initEventListeners);
+} else {
+  initEventListeners();
+}
+  </script>
+</body>
+</html>
