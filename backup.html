@@ -1403,57 +1403,60 @@ body.screenshot-mode #screenshotToolbar {
         <h1 id="mainTitle">Indicators by Country (Reporte Full Year)</h1> <!-- CAMBIA NOMBRE AQUI -->
 
         <div class="controls">
-            <!-- INPUTS REMOVIDOS PARA CARGA AUTOMÁTICA -->
+            <input type="file" id="excelFile" accept=".xlsx,.xls" />
+            <input type="text" id="excelURL" placeholder="🔗 Paste Excel URL (optional)" style="width:260px;">
+            <button id="loadExcel">📂 Load Report: Full Year</button>
             <select id="countrySelect">
                 <option value="">Select a Country</option>
             </select>
         </div>
         <div id="status"></div>
 
-        <!-- MANUAL DE USUARIO RESTAURADO Y ACTUALIZADO -->
         <div id="instructionsBox" class="instructions-box">
-            <div class="instructions-header">
-                <svg class="instructions-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-                </svg>
-                <h2>Quick Start Guide (Report Full Year)</h2>
+        <div class="instructions-header">
+            <svg class="instructions-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+            </svg>
+            <h2>Quick Start Guide (Report Full Year)</h2> <!-- CAMBIA NOMBRE AQUI -->
+        </div>
+        
+        <div class="instructions-content">
+            <div class="instructions-grid">
+            <div class="instruction-step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                <h3>Select Data Source</h3>
+                <p>Select the excel file named: Annual_V1 </p>
+                </div>
             </div>
             
-            <div class="instructions-content">
-                <div class="instructions-grid">
-                <div class="instruction-step">
-                    <div class="step-number">1</div>
-                    <div class="step-content">
-                    <h3>Data Load (Auto)</h3>
-                    <p>File loaded automatically: <br><strong>AP_OCT_A.xlsx</strong></p>
-                    </div>
-                </div>
-                
-                <div class="instruction-step">
-                    <div class="step-number">2</div>
-                    <div class="step-content">
-                    <h3>Check Status</h3>
-                    <p>Ensure the status bar says <br>"✅ Data loaded successfully"</p>
-                    </div>
-                </div>
-                
-                <div class="instruction-step">
-                    <div class="step-number">3</div>
-                    <div class="step-content">
-                    <h3>Select Country</h3>
-                    <p>Choose a country from the dropdown to view specific metrics</p>
-                    </div>
-                </div>
-                
-                <div class="instruction-step">
-                    <div class="step-number">4</div>
-                    <div class="step-content">
-                    <h3>Analyze Results</h3>
-                    <p>Explore interactive charts and performance indicators</p>
-                    </div>
-                </div>
+            <div class="instruction-step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                <h3>Load Data</h3>
+                <p>Click "📂 Load Report: Full Year" to import and process your data</p>
                 </div>
             </div>
+            
+            <div class="instruction-step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                <h3>Select Country</h3>
+                <p>Choose a country from the dropdown to view specific metrics</p>
+                </div>
+            </div>
+            
+            <div class="instruction-step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                <h3>Analyze Results</h3>
+                <p>Explore interactive charts and performance indicators</p>
+                </div>
+            </div>
+            </div>
+            
+        
+        </div>
         </div>
 
         <div class="separacion hidden">
@@ -1606,20 +1609,21 @@ body.screenshot-mode #screenshotToolbar {
         <h1 id="mainTitle_V2">Indicators by Country (Report Year To Date)</h1> <!-- CAMBIA NOMBRE AQUI -->
 
         <div class="controls">
-            <!-- INPUTS REMOVIDOS PARA CARGA AUTOMÁTICA -->
+            <input type="file" id="excelFile_V2" accept=".xlsx,.xls" />
+            <input type="text" id="excelURL_V2" placeholder="🔗 Paste Excel URL (optional)" style="width:260px;">
+            <button id="loadExcel_V2">📂 Load Report: Year To Date</button>
             <select id="countrySelect_V2">
                 <option value="">Select a Country</option>
             </select>
         </div>
         <div id="status_V2"></div>
 
-        <!-- MANUAL DE USUARIO RESTAURADO Y ACTUALIZADO V2 -->
         <div id="instructionsBox_V2" class="instructions-box">
             <div class="instructions-header">
                 <svg class="instructions-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
                 </svg>
-                <h2>Quick Start Guide (Year To date)</h2>
+                <h2>Quick Start Guide (Year To date)</h2> <!-- CAMBIA NOMBRE AQUI -->
             </div>
             
             <div class="instructions-content">
@@ -1627,11 +1631,12 @@ body.screenshot-mode #screenshotToolbar {
                 <div class="instruction-step">
                     <div class="step-number">1</div>
                     <div class="step-content">
-                    <h3>Data Load (Auto)</h3>
-                    <p>File loaded automatically: <br><strong>Annual_V2.xlsx</strong></p>
+                    <h3>Select "Annual_V2"</h3>
+                    <p>Select the excel file named: Annual_V2</p>
                     </div>
                 </div>
-                <div class="instruction-step"><div class="step-number">2</div><div class="step-content"><h3>Check Status</h3><p>Verify "Report Year Today loaded"</p></div></div>
+                <!-- Same steps, just visual guide -->
+                <div class="instruction-step"><div class="step-number">2</div><div class="step-content"><h3>Load Data</h3><p>Click "Load Report: Year To date"</p></div></div>
                 <div class="instruction-step"><div class="step-number">3</div><div class="step-content"><h3>Select Country</h3><p>Select a country from the dropdown menu</p></div></div>
                 <div class="instruction-step"><div class="step-number">4</div><div class="step-content"><h3>Analyze</h3><p>View Year To date KPI´s</p></div></div>
                 </div>
@@ -1784,12 +1789,6 @@ body.screenshot-mode #screenshotToolbar {
   </div>
 
   <script>
-// ====================== ARCHIVOS DE CARGA AUTOMÁTICA ======================
-const FILE_PATHS = {
-    V1: 'AP_OCT_A.xlsx',
-    V2: 'Annual_V2.xlsx'
-};
-
 // ====================== CONTROL DE SEMÁFORO GLOBAL ======================
 let isTrafficLightOn = false; // Por defecto apagado (Azul)
 
@@ -2888,69 +2887,68 @@ function updateStatus(message, type = '', suffix = '') {
   }
 }
 
-// ----- NUEVA FUNCIÓN DE CARGA AUTOMÁTICA -----
+// ----- HANDLERS VIEW 1 -----
 
-async function autoLoadData() {
-    // 1. Cargar datos de Vista 1
-    await loadView1();
-    // 2. Cargar datos de Vista 2
-    await loadView2();
+function handleFileSelectV1(e) {
+  stateV1.loadedFile = e.target.files[0];
+  const message = stateV1.loadedFile 
+    ? `File selected: ${stateV1.loadedFile.name}`
+    : 'No file selected';
+  updateStatus(message, '', '');
 }
 
-async function loadView1() {
-    updateStatus('⏳ Auto-loading data...', '', '');
-    
-    try {
-        // Carga automática del archivo AP_OCT_A.xlsx
-        stateV1.data = await loadExcelFromURLInternal(FILE_PATHS.V1, CONFIG.SHEET_NAME, mapRowToData, 3, 100);
-        updateStatus('✅ Data loaded successfully.', '', '');
-        
-        populateCountrySelector(stateV1, 'countrySelect');
-        
-        // Agregar Título de Periodo V1
-        const statusDiv1 = document.getElementById('status');
-        const existingTitle = statusDiv1.querySelector('h2');
-        if (existingTitle) existingTitle.remove();
-        
-        const extraTitle1 = document.createElement('h2');
-        extraTitle1.textContent = "Period: As Of October"; 
-        extraTitle1.style.color = "#333"; 
-        extraTitle1.style.marginTop = "10px";
-        extraTitle1.style.fontSize = "16px"; 
-        statusDiv1.appendChild(extraTitle1);
-
-    } catch (err) {
-        console.error('Error loading V1:', err);
-        updateStatus(`❌ Load Error (${FILE_PATHS.V1}): ${err.message}`, 'error', '');
+async function handleLoadExcelV1() {
+  const url = document.getElementById('excelURL').value.trim();
+ 
+  if (!stateV1.loadedFile && !url) {
+    updateStatus('⚠️ Select a file or paste a URL.', 'error', '');
+    return;
+  }
+ 
+  updateStatus('⏳ Loading data...', '', '');
+  const debugDiv = document.getElementById('debugInfo');
+  if (debugDiv) {
+    debugDiv.style.display = 'none';
+    debugDiv.innerHTML = '';
+  }
+ 
+  try {
+    // Lectura de Excel para V1
+    if (url) {
+      // Usamos startRow=3 y endRow=100 (índices 3 y 100)
+      stateV1.data = await loadExcelFromURLInternal(url, CONFIG.SHEET_NAME, mapRowToData, 3, 100);
+      updateStatus('✅ Excel loaded from URL successfully.', '', '');
+    } else {
+      // Usamos startRow=3 y endRow=100 (índices 3 y 100)
+      stateV1.data = await loadExcelDataInternal(stateV1.loadedFile, CONFIG.SHEET_NAME, mapRowToData, 3, 100);
+      updateStatus('✅ Excel loaded successfully.', '', '');
     }
-}
 
-async function loadView2() {
-    updateStatus('⏳ Auto-loading data...', '', '_V2');
-    
-    try {
-        // Carga automática del archivo Annual_V2.xlsx
-        stateV2.data = await loadExcelFromURLInternal(FILE_PATHS.V2, CONFIG.SHEET_NAME_V2, mapRowToDataV2, 2, 17);
-        updateStatus('✅ Report Year Today loaded successfully.', '', '_V2');
-        
-        populateCountrySelector(stateV2, 'countrySelect_V2');
-        
-        // Agregar Título de Periodo V2
-        const statusDiv = document.getElementById('status_V2');
-        const existingTitle = statusDiv.querySelector('h2');
-        if (existingTitle) existingTitle.remove();
+    // =================================================================
 
-        const extraTitle = document.createElement('h2');
-        extraTitle.textContent = "Period: Abril - September"; 
-        extraTitle.style.color = "#333"; 
-        extraTitle.style.marginTop = "10px";
-        extraTitle.style.fontSize = "16px"; 
-        statusDiv.appendChild(extraTitle);
+    const statusDiv1 = document.getElementById('status'); // Nota: El ID para V1 es 'status' (sin sufijo)
+    // Limpiamos cualquier título previo para no duplicarlo si recargas
+    const existingTitle = statusDiv1.querySelector('h2');
+    if (existingTitle) existingTitle.remove();
 
-    } catch (err) {
-        console.error('Error loading V2:', err);
-        updateStatus(`❌ Load Error (${FILE_PATHS.V2}): ${err.message}`, 'error', '_V2');
+    const extraTitle1 = document.createElement('h2');
+    extraTitle1.textContent = "Period: As Of October"; // <--- TU TITULO AQUI
+    extraTitle1.style.color = "#333"; 
+    extraTitle1.style.marginTop = "10px";
+    extraTitle1.style.fontSize = "16px"; // Ajuste de tamaño recomendado
+    statusDiv1.appendChild(extraTitle1);
+
+      // <!-- TITULO AQUI -->
+ 
+    if (!stateV1.data || stateV1.data.length === 0) {
+      throw new Error('No valid data found in Excel file');
     }
+ 
+    populateCountrySelector(stateV1, 'countrySelect');
+  } catch (err) {
+    console.error('Error loading Excel V1:', err);
+    updateStatus(`❌ Error: ${err.message}`, 'error', '');
+  }
 }
 
 function handleCountryChangeV1(e) {
@@ -2983,6 +2981,79 @@ function handleCountryChangeV1(e) {
   
   // Habilitar botón al seleccionar país
   if(screenshotBtn) screenshotBtn.disabled = false;
+}
+
+// ----- HANDLERS VIEW 2 -----
+
+function handleFileSelectV2(e) {
+  stateV2.loadedFile = e.target.files[0];
+  const message = stateV2.loadedFile 
+    ? `File selected: ${stateV2.loadedFile.name}`
+    : 'No file selected';
+  updateStatus(message, '', '_V2');
+}
+
+async function handleLoadExcelV2() {
+  const url = document.getElementById('excelURL_V2').value.trim();
+ 
+  if (!stateV2.loadedFile && !url) {
+    updateStatus('⚠️ Select a file or paste a URL.', 'error', '_V2');
+    return;
+  }
+ 
+  updateStatus('⏳ Loading data...', '', '_V2');
+  const debugDiv = document.getElementById('debugInfo_V2');
+  if (debugDiv) {
+    debugDiv.style.display = 'none';
+    debugDiv.innerHTML = '';
+  }
+ 
+  try {
+    // Lectura de Excel para V2
+    if (url) {
+      stateV2.data = await loadExcelFromURLInternal(
+        url, 
+        CONFIG.SHEET_NAME_V2, 
+        mapRowToDataV2,
+        2,  // <--- CAMBIA ESTE NUMERO (Fila inicial, 0 es la fila 1 de Excel)
+        17 // <-- AUMENTADO A 100
+      );
+      updateStatus('✅ Report Year Today loaded successfully.', '', '_V2');
+    } else {
+      stateV2.data = await loadExcelDataInternal(
+        stateV2.loadedFile, 
+        CONFIG.SHEET_NAME_V2, 
+        mapRowToDataV2,
+        2,  // <--- CAMBIA ESTE NUMERO (Fila inicial, 0 es la fila 1 de Excel)
+        17 // <-- AUMENTADO A 100
+      );
+      updateStatus('✅ Report Year Today loaded successfully.', '', '_V2');
+    }
+    
+    // =================================================================
+    // <!-- TITULO AQUI -->
+    // Para añadir un título debajo de "Excel V2 loaded successfully":
+    //
+    const statusDiv = document.getElementById('status_V2');
+    const extraTitle = document.createElement('h2');
+    extraTitle.textContent = "Period: Abril - September"; // <--- TU TITULO AQUI
+    extraTitle.style.color = "#333"; 
+    extraTitle.style.marginTop = "10px";
+    extraTitle.style.fontSize = "16px"; // Ajuste de tamaño recomendado
+    statusDiv.appendChild(extraTitle);
+
+    
+    // =================================================================
+ 
+    if (!stateV2.data || stateV2.data.length === 0) {
+      throw new Error('No valid data found in Excel file');
+    }
+ 
+    populateCountrySelector(stateV2, 'countrySelect_V2');
+  } catch (err) {
+    console.error('Error loading Excel V2:', err);
+    updateStatus(`❌ Error: ${err.message}`, 'error', '_V2');
+  }
 }
 
 function handleCountryChangeV2(e) {
@@ -3018,20 +3089,21 @@ function handleCountryChangeV2(e) {
 }
 
 function initEventListeners() {
-  // Solo Listeners de Cambio de País (Inputs de archivo removidos)
+  // Vista 1 Listeners
+  document.getElementById('excelFile').addEventListener('change', handleFileSelectV1);
+  document.getElementById('loadExcel').addEventListener('click', handleLoadExcelV1);
   document.getElementById('countrySelect').addEventListener('change', handleCountryChangeV1);
+
+  // Vista 2 Listeners
+  document.getElementById('excelFile_V2').addEventListener('change', handleFileSelectV2);
+  document.getElementById('loadExcel_V2').addEventListener('click', handleLoadExcelV2);
   document.getElementById('countrySelect_V2').addEventListener('change', handleCountryChangeV2);
 }
 
-// Inicialización
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
-      initEventListeners();
-      autoLoadData(); // Iniciar carga automática
-  });
+  document.addEventListener('DOMContentLoaded', initEventListeners);
 } else {
   initEventListeners();
-  autoLoadData();
 }
   </script>
 </body>
