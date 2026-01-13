@@ -1015,33 +1015,46 @@ body.screenshot-mode #chartsRow1,
 body.screenshot-mode #chartsRow1_V2 {
     display: grid !important;
     grid-template-columns: repeat(3, 1fr) !important;
-    gap: 20px !important;
+    gap: 16px !important;
     width: 100% !important;
     overflow: visible !important;
     padding: 0 !important;
-    margin-bottom: 30px !important;
+    margin-bottom: 20px !important;
 }
 
 /* Height specific for Row 1 cards to look uniform */
 body.screenshot-mode #chartsRow1 .card,
-body.screenshot-mode #chartsRow1_V2 .card,
-body.screenshot-mode #trainingCombinedBarChartCard {
-    height: 320px !important; /* Altura uniforme fila 1 */
-    min-height: 320px !important;
+body.screenshot-mode #chartsRow1_V2 .card {
+    height: auto !important;
+    min-height: 280px !important;
+    max-height: 300px !important;
     display: flex !important;
     flex-direction: column !important;
-    justify-content: space-between !important;
-    padding: 12px !important; /* Padding reducido */
+    justify-content: center !important;
+    align-items: center !important;
+    padding: 14px 16px !important;
+    gap: 8px !important;
+}
+
+/* Training Chart Card - altura específica */
+body.screenshot-mode #trainingCombinedBarChartCard {
+    height: auto !important;
+    min-height: 280px !important;
+    max-height: 300px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    padding: 14px 16px !important;
 }
 
 /* 4. ROW 2: BRAND POWER (Tables) - 3 Columns */
 body.screenshot-mode .tables-container {
     display: grid !important;
     grid-template-columns: repeat(3, 1fr) !important;
-    gap: 20px !important;
+    gap: 16px !important;
     width: 100% !important;
     overflow: visible !important;
-    margin-bottom: 30px !important;
+    margin-bottom: 20px !important;
     padding: 0 !important;
 }
 
@@ -1051,7 +1064,7 @@ body.screenshot-mode .graficas-scroll {
     display: grid !important;
     /* 3fr for Sustainable (3 cards), 1fr for Total (1 card) = Equal card widths */
     grid-template-columns: 3fr 1fr !important;
-    gap: 20px !important;
+    gap: 16px !important;
     width: 100% !important;
     align-items: start !important;
 }
@@ -1065,7 +1078,7 @@ body.screenshot-mode .subgrupo {
 body.screenshot-mode .subgrupo:first-child .graficas-linea {
     display: grid !important;
     grid-template-columns: repeat(3, 1fr) !important;
-    gap: 20px !important;
+    gap: 16px !important;
     width: 100% !important;
 }
 
@@ -1084,13 +1097,15 @@ body.screenshot-mode #sellInChartCard_V2,
 body.screenshot-mode #retentionChartCard_V2,
 body.screenshot-mode #retailChartCard_V2,
 body.screenshot-mode #totalChartCard_V2 {
-    height: 300px !important; /* Altura fija idéntica */
-    min-height: 300px !important;
+    height: auto !important;
+    min-height: 280px !important;
     max-height: 300px !important;
     display: flex !important;
     flex-direction: column !important;
-    justify-content: space-between !important;
-    padding: 12px !important; /* Padding reducido */
+    justify-content: center !important;
+    align-items: center !important;
+    padding: 14px 16px !important;
+    gap: 8px !important;
 }
 
 /* Style specific for Total Card */
@@ -1104,18 +1119,18 @@ body.screenshot-mode #totalChartCard_V2 {
 body.screenshot-mode .card > canvas,
 body.screenshot-mode #totalChartCard canvas,
 body.screenshot-mode #totalChartCard_V2 canvas {
-    max-height: 130px !important; /* Reducido de 150px para dar espacio */
-    height: 130px !important;
+    max-height: 140px !important;
+    height: 140px !important;
     width: 100% !important;
-    max-width: 180px !important; /* Reducido ligeramente */
-    margin: 5px auto !important; /* Margen reducido */
+    max-width: 180px !important;
+    margin: 6px auto !important;
     display: block !important;
 }
 
 /* Training Chart Specifics */
 body.screenshot-mode #trainingCombinedBarChartCard canvas {
-    max-height: 240px !important;
-    height: 240px !important;
+    max-height: 220px !important;
+    height: 220px !important;
     width: 100% !important;
     max-width: 100% !important;
     object-fit: contain !important;
@@ -1125,10 +1140,15 @@ body.screenshot-mode #trainingCombinedBarChartCard canvas {
 body.screenshot-mode .titulo-grupo {
     background: linear-gradient(135deg, #f8f8f8 0%, #f0f0f0 100%) !important;
     border-left: 4px solid var(--primary) !important;
-    border-radius: 8px !important;
+    border-radius: 6px !important;
     box-shadow: 0 1px 4px rgba(0,0,0,0.06) !important;
-    margin-bottom: 16px !important;
-    padding: 12px 20px !important;
+    margin-bottom: 12px !important;
+    padding: 8px 16px !important;
+}
+
+body.screenshot-mode .titulo-grupo h1 {
+    font-size: 16px !important;
+    margin: 0 !important;
 }
 
 /* Remove decorative elements */
@@ -1141,15 +1161,15 @@ body.screenshot-mode #totalChartCard_V2::after {
 
 /* Font sizes and margins reduced for screenshot mode */
 body.screenshot-mode .card p {
-    font-size: 11px !important; /* Reducido de 13px */
-    margin: 2px 0 !important; /* Reducido de 4px */
+    font-size: 12px !important;
+    margin: 2px 0 !important;
     text-align: center !important;
     line-height: 1.2 !important;
 }
 body.screenshot-mode .card p strong {
-    font-size: 16px !important; /* Reducido de 18px */
+    font-size: 18px !important;
     display: block !important;
-    margin-bottom: 1px !important;
+    margin-bottom: 2px !important;
 }
 
 /* Tablas con altura uniforme */
@@ -1158,13 +1178,13 @@ body.screenshot-mode .table-container table {
 }
 
 body.screenshot-mode .table-container th {
-    font-size: 12px !important; /* Reducido ligeramente */
-    padding: 10px 6px !important; /* Padding reducido */
+    font-size: 13px !important;
+    padding: 10px 6px !important;
 }
 
 body.screenshot-mode .table-container td {
-    font-size: 11px !important; /* Reducido ligeramente */
-    padding: 8px 6px !important; /* Padding reducido */
+    font-size: 12px !important;
+    padding: 8px 6px !important;
 }
 
 /* Mini gauge en tabla NRC */
@@ -1175,9 +1195,9 @@ body.screenshot-mode .mini-gauge-container canvas {
 
 /* Barra de progreso GamePlan uniforme */
 body.screenshot-mode .quarter-bar-container {
-    height: 18px !important;
+    height: 16px !important;
     width: 85% !important;
-    margin: 6px auto !important;
+    margin: 5px auto !important;
 }
 
 /* ==========================================================================
@@ -1188,7 +1208,7 @@ body.screenshot-mode .wrapper {
     width: 1200px !important;
     max-width: 1200px !important; 
     margin: 0 auto !important;
-    padding: 30px 40px !important;
+    padding: 20px 30px !important;
     background: white;
     box-sizing: border-box;
     overflow: visible !important;
@@ -1196,11 +1216,11 @@ body.screenshot-mode .wrapper {
 
 /* Títulos uniformes y profesionales */
 body.screenshot-mode h1 {
-    font-size: 22px !important;
-    margin: 0 0 24px 0 !important;
+    font-size: 20px !important;
+    margin: 0 0 16px 0 !important;
     text-align: left !important;
-    border-bottom: 3px solid var(--primary);
-    padding-bottom: 12px;
+    border-bottom: 2px solid var(--primary);
+    padding-bottom: 10px;
     font-weight: 600 !important;
     color: #1a1a1a !important;
 }
@@ -1211,31 +1231,31 @@ body.screenshot-mode h1 {
 body.screenshot-mode #chartsRow1 {
     display: grid !important;
     grid-template-columns: repeat(3, 1fr) !important;
-    gap: 20px !important;
+    gap: 16px !important;
     width: 100% !important;
     overflow: visible !important;
     padding: 0 !important;
-    margin-bottom: 30px !important;
+    margin-bottom: 20px !important;
 }
 
 body.screenshot-mode #chartsRow1_V2 {
     display: grid !important;
     grid-template-columns: repeat(3, 1fr) !important;
-    gap: 20px !important;
+    gap: 16px !important;
     width: 100% !important;
     overflow: visible !important;
     padding: 0 !important;
-    margin-bottom: 30px !important;
+    margin-bottom: 20px !important;
 }
 
 /* Fila 2: Brand Power (3 Columnas) */
 body.screenshot-mode .tables-container {
     display: grid !important;
     grid-template-columns: repeat(3, 1fr) !important;
-    gap: 20px !important;
+    gap: 16px !important;
     width: 100% !important;
     overflow: visible !important;
-    margin-bottom: 30px !important;
+    margin-bottom: 20px !important;
 }
 
 /* Fila 3: Sustainable + Total (Layout Complejo) */
@@ -1249,7 +1269,7 @@ body.screenshot-mode .section-block {
 body.screenshot-mode .graficas-scroll {
     display: grid !important;
     grid-template-columns: 3fr 1fr !important;
-    gap: 20px !important;
+    gap: 16px !important;
     align-items: start !important;
     overflow: visible !important;
 }
@@ -1261,7 +1281,7 @@ body.screenshot-mode .subgrupo:first-child {
 body.screenshot-mode .subgrupo:first-child .graficas-linea {
     display: grid !important;
     grid-template-columns: repeat(3, 1fr) !important;
-    gap: 20px !important;
+    gap: 16px !important;
 }
 
 body.screenshot-mode .subgrupo:last-child { 
@@ -1297,14 +1317,14 @@ body.screenshot-mode #totalChartCard_V2::after {
 body.screenshot-mode .titulo-grupo {
     background: linear-gradient(135deg, #f8f8f8 0%, #f0f0f0 100%) !important;
     border-left: 4px solid var(--primary) !important;
-    border-radius: 8px !important;
+    border-radius: 6px !important;
     box-shadow: 0 1px 4px rgba(0,0,0,0.06) !important;
-    margin-bottom: 16px !important;
-    padding: 12px 20px !important;
+    margin-bottom: 12px !important;
+    padding: 8px 16px !important;
 }
 
 body.screenshot-mode .titulo-grupo h1 {
-    font-size: 18px !important;
+    font-size: 16px !important;
     border: none !important;
     margin: 0 !important;
     padding: 0 !important;
@@ -2114,7 +2134,7 @@ function mapRowToDataV2(row) {
 
     //nrcStatus: (parseFloat(row[4]) * 100).toFixed(0) + '%',
     nrcStatus : 'Signed',
-    nrcTarget: 'NRC PLAN',
+    nrcTarget: 'NRC Plan',
     nrcProgress: (parseFloat(row[23]) || 0) * 100, // <--- CAMBIA EL INDICE [4] POR LA COLUMNA DE PROGRESO NRC EN EXCEL V2
 
     
@@ -2203,6 +2223,10 @@ function createCombinedTrainingChart(realSales, targetSales, realAftersales, tar
   const ctx = document.getElementById(canvasId).getContext('2d');
   if (existingChart) existingChart.destroy();
 
+  // Detectar si estamos en modo screenshot para ajustar barras
+  const isScreenshotMode = document.body.classList.contains('screenshot-mode');
+  const barSize = isScreenshotMode ? 28 : 50;
+
   return new Chart(ctx, {
     type: 'bar',
     data: {
@@ -2213,8 +2237,8 @@ function createCombinedTrainingChart(realSales, targetSales, realAftersales, tar
           data: [realSales, realAftersales],
           backgroundColor: ['#b0b0b0', '#a8a8a8'],
           borderWidth: 0,
-          barThickness: 60,
-          borderRadius: 4
+          barThickness: barSize,
+          borderRadius: 3
         },
         {
           label: 'Target (%)',
@@ -2223,7 +2247,7 @@ function createCombinedTrainingChart(realSales, targetSales, realAftersales, tar
           borderColor: '#c62828',
           borderWidth: 2,
           tension: 0.3,
-          pointRadius: 4,
+          pointRadius: 3,
           pointBackgroundColor: '#c62828'
         }
       ]
@@ -2232,42 +2256,69 @@ function createCombinedTrainingChart(realSales, targetSales, realAftersales, tar
       responsive: true,
       maintainAspectRatio: false,
       indexAxis: 'y',
+      layout: {
+        padding: {
+          right: isScreenshotMode ? 80 : 20
+        }
+      },
       plugins: {
-        legend: { display: true, position: 'bottom' },
-        title: { display: true, text: 'Training e-Learning Completion', font: { size: 14, weight: 'bold' } }
+        legend: { display: !isScreenshotMode, position: 'bottom' },
+        title: { display: true, text: 'Training e-Learning Completion', font: { size: isScreenshotMode ? 12 : 14, weight: 'bold' } }
       },
       scales: {
         x: {
           beginAtZero: true,
           max: 110,
-          ticks: { callback: (v) => `${v}%` },
+          ticks: { 
+            callback: (v) => `${v}%`,
+            font: { size: isScreenshotMode ? 9 : 11 }
+          },
           grid: { color: '#e0e0e0' }
         },
-        y: { grid: { display: false } }
+        y: { 
+          grid: { display: false },
+          ticks: {
+            font: { size: isScreenshotMode ? 10 : 12 }
+          }
+        }
       }
     },
     plugins: [{
       id: 'trainingLabels',
       afterDatasetsDraw(chart, args, options) {
-        if (!document.body.classList.contains('screenshot-mode')) return; // Only in screenshot mode
+        if (!document.body.classList.contains('screenshot-mode')) return;
 
         const { ctx, data } = chart;
-        const datasetIndex = 0; // The bar dataset
-        const meta = chart.getDatasetMeta(datasetIndex);
-        const dataset = data.datasets[datasetIndex];
+        
+        const barDatasetIndex = 0;
+        const barMeta = chart.getDatasetMeta(barDatasetIndex);
+        const barDataset = data.datasets[barDatasetIndex];
+        const targetDataset = data.datasets[1];
 
         ctx.save();
-        ctx.font = 'bold 12px "Segoe UI", sans-serif';
-        ctx.fillStyle = '#333'; 
-        ctx.textAlign = 'left'; 
-        ctx.textBaseline = 'middle';
-
-        meta.data.forEach((bar, index) => {
-          const value = dataset.data[index];
-          const text = value.toFixed(1) + '%';
-          // Draw text slightly to the right of the bar end
-          ctx.fillText(text, bar.x + 5, bar.y); 
+        
+        barMeta.data.forEach((bar, index) => {
+          const realValue = barDataset.data[index];
+          const targetValue = targetDataset.data[index];
+          
+          const barStartX = bar.base;
+          const barEndX = bar.x;
+          const barCenterY = bar.y;
+          const centerX = barStartX + (barEndX - barStartX) / 2;
+          
+          // Valor real - dentro de la barra, arriba
+          ctx.font = 'bold 11px "Segoe UI", sans-serif';
+          ctx.fillStyle = '#ffffff';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(realValue.toFixed(1) + '%', centerX, barCenterY - 7);
+          
+          // Target - dentro de la barra, abajo
+          ctx.font = 'bold 10px "Segoe UI", sans-serif';
+          ctx.fillStyle = '#c62828';
+          ctx.fillText('Target(' + targetValue.toFixed(1) + '%)', centerX, barCenterY + 8);
         });
+        
         ctx.restore();
       }
     }]
