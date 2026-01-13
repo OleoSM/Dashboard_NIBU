@@ -1651,7 +1651,7 @@ body.screenshot-mode #screenshotToolbar {
                     <p>File loaded automatically: <br><strong>Annual_V2.xlsx</strong></p>
                     </div>
                 </div>
-                <div class="instruction-step"><div class="step-number">2</div><div class="step-content"><h3>Check Status</h3><p>Verify "Report Year Today loaded"</p></div></div>
+                <div class="instruction-step"><div class="step-number">2</div><div class="step-content"><h3>Check Status</h3><p>Verify "Year To Date Report loaded"</p></div></div>
                 <div class="instruction-step"><div class="step-number">3</div><div class="step-content"><h3>Select Country</h3><p>Select a country from the dropdown menu</p></div></div>
                 <div class="instruction-step"><div class="step-number">4</div><div class="step-content"><h3>Analyze</h3><p>View Year To date KPI´s</p></div></div>
                 </div>
@@ -2088,7 +2088,7 @@ function mapRowToData(row) {
     retentionTarget: parseFloat(row[35]),
     retailSales: parseFloat(row[40]),
     retailSalesTarget: parseFloat(row[39]),
-    totalArchievement: parseFloat(row[55]) * 100,
+    totalAchievement: parseFloat(row[55]) * 100,
     realTRsales: (parseFloat(row[48]) || 0) * 100,
     realTRAftersales: (parseFloat(row[52]) || 0) * 100,
     TRsales: (parseFloat(row[47]) || 0) * 100,
@@ -2197,7 +2197,7 @@ function mapRowToDataV2(row) {
 
     
 
-    totalArchievement: parseFloat(row[13]) * 100,
+    totalAchievement: parseFloat(row[13]) * 100,
 
     
     // Datos faltantes descartados (en 0)
@@ -2639,7 +2639,7 @@ function updateGaugeInfo(infoId, targetId, valueText, targetText, cumplimiento, 
   const compText = isNaN(cumplimiento) ? 'NA' : `${cumplimiento.toFixed(1)}%`;
   
   // LOGICA DE INTERCAMBIO DE ETIQUETAS
-  // "Para Total en ambas vistas y para Retail Sales en Vista 2: Fullfilment en lugar de Valor, y Valor en lugar de Fullfilment"
+  // "Para Total en ambas vistas y para Retail Sales en Vista 2: Fulfillment en lugar de Valor, y Valor en lugar de Fulfillment"
   // IDs afectados:
   const swappedIds = [
       'totalInfo',      // Total Vista 1
@@ -2660,14 +2660,14 @@ function updateGaugeInfo(infoId, targetId, valueText, targetText, cumplimiento, 
   
   if (swappedIds.includes(infoId)) {
       // MODO INVERTIDO SOLICITADO
-      // - "Fullfilment" (como palabra) reemplaza al valor numérico (grande).
-      // - El Valor numérico reemplaza a Fullfilment (pequeño).
-      // - Se quitan las etiquetas de texto "Value:" y "Fullfilment:".
-      // - Se elimina el valor porcentual del texto de "Fullfilment" porque ya existe visualmente.
+      // - "Fulfillment" (como palabra) reemplaza al valor numérico (grande).
+      // - El Valor numérico reemplaza a Fulfillment (pequeño).
+      // - Se quitan las etiquetas de texto "Value:" y "Fulfillment:".
+      // - Se elimina el valor porcentual del texto de "Fulfillment" porque ya existe visualmente.
       
       infoEl.innerHTML = `
         <div style="margin-bottom:2px;">
-            <strong style="font-size: 22px; color:${color};">Fullfilment</strong>
+            <strong style="font-size: 22px; color:${color};">Fulfillment</strong>
         </div>
         <div style="font-size: 13px; color: #555;">
             ${valueText}
@@ -2676,10 +2676,10 @@ function updateGaugeInfo(infoId, targetId, valueText, targetText, cumplimiento, 
   } else {
       // MODO ESTANDAR (Resto de gráficas y Retail V1)
       // Valor Absoluto Grande Arriba
-      // Fullfilment Pequeño Abajo
+      // Fulfillment Pequeño Abajo
       infoEl.innerHTML = `
         <strong style="font-size: 22px; color:${color};">${valueText}</strong><br>
-        <strong>Fullfilment:</strong> <span style="color:${color};">${compText}</span>
+        <strong>Fulfillment:</strong> <span style="color:${color};">${compText}</span>
       `;
   }
   
@@ -2762,7 +2762,7 @@ function renderDashboard(data, targetState, suffix) {
     country, csi, csi_target, ssi, ssi_target, SC, SC_target, TREL, TREL_target,
     nrcStatus, nrcTarget, nrcProgress, leadTarget, leadReal, shareTarget, shareReal,
     gameplanTarget, gameplanReal, sellIn, sellInTarget, retention, retentionTarget,
-    retailSales, retailSalesTarget, totalArchievement,
+    retailSales, retailSalesTarget, totalAchievement,
     realTRsales, realTRAftersales, TRsales, TRAftersales
   } = data;
   
@@ -2770,7 +2770,7 @@ function renderDashboard(data, targetState, suffix) {
   // ** MODIFICACIÓN SOLICITADA: Sobrescribir TARGETS de Brand Power para VISTA 2 **
   // =========================================================================
   if (suffix === '_V2') {
-      leadTarget = 'Montly Report';
+      leadTarget = 'Monthly Report';
       shareTarget = 'Top 5 Competitors + Nissan';
       gameplanTarget = 'Quarterly Template Format';
       // En V2, el target NRC es 100%, pero lo mantenemos para ser consistente.
@@ -2870,8 +2870,8 @@ function renderDashboard(data, targetState, suffix) {
   let totalValue = "";
   targetState.charts.total = drawGauge({
     canvasId: 'totalGauge' + suffix, label: 'Total',
-    value: totalArchievement,
-    cumplimiento: totalArchievement, country, existingChart: targetState.charts.total,
+    value: totalAchievement,
+    cumplimiento: totalAchievement, country, existingChart: targetState.charts.total,
     infoId: 'totalInfo' + suffix, targetId: 'totalTargetLabel' + suffix,
     mode: mode_total, specialColor: null, suffix 
   });
@@ -2982,7 +2982,7 @@ async function loadView2() {
     try {
         // Carga automática del archivo Annual_V2.xlsx
         stateV2.data = await loadExcelFromURLInternal(FILE_PATHS.V2, CONFIG.SHEET_NAME_V2, mapRowToDataV2, 2, 17);
-        updateStatus('✅ Report Year Today loaded successfully.', '', '_V2');
+        updateStatus('✅ Year To Date Report loaded successfully.', '', '_V2');
         
         populateCountrySelector(stateV2, 'countrySelect_V2');
         
@@ -2992,7 +2992,7 @@ async function loadView2() {
         if (existingTitle) existingTitle.remove();
 
         const extraTitle = document.createElement('h2');
-        extraTitle.textContent = "Period: Abril - September"; 
+        extraTitle.textContent = "Period: April - September"; 
         extraTitle.style.color = "#333"; 
         extraTitle.style.marginTop = "10px";
         extraTitle.style.fontSize = "16px"; 
