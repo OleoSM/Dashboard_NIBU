@@ -9,6 +9,8 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
   <!-- LIBRERÍA PARA CAPTURA DE PANTALLA -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <!-- LIBRERÍA PARA GENERAR PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <style>
 :root{
@@ -1371,6 +1373,9 @@ body.screenshot-mode #screenshotToolbar {
 .btn-download { background: #e3f2fd; color: #1976d2; }
 .btn-download:hover { background: #bbdefb; }
 
+.btn-download-pdf { background: #fff3e0; color: #e65100; }
+.btn-download-pdf:hover { background: #ffe0b2; }
+
 .btn-copy { background: #e8f5e9; color: #388e3c; }
 .btn-copy:hover { background: #c8e6c9; }
 
@@ -1385,8 +1390,11 @@ body.screenshot-mode #screenshotToolbar {
         <button class="tool-btn btn-exit" onclick="toggleScreenshotMode()">
             Exit
         </button>
-        <button class="tool-btn btn-download" onclick="captureDashboard('download')">
-            Download Status
+        <button class="tool-btn btn-download" onclick="captureDashboard('png')">
+            Download PNG
+        </button>
+        <button class="tool-btn btn-download-pdf" onclick="captureDashboard('pdf')">
+            Download PDF
         </button>
         <button class="tool-btn btn-copy" onclick="captureDashboard('copy')">
             Copy to Clipboard
@@ -1810,6 +1818,146 @@ const FILE_PATHS = {
     V2: 'Annual_V2.xlsx'
 };
 
+// ====================== CONFIGURACIÓN DE VALIDACIÓN DE KPIs ======================
+// Define los nombres de columnas esperados y sus posiciones para cada vista
+const KPI_VALIDATION = {
+    V1: {
+        // Columna índice: nombre esperado (basado en estructura del Excel)
+        1: 'Market',
+        2: 'CSI Target',
+        3: 'CSI',
+        6: 'SSI Target',
+        7: 'SSI',
+        10: 'NRC Target',
+        11: 'NRC Status',
+        15: 'Training',
+        16: 'Training Target',
+        18: 'SC Target',
+        19: 'SC',
+        22: 'Lead Target',
+        23: 'Lead Real',
+        26: 'Share',
+        28: 'GamePlan',
+        31: 'Sell-In Target',
+        32: 'Sell-In',
+        35: 'Retention Target',
+        36: 'Retention',
+        39: 'Retail Target',
+        40: 'Retail',
+        55: 'Total Achievement'
+    },
+    V2: {
+        1: 'Market',
+        2: 'CSI',
+        3: 'SSI',
+        5: 'Training',
+        7: 'Lead',
+        8: 'Share',
+        9: 'GamePlan',
+        12: 'Retail',
+        13: 'Total',
+        14: 'CSI Target',
+        15: 'SSI Target',
+        17: 'Retention Target',
+        18: 'Retention',
+        19: 'Sell-In Target',
+        20: 'Sell-In',
+        21: 'SC Target',
+        22: 'SC'
+    }
+};
+
+/**
+ * Valida los encabezados del Excel contra los nombres esperados de KPIs
+ * @param {Array} headerRow - Fila de encabezados del Excel
+ * @param {string} version - 'V1' o 'V2'
+ * @returns {Object} - {isValid: boolean, warnings: string[], errors: string[]}
+ */
+function validateKPIHeaders(headerRow, version) {
+    const expectedHeaders = KPI_VALIDATION[version];
+    const result = {
+        isValid: true,
+        warnings: [],
+        errors: [],
+        matched: [],
+        mismatched: []
+    };
+    
+    if (!headerRow || headerRow.length === 0) {
+        result.isValid = false;
+        result.errors.push('No header row found in Excel file');
+        return result;
+    }
+    
+    // Verificar cada columna esperada
+    for (const [indexStr, expectedName] of Object.entries(expectedHeaders)) {
+        const index = parseInt(indexStr);
+        const actualValue = headerRow[index];
+        
+        if (actualValue === undefined || actualValue === null || actualValue === '') {
+            result.warnings.push(`Column ${index}: Expected "${expectedName}" but found empty cell`);
+            result.mismatched.push({ index, expected: expectedName, actual: '(empty)' });
+        } else {
+            // Normalizar para comparación (quitar espacios, lowercase)
+            const normalizedExpected = String(expectedName).toLowerCase().trim();
+            const normalizedActual = String(actualValue).toLowerCase().trim();
+            
+            // Verificar si contiene el nombre esperado (búsqueda flexible)
+            if (normalizedActual.includes(normalizedExpected) || normalizedExpected.includes(normalizedActual)) {
+                result.matched.push({ index, expected: expectedName, actual: actualValue });
+            } else {
+                result.warnings.push(`Column ${index}: Expected "${expectedName}" but found "${actualValue}"`);
+                result.mismatched.push({ index, expected: expectedName, actual: actualValue });
+            }
+        }
+    }
+    
+    // Si hay más del 50% de discrepancias, marcar como inválido
+    const totalChecked = Object.keys(expectedHeaders).length;
+    if (result.mismatched.length > totalChecked * 0.5) {
+        result.isValid = false;
+        result.errors.push(`Too many column mismatches (${result.mismatched.length}/${totalChecked}). Please verify the Excel structure.`);
+    }
+    
+    return result;
+}
+
+/**
+ * Muestra los resultados de validación en la consola y opcionalmente en pantalla
+ */
+function displayValidationResults(result, version, showAlert = false) {
+    const prefix = `[KPI Validation ${version}]`;
+    
+    console.group(prefix);
+    
+    if (result.matched.length > 0) {
+        console.log('%c✅ Matched columns:', 'color: green; font-weight: bold');
+        result.matched.forEach(m => console.log(`  Column ${m.index}: "${m.expected}" ✓`));
+    }
+    
+    if (result.warnings.length > 0) {
+        console.warn('%c⚠️ Warnings:', 'color: orange; font-weight: bold');
+        result.warnings.forEach(w => console.warn(`  ${w}`));
+    }
+    
+    if (result.errors.length > 0) {
+        console.error('%c❌ Errors:', 'color: red; font-weight: bold');
+        result.errors.forEach(e => console.error(`  ${e}`));
+    }
+    
+    console.log(`%cSummary: ${result.matched.length} matched, ${result.mismatched.length} mismatched`, 
+        result.isValid ? 'color: green' : 'color: red');
+    
+    console.groupEnd();
+    
+    // Mostrar alerta si hay problemas significativos
+    if (showAlert && !result.isValid) {
+        alert(`⚠️ KPI Validation Warning (${version}):\n\n${result.errors.join('\n')}\n\nCheck browser console for details.`);
+    }
+    
+    return result;
+}
+
 // ====================== CONTROL DE SEMÁFORO GLOBAL ======================
 let isTrafficLightOn = false; // Por defecto apagado (Azul)
 
@@ -1891,13 +2039,39 @@ async function captureDashboard(action) {
             windowWidth: captureWidth // Simular ancho de ventana correcto
         });
 
-        if (action === 'download') {
-            // Descargar imagen
+        const date = new Date().toISOString().slice(0,10);
+
+        if (action === 'png') {
+            // Descargar imagen PNG
             const link = document.createElement('a');
-            const date = new Date().toISOString().slice(0,10);
             link.download = `NIBU_Dashboard_${date}.png`;
             link.href = canvas.toDataURL('image/png');
             link.click();
+        } else if (action === 'pdf') {
+            // Descargar como PDF
+            const { jsPDF } = window.jspdf;
+            
+            // Obtener dimensiones del canvas
+            const imgWidth = canvas.width;
+            const imgHeight = canvas.height;
+            
+            // Calcular dimensiones del PDF (A4 landscape o portrait según proporción)
+            const pdfWidth = 297; // A4 landscape width en mm
+            const pdfHeight = (imgHeight * pdfWidth) / imgWidth;
+            
+            // Crear PDF en orientación landscape para mejor visualización del dashboard
+            const pdf = new jsPDF({
+                orientation: pdfHeight > pdfWidth ? 'portrait' : 'landscape',
+                unit: 'mm',
+                format: [pdfWidth, pdfHeight]
+            });
+            
+            // Agregar la imagen al PDF
+            const imgData = canvas.toDataURL('image/png');
+            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+            
+            // Descargar el PDF
+            pdf.save(`NIBU_Dashboard_${date}.pdf`);
         } else if (action === 'copy') {
             // Copiar al portapapeles
             canvas.toBlob(blob => {
@@ -2225,7 +2399,8 @@ function createCombinedTrainingChart(realSales, targetSales, realAftersales, tar
 
   // Detectar si estamos en modo screenshot para ajustar barras
   const isScreenshotMode = document.body.classList.contains('screenshot-mode');
-  const barSize = isScreenshotMode ? 28 : 50;
+  const barSizeReal = isScreenshotMode ? 18 : 30; // Barra real más delgada
+  const barSizeTarget = isScreenshotMode ? 6 : 8; // Barra target muy delgada
 
   return new Chart(ctx, {
     type: 'bar',
@@ -2237,18 +2412,18 @@ function createCombinedTrainingChart(realSales, targetSales, realAftersales, tar
           data: [realSales, realAftersales],
           backgroundColor: ['#b0b0b0', '#a8a8a8'],
           borderWidth: 0,
-          barThickness: barSize,
-          borderRadius: 3
+          barThickness: barSizeReal,
+          borderRadius: 3,
+          order: 2 // Se dibuja primero (atrás)
         },
         {
           label: 'Target (%)',
           data: [targetSales, targetAftersales],
-          type: 'line',
-          borderColor: '#c62828',
-          borderWidth: 2,
-          tension: 0.3,
-          pointRadius: 3,
-          pointBackgroundColor: '#c62828'
+          backgroundColor: '#c62828',
+          borderWidth: 0,
+          barThickness: barSizeTarget,
+          borderRadius: 2,
+          order: 1 // Se dibuja después (adelante)
         }
       ]
     },
@@ -2290,10 +2465,11 @@ function createCombinedTrainingChart(realSales, targetSales, realAftersales, tar
 
         const { ctx, data } = chart;
         
-        const barDatasetIndex = 0;
+        const barDatasetIndex = 0; // Real
+        const targetDatasetIndex = 1; // Target
         const barMeta = chart.getDatasetMeta(barDatasetIndex);
         const barDataset = data.datasets[barDatasetIndex];
-        const targetDataset = data.datasets[1];
+        const targetDataset = data.datasets[targetDatasetIndex];
 
         ctx.save();
         
@@ -2399,7 +2575,7 @@ async function loadExcelDataInternal(file, sheetName, mapperFn, startRow = 3, en
   return processedData;
 }
 
-async function loadExcelFromURLInternal(url, sheetName, mapperFn, startRow = 3, endRow = 50) {
+async function loadExcelFromURLInternal(url, sheetName, mapperFn, startRow = 3, endRow = 50, version = 'V1') {
   try {
     const response = await fetch(url);
     if (!response.ok) throw new Error(`Download error (${response.status})`);
@@ -2413,6 +2589,28 @@ async function loadExcelFromURLInternal(url, sheetName, mapperFn, startRow = 3, 
 
     const sheet = workbook.Sheets[targetSheet];
     const json = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+    
+    // ===== VALIDACIÓN DE ENCABEZADOS =====
+    // Buscar la fila de encabezados (generalmente fila 0, 1 o 2)
+    let headerRow = null;
+    for (let i = 0; i < Math.min(3, json.length); i++) {
+        if (json[i] && json[i].length > 5) {
+            // Verificar si parece una fila de encabezados (contiene texto)
+            const hasText = json[i].some(cell => typeof cell === 'string' && cell.length > 0);
+            if (hasText) {
+                headerRow = json[i];
+                break;
+            }
+        }
+    }
+    
+    if (headerRow) {
+        const validationResult = validateKPIHeaders(headerRow, version);
+        displayValidationResults(validationResult, version, !validationResult.isValid);
+    } else {
+        console.warn(`[KPI Validation ${version}] Could not find header row for validation`);
+    }
+    // =====================================
     
     const processedData = [];
     
@@ -2953,7 +3151,7 @@ async function loadView1() {
     
     try {
         // Carga automática del archivo AP_OCT_A.xlsx
-        stateV1.data = await loadExcelFromURLInternal(FILE_PATHS.V1, CONFIG.SHEET_NAME, mapRowToData, 3, 100);
+        stateV1.data = await loadExcelFromURLInternal(FILE_PATHS.V1, CONFIG.SHEET_NAME, mapRowToData, 3, 100, 'V1');
         updateStatus('✅ Data loaded successfully.', '', '');
         
         populateCountrySelector(stateV1, 'countrySelect');
@@ -2981,7 +3179,7 @@ async function loadView2() {
     
     try {
         // Carga automática del archivo Annual_V2.xlsx
-        stateV2.data = await loadExcelFromURLInternal(FILE_PATHS.V2, CONFIG.SHEET_NAME_V2, mapRowToDataV2, 2, 17);
+        stateV2.data = await loadExcelFromURLInternal(FILE_PATHS.V2, CONFIG.SHEET_NAME_V2, mapRowToDataV2, 2, 17, 'V2');
         updateStatus('✅ Year To Date Report loaded successfully.', '', '_V2');
         
         populateCountrySelector(stateV2, 'countrySelect_V2');
