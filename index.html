@@ -1576,7 +1576,7 @@ body.screenshot-mode #screenshotToolbar {
 
           <!-- AÑADIDO: id y disabled para control JS -->
           <button id="screenshotBtn" onclick="toggleScreenshotMode()" class="view-toggle-btn screenshot-btn" disabled>
-              📷 Screenshot view (Full View)
+              📷 Screenshot mode
           </button>
           
           <button onclick="toggleView()" class="view-toggle-btn">
@@ -2357,7 +2357,7 @@ function toggleView() {
     selectV1.classList.remove('hidden');
     selectV2.classList.add('hidden');
     // Actualizar indicador de contexto con el país de V1
-    updateContextIndicator(selectV1.value || null, 'Full Year', 'As Of October');
+    updateContextIndicator(selectV1.value || null, 'Full Year');
   } else {
     v1.classList.add("hidden");
     v2.classList.remove("hidden");
@@ -2366,7 +2366,7 @@ function toggleView() {
     selectV1.classList.add('hidden');
     selectV2.classList.remove('hidden');
     // Actualizar indicador de contexto con el país de V2
-    updateContextIndicator(selectV2.value || null, 'Year To Date', 'April - September');
+    updateContextIndicator(selectV2.value || null, 'Year To Date');
   }
   // Re-renderizar si es necesario para aplicar semáforo correctamente
   toggleTrafficLight(); // Esto refresca la vista
@@ -2377,22 +2377,16 @@ function toggleView() {
 
 // ====================== FUNCIÓN PARA ACTUALIZAR INDICADOR DE CONTEXTO ======================
 /**
- * Actualiza el indicador de contexto en el navbar con el país, vista y período actual
+ * Actualiza el indicador de contexto en el navbar con el país y la vista actual
  * @param {string|null} country - Nombre del país seleccionado o null si no hay selección
  * @param {string} viewName - Nombre de la vista actual ('Full Year' o 'Year To Date')
- * @param {string} periodName - Nombre del período actual ('As Of October' o 'April - September')
  */
-function updateContextIndicator(country, viewName, periodName) {
+function updateContextIndicator(country, viewName) {
   const viewDisplay = document.getElementById('currentViewDisplay');
-  const periodDisplay = document.getElementById('currentPeriodDisplay');
   const countryFlag = document.getElementById('countryFlag');
   
   if (viewDisplay) {
     viewDisplay.textContent = viewName;
-  }
-  
-  if (periodDisplay) {
-    periodDisplay.textContent = periodName;
   }
   
   // Mapeo de banderas por país (puedes agregar más según necesites)
@@ -3373,7 +3367,7 @@ async function loadView1() {
     try {
         // Carga automática del archivo AP_OCT_A.xlsx
         stateV1.data = await loadExcelFromURLInternal(FILE_PATHS.V1, CONFIG.SHEET_NAME, mapRowToData, 3, 100, 'V1');
-        updateStatus('Data loaded successfully.', '', '');
+        updateStatus('✅ Data loaded successfully.', '', '');
         
         populateCountrySelector(stateV1, 'countrySelect');
         
@@ -3437,7 +3431,7 @@ function handleCountryChangeV1(e) {
     // Deshabilitar botón si no hay país
     if(screenshotBtn) screenshotBtn.disabled = true;
     // Actualizar indicador de contexto
-    updateContextIndicator(null, 'Full Year', 'As Of October');
+    updateContextIndicator(null, 'Full Year');
     return;
   }
   
@@ -3457,7 +3451,7 @@ function handleCountryChangeV1(e) {
   if(screenshotBtn) screenshotBtn.disabled = false;
   
   // Actualizar indicador de contexto
-  updateContextIndicator(country, 'Full Year', 'As Of October');
+  updateContextIndicator(country, 'Full Year');
 }
 
 function handleCountryChangeV2(e) {
@@ -3474,7 +3468,7 @@ function handleCountryChangeV2(e) {
     // Deshabilitar botón si no hay país
     if(screenshotBtn) screenshotBtn.disabled = true;
     // Actualizar indicador de contexto
-    updateContextIndicator(null, 'Year To Date', 'April - September');
+    updateContextIndicator(null, 'Year To Date');
     return;
   }
   
@@ -3494,7 +3488,7 @@ function handleCountryChangeV2(e) {
   if(screenshotBtn) screenshotBtn.disabled = false;
   
   // Actualizar indicador de contexto
-  updateContextIndicator(country, 'Year To Date', 'April - September');
+  updateContextIndicator(country, 'Year To Date');
 }
 
 function initEventListeners() {
