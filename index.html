@@ -25,10 +25,325 @@
   --table-head:#1a1a1a;
   --muted:#FAFAFA;
   --text:#111111;
+  --text-secondary:#6b7280;
   --border-radius-card: 16px;
   --border-radius-btn: 10px;
   --card-shadow: 0 2px 6px rgba(0,0,0,0.08);
   --card-shadow-hover: 0 4px 12px rgba(0,0,0,0.12);
+  --border-color: #e5e7eb;
+  --input-bg: #fff;
+  --navbar-bg: #fff;
+  --instructions-bg: #ffffff;
+  --instructions-footer-bg: #f9fafb;
+}
+
+/* ====================== MODO NOCHE ====================== */
+body.dark-mode {
+  /* Fondo principal - negro profundo */
+  --bg: #0a0a0a;
+  /* Cards - ligeramente más claro que el fondo para crear profundidad */
+  --card: #151515;
+  /* Cabecera de tablas */
+  --table-head: #1a1a1a;
+  /* Fondos secundarios */
+  --muted: #1a1a1a;
+  /* Texto principal - blanco puro para máximo contraste */
+  --text: #ffffff;
+  /* Texto secundario */
+  --text-secondary: #b0b0b0;
+  /* Sombras más pronunciadas */
+  --card-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  --card-shadow-hover: 0 4px 20px rgba(0,0,0,0.6);
+  /* Bordes sutiles */
+  --border-color: #2a2a2a;
+  /* Inputs */
+  --input-bg: #1a1a1a;
+  /* Navbar */
+  --navbar-bg: #0a0a0a;
+  /* Instrucciones */
+  --instructions-bg: #151515;
+  --instructions-footer-bg: #1a1a1a;
+  /* Colores primarios VIBRANTES para modo oscuro */
+  --primary: #ff2d4d;
+  --primary-dark: #ff4d6d;
+}
+
+body.dark-mode {
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+body.dark-mode .brand-header {
+  background: var(--navbar-bg);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  border-bottom: 1px solid var(--border-color);
+}
+
+body.dark-mode .brand-header.scrolled {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+body.dark-mode .navbar-country-selector {
+  background: linear-gradient(135deg, #1f1f1f 0%, #262626 100%);
+  border-color: #333;
+  color: var(--text-secondary);
+}
+
+body.dark-mode .navbar-select {
+  background: var(--input-bg);
+  border-color: #333;
+  color: var(--text);
+}
+
+body.dark-mode .navbar-select:hover,
+body.dark-mode .navbar-select:focus {
+  border-color: var(--primary);
+}
+
+body.dark-mode .context-value {
+  color: var(--primary-dark);
+}
+
+body.dark-mode .view-toggle-btn {
+  background: #1f1f1f;
+  border-color: #333;
+}
+
+body.dark-mode .view-toggle-btn:hover {
+  background: #2a2a2a;
+}
+
+body.dark-mode .traffic-btn {
+  background: #1f1f1f;
+  color: var(--text);
+  border-color: #333;
+}
+
+body.dark-mode .traffic-btn.active {
+  background: #2a2008;
+  color: #ffc107;
+  border-color: #b8860b;
+}
+
+body.dark-mode .screenshot-btn {
+  background: #1565c0;
+  border-color: #1565c0;
+}
+
+body.dark-mode .wrapper {
+  background: transparent;
+}
+
+body.dark-mode h1 {
+  color: var(--text);
+}
+
+body.dark-mode .instructions-box {
+  background: var(--instructions-bg);
+  border-color: var(--border-color);
+  box-shadow: var(--card-shadow);
+}
+
+body.dark-mode .instructions-header {
+  background: linear-gradient(135deg, var(--primary) 0%, #6a0020 100%);
+}
+
+body.dark-mode .instructions-content {
+  background: var(--card);
+}
+
+body.dark-mode .step-content h3 {
+  color: var(--primary-dark);
+}
+
+body.dark-mode .step-content p {
+  color: var(--text-secondary);
+}
+
+body.dark-mode .instructions-footer {
+  background: var(--instructions-footer-bg);
+  border-color: var(--border-color);
+}
+
+body.dark-mode .instructions-footer p {
+  color: var(--text-secondary);
+}
+
+body.dark-mode .card {
+  background: var(--card);
+  border-top-color: var(--primary);
+  box-shadow: var(--card-shadow);
+}
+
+body.dark-mode .card:hover {
+  box-shadow: var(--card-shadow-hover);
+}
+
+body.dark-mode .card p {
+  color: var(--text);
+}
+
+body.dark-mode #totalChartCard,
+body.dark-mode #totalChartCard_V2 {
+  background: linear-gradient(135deg, #1a1505 0%, #151515 100%);
+  border-color: #daa520;
+  box-shadow: 0 2px 12px rgba(218,165,32,0.15);
+}
+
+body.dark-mode #totalInfo strong,
+body.dark-mode #totalInfo_V2 strong {
+  color: #ffd700;
+  text-shadow: 0 0 2px rgba(255,215,0,0.3);
+}
+
+body.dark-mode .table-container {
+  background: var(--card);
+  border-color: var(--border-color);
+  box-shadow: var(--card-shadow);
+}
+
+body.dark-mode .table-container:hover {
+  border-color: var(--primary);
+  box-shadow: var(--card-shadow-hover);
+}
+
+body.dark-mode table th {
+  background: var(--table-head);
+  color: #fff;
+}
+
+body.dark-mode table .subheader td {
+  background: #121212;
+  color: var(--text-secondary);
+  border-color: var(--border-color);
+}
+
+body.dark-mode table td {
+  color: var(--text);
+  border-color: var(--border-color);
+}
+
+body.dark-mode tbody tr:nth-child(even) {
+  background-color: #121212;
+}
+
+body.dark-mode tbody tr:nth-child(odd) {
+  background-color: #151515;
+}
+
+body.dark-mode tbody tr:hover {
+  background-color: #1a1212;
+}
+
+body.dark-mode .separacion,
+body.dark-mode .titulo-grupo {
+  background: var(--card);
+  border-left-color: var(--primary);
+  color: var(--primary-dark);
+  box-shadow: 0 2px 8px rgba(255,45,77,0.1);
+}
+
+body.dark-mode .scroller::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+body.dark-mode .scroller::-webkit-scrollbar-thumb {
+  background: #444;
+}
+
+body.dark-mode .scroller::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+body.dark-mode #status,
+body.dark-mode #status_V2 {
+  color: var(--text);
+}
+
+body.dark-mode .controls {
+  background: #1a1a1a;
+}
+
+body.dark-mode select,
+body.dark-mode input[type="text"] {
+  background: var(--input-bg);
+  border-color: var(--border-color);
+  color: var(--text);
+}
+
+body.dark-mode .wip-label {
+  background: linear-gradient(135deg, #2a2008 0%, #1f1a05 100%);
+  color: #ffd000;
+  border-color: #b8960b;
+  font-weight: 600;
+}
+
+body.dark-mode .quarter-bar-container {
+  background: #1a1a1a;
+}
+
+body.dark-mode #debugInfo,
+body.dark-mode #debugInfo_V2 {
+  background: #1a1a1a;
+  border-color: var(--border-color);
+  color: var(--text-secondary);
+}
+
+/* Botón flotante de modo noche */
+.dark-mode-toggle {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+  color: #ffd700;
+  font-size: 22px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  z-index: 9998;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dark-mode-toggle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+}
+
+body.dark-mode .dark-mode-toggle {
+  background: linear-gradient(145deg, #f5f5f5, #e0e0e0);
+  color: #ff8c00;
+  box-shadow: 0 4px 15px rgba(255,255,255,0.15);
+}
+
+body.dark-mode .dark-mode-toggle:hover {
+  box-shadow: 0 6px 20px rgba(255,255,255,0.25);
+}
+
+/* Transición suave al cambiar de modo */
+body,
+.brand-header,
+.card,
+.table-container,
+.instructions-box,
+.navbar-country-selector,
+.view-toggle-btn,
+h1,
+table th,
+table td,
+.separacion,
+.titulo-grupo {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Ocultar botón en modo screenshot */
+body.screenshot-mode .dark-mode-toggle {
+  display: none !important;
 }
 
 *{
@@ -686,6 +1001,17 @@ tbody tr:hover {
 .mini-gauge-text {
     font-size: 12px;
     font-weight: 700;
+}
+
+/* Etiqueta WIP para Ecuador en V1 */
+.wip-label {
+    font-size: 14px;
+    font-weight: 700;
+    color: #ff9800;
+    background: #fff3e0;
+    padding: 4px 12px;
+    border-radius: 6px;
+    border: 1px solid #ffcc80;
 }
 
 /* Ajuste de padding de celda para que quepa la mini gráfica */
@@ -1476,6 +1802,196 @@ body.screenshot-mode .titulo-grupo h1 {
     color: var(--primary-dark) !important;
 }
 
+/* =========================================================================
+   ESTILOS MODO OSCURO + SCREENSHOT MODE
+   Textos blancos para contraste, rojos vibrantes
+   ========================================================================= */
+body.dark-mode.screenshot-mode {
+    background-color: #0a0a0a !important;
+}
+
+body.dark-mode.screenshot-mode .wrapper {
+    background: #0a0a0a !important;
+}
+
+body.dark-mode.screenshot-mode .card,
+body.dark-mode.screenshot-mode #trainingCombinedBarChartCard {
+    background: #151515 !important;
+    border: 1px solid #2a2a2a !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.5) !important;
+}
+
+body.dark-mode.screenshot-mode .card p {
+    color: #ffffff !important;
+}
+
+body.dark-mode.screenshot-mode .card p strong {
+    color: #ffffff !important;
+    text-shadow: 0 0 1px rgba(255,255,255,0.3);
+}
+
+body.dark-mode.screenshot-mode .table-container {
+    background: #151515 !important;
+    border: 1px solid #2a2a2a !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.5) !important;
+}
+
+body.dark-mode.screenshot-mode table th {
+    background: linear-gradient(135deg, #1a1a1a 0%, #222222 100%) !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+}
+
+body.dark-mode.screenshot-mode table .subheader td {
+    background: #1a1a1a !important;
+    color: #b0b0b0 !important;
+}
+
+body.dark-mode.screenshot-mode table td {
+    color: #ffffff !important;
+    border-color: #2a2a2a !important;
+}
+
+body.dark-mode.screenshot-mode tbody tr:nth-child(even) {
+    background-color: #121212 !important;
+}
+
+body.dark-mode.screenshot-mode tbody tr:nth-child(odd) {
+    background-color: #151515 !important;
+}
+
+/* Títulos de grupo - Rojo vibrante */
+body.dark-mode.screenshot-mode .titulo-grupo {
+    background: linear-gradient(135deg, #1a1a1a 0%, #1f1f1f 100%) !important;
+    border-left: 4px solid #ff2d4d !important;
+    box-shadow: 0 2px 8px rgba(255,45,77,0.15) !important;
+}
+
+body.dark-mode.screenshot-mode .titulo-grupo h1 {
+    color: #ff4d6d !important;
+    font-weight: 700 !important;
+}
+
+/* Total Achievement - Dorado vibrante */
+body.dark-mode.screenshot-mode #totalChartCard,
+body.dark-mode.screenshot-mode #totalChartCard_V2 {
+    background: linear-gradient(135deg, #1a1505 0%, #151515 100%) !important;
+    border: 2px solid #daa520 !important;
+    box-shadow: 0 2px 12px rgba(218,165,32,0.2) !important;
+}
+
+body.dark-mode.screenshot-mode #totalInfo strong,
+body.dark-mode.screenshot-mode #totalInfo_V2 strong {
+    color: #ffd700 !important;
+    text-shadow: 0 0 2px rgba(255,215,0,0.3);
+}
+
+body.dark-mode.screenshot-mode #totalInfo,
+body.dark-mode.screenshot-mode #totalInfo_V2 {
+    color: #ffffff !important;
+}
+
+/* WIP Label - Amarillo vibrante */
+body.dark-mode.screenshot-mode .wip-label {
+    background: linear-gradient(135deg, #2a2008 0%, #1f1a05 100%) !important;
+    color: #ffd000 !important;
+    border: 1px solid #b8960b !important;
+    font-weight: 600 !important;
+}
+
+body.dark-mode.screenshot-mode .quarter-bar-container {
+    background: #1a1a1a !important;
+}
+
+/* Separadores - Rojo vibrante */
+body.dark-mode.screenshot-mode .separacion {
+    background: #151515 !important;
+    border-left: 4px solid #ff2d4d !important;
+    color: #ff4d6d !important;
+    font-weight: 600 !important;
+}
+
+/* Separadores h1 (Customer Experience) - Rojo vibrante */
+body.dark-mode.screenshot-mode .separacion h1 {
+    color: #ff4d6d !important;
+    border-bottom: none !important;
+}
+
+/* TÍTULO PRINCIPAL - Dashboard NIBU - BLANCO */
+body.dark-mode.screenshot-mode h1 {
+    color: #ffffff !important;
+    border-bottom-color: #ff2d4d !important;
+}
+
+body.dark-mode.screenshot-mode #mainTitle,
+body.dark-mode.screenshot-mode #mainTitle_V2 {
+    color: #ffffff !important;
+    border-bottom-color: #ff2d4d !important;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+
+/* Separacion override - Rojo vibrante para Customer Experience */
+body.dark-mode.screenshot-mode .separacion h1,
+body.dark-mode.screenshot-mode .section h1.separacion {
+    color: #ff4d6d !important;
+}
+
+/* Títulos de grupo - Rojo vibrante */
+body.dark-mode.screenshot-mode .titulo-grupo h1 {
+    color: #ff4d6d !important;
+    border-bottom: none !important;
+}
+
+/* Mini gauges text */
+body.dark-mode.screenshot-mode .mini-gauge-container {
+    color: #ffffff !important;
+}
+
+/* Asegurar que todos los textos sean blancos */
+body.dark-mode.screenshot-mode span,
+body.dark-mode.screenshot-mode label {
+    color: #ffffff !important;
+}
+
+/* Barra de herramientas en modo oscuro */
+body.dark-mode #screenshotToolbar {
+    background: rgba(26, 26, 26, 0.95);
+    border-color: #333;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+
+body.dark-mode .btn-exit { 
+    background: #2a1a1a; 
+    color: #ff6b6b; 
+}
+body.dark-mode .btn-exit:hover { 
+    background: #3a2020; 
+}
+
+body.dark-mode .btn-download { 
+    background: #1a2a3a; 
+    color: #64b5f6; 
+}
+body.dark-mode .btn-download:hover { 
+    background: #203040; 
+}
+
+body.dark-mode .btn-download-pdf { 
+    background: #2a2010; 
+    color: #ffb74d; 
+}
+body.dark-mode .btn-download-pdf:hover { 
+    background: #3a3020; 
+}
+
+body.dark-mode .btn-copy { 
+    background: #1a2a1a; 
+    color: #81c784; 
+}
+body.dark-mode .btn-copy:hover { 
+    background: #203020; 
+}
+
 /* Barra de herramientas flotante para screenshot */
 #screenshotToolbar {
     display: none;
@@ -1526,6 +2042,11 @@ body.screenshot-mode #screenshotToolbar {
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
 </head>
 <body>
+
+    <!-- BOTÓN FLOTANTE MODO NOCHE -->
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()" title="Toggle Dark Mode">
+        <span id="darkModeIcon">🌙</span>
+    </button>
 
     <!-- BARRA FLOTANTE DE HERRAMIENTAS (Solo visible en modo captura) -->
     <div id="screenshotToolbar">
@@ -1580,7 +2101,7 @@ body.screenshot-mode #screenshotToolbar {
           </button>
           
           <button onclick="toggleView()" class="view-toggle-btn">
-            🔄 Change report: <span id="viewLabel" class="view-label">Report Full Year</span> 
+            🔄 Change report: <span id="viewLabel" class="view-label">Full Year</span> 
           </button>
       </div>
     </div>
@@ -1592,7 +2113,7 @@ body.screenshot-mode #screenshotToolbar {
     
     <!-- ============================== VISTA 1 ============================== -->
     <div id="vista1">
-        <h1 id="mainTitle">Indicators by Country (Reporte Full Year)</h1> <!-- CAMBIA NOMBRE AQUI -->
+        <h1 id="mainTitle">Indicators by Country (Report Full Year)</h1> <!-- CAMBIA NOMBRE AQUI -->
 
         <div id="status"></div>
 
@@ -2110,6 +2631,36 @@ function displayValidationResults(result, version, showAlert = false) {
     return result;
 }
 
+// ====================== CONTROL DE MODO NOCHE ======================
+let isDarkMode = false;
+
+function toggleDarkMode() {
+    isDarkMode = !isDarkMode;
+    const body = document.body;
+    const icon = document.getElementById('darkModeIcon');
+    
+    if (isDarkMode) {
+        body.classList.add('dark-mode');
+        icon.textContent = '☀️';
+        localStorage.setItem('darkMode', 'true');
+    } else {
+        body.classList.remove('dark-mode');
+        icon.textContent = '🌙';
+        localStorage.setItem('darkMode', 'false');
+    }
+}
+
+// Cargar preferencia guardada al iniciar
+function loadDarkModePreference() {
+    const saved = localStorage.getItem('darkMode');
+    if (saved === 'true') {
+        isDarkMode = true;
+        document.body.classList.add('dark-mode');
+        const icon = document.getElementById('darkModeIcon');
+        if (icon) icon.textContent = '☀️';
+    }
+}
+
 // ====================== CONTROL DE SEMÁFORO GLOBAL ======================
 let isTrafficLightOn = false; // Por defecto apagado (Azul)
 
@@ -2181,22 +2732,45 @@ async function captureDashboard(action) {
         const isMobile = window.innerWidth <= 768;
         const captureWidth = isMobile ? window.innerWidth : 1200;
 
+        // 5. DETECTAR MODO OSCURO PARA COLOR DE FONDO
+        const isDark = document.body.classList.contains('dark-mode');
+        const bgColor = isDark ? '#0a0a0a' : '#ffffff';
+
+        // 6. OBTENER INFORMACIÓN PARA EL NOMBRE DEL ARCHIVO
+        const v1Visible = !document.getElementById('vista1').classList.contains('hidden');
+        let country = '';
+        let viewName = '';
+        
+        if (v1Visible) {
+            country = document.getElementById('countrySelect').value || 'Unknown';
+            viewName = VIEW_CONFIG.NAME_V1;
+        } else {
+            country = document.getElementById('countrySelect_V2').value || 'Unknown';
+            viewName = VIEW_CONFIG.NAME_V2;
+        }
+        
+        // Limpiar nombre del país para usar en archivo (quitar caracteres especiales)
+        const cleanCountry = country.replace(/[^a-zA-Z0-9]/g, '_');
+        const cleanView = viewName.replace(/\s+/g, '_');
+        const date = new Date().toISOString().slice(0,10);
+
         // Generar el canvas con html2canvas
         const canvas = await html2canvas(element, {
             scale: isMobile ? 2 : 3, // Escala ligeramente menor en móvil para ahorrar memoria
-            backgroundColor: '#ffffff',
+            backgroundColor: bgColor, // Color dinámico según el modo
             useCORS: true,
             logging: false,
             width: captureWidth, // Ancho dinámico
             windowWidth: captureWidth // Simular ancho de ventana correcto
         });
 
-        const date = new Date().toISOString().slice(0,10);
+        // Formato: Pais_Periodo_Vista (ej: Mexico_2026-01-16_Full_Year.png)
+        const fileName = `${cleanCountry}_${date}_${cleanView}`;
 
         if (action === 'png') {
             // Descargar imagen PNG
             const link = document.createElement('a');
-            link.download = `NIBU_Dashboard_${date}.png`;
+            link.download = `${fileName}.png`;
             link.href = canvas.toDataURL('image/png');
             link.click();
         } else if (action === 'pdf') {
@@ -2223,7 +2797,7 @@ async function captureDashboard(action) {
             pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
             
             // Descargar el PDF
-            pdf.save(`NIBU_Dashboard_${date}.pdf`);
+            pdf.save(`${fileName}.pdf`);
         } else if (action === 'copy') {
             // Copiar al portapapeles
             canvas.toBlob(blob => {
@@ -2249,8 +2823,8 @@ async function captureDashboard(action) {
 
 // ====================== CONSTANTES DE NOMBRES (EDITA AQUI) ======================
 const VIEW_CONFIG = {
-    NAME_V1: "Report:  Full Year", // Nombre completo para Vista 1
-    NAME_V2: "Report:  Year To Date"        // Nombre completo para Vista 2
+    NAME_V1: "Full Year",
+    NAME_V2: "Year To Date"
 };
 // ===============================================================================
 
@@ -2352,7 +2926,7 @@ function toggleView() {
   if (v1.classList.contains("hidden")) {
     v1.classList.remove("hidden");
     v2.classList.add("hidden");
-    label.textContent = VIEW_CONFIG.NAME_V1; // Usa nombre configurado
+    label.textContent = VIEW_CONFIG.NAME_V1;
     // Mostrar selector V1, ocultar V2
     selectV1.classList.remove('hidden');
     selectV2.classList.add('hidden');
@@ -2361,7 +2935,7 @@ function toggleView() {
   } else {
     v1.classList.add("hidden");
     v2.classList.remove("hidden");
-    label.textContent = VIEW_CONFIG.NAME_V2; // Usa nombre configurado
+    label.textContent = VIEW_CONFIG.NAME_V2;
     // Mostrar selector V2, ocultar V1
     selectV1.classList.add('hidden');
     selectV2.classList.remove('hidden');
@@ -3117,7 +3691,7 @@ function updateGaugeInfo(infoId, targetId, valueText, targetText, cumplimiento, 
 }
 
 // CORREGIDA: Ahora inyecta el canvas y llama a drawMiniGauge con un pequeño delay
-function updateTable(targetId, statusId, targetValue, statusValue, suffix, nrcProgressValue) {
+function updateTable(targetId, statusId, targetValue, statusValue, suffix, nrcProgressValue, country) {
   document.getElementById(targetId).textContent = targetValue || '';
   document.getElementById(statusId).textContent = statusValue || '';
   
@@ -3134,38 +3708,52 @@ function updateTable(targetId, statusId, targetValue, statusValue, suffix, nrcPr
       // 1. Actualizar Target con el label
       document.getElementById(extraTargetCellId).textContent = 'Progress execution'; 
       
-      // 2. Configuramos valores para el mini-gráfico
-      const cumplimiento = nrcProgressValue !== undefined ? nrcProgressValue : 0;
-      // Usamos toFixed(1) para la mini gráfica
-      const compText = `${cumplimiento.toFixed(1)}%`;
-      
-      // 3. Insertamos la estructura HTML (Canvas + Texto) en la celda de Status
+      // 2. Obtener la celda de Status
       const statusCell = document.getElementById(extraStatusCellId);
       
-      // Limpiamos y preparamos el HTML para la gráfica
-      statusCell.innerHTML = '';
-
-      // Inyectamos la estructura con el canvas y el texto
-      statusCell.innerHTML = `
-          <div class="mini-gauge-container">
-              <canvas id="${miniGaugeCanvasId}" width="35" height="35"></canvas>
-              <span class="mini-gauge-text" id="${miniGaugeCanvasId}_text">${compText}</span>
-          </div>
-      `;
+      // 3. Caso especial: Ecuador en Vista Full Year (V1) muestra "WIP"
+      const isEcuador = country && (country.toLowerCase() === 'ecuador' || country.toLowerCase() === 'eca');
+      const isV1 = suffix === '';
       
-      // 4. Dibujar el Mini Gauge en el Canvas recién creado (usamos setTimeout para asegurar renderizado)
-      setTimeout(() => {
-           drawMiniGauge(miniGaugeCanvasId, cumplimiento, suffix);
-           // Actualizar color del texto
-           const textEl = document.getElementById(miniGaugeCanvasId + '_text');
-           if(textEl) {
-               let color;
-               if (isTrafficLightOn) color = getTrafficLightColor(cumplimiento);
-               else color = CONFIG.COLOR_V1_FILL;
-               
-               textEl.style.color = color;
-           }
-      }, 0);
+      if (isEcuador && isV1) {
+          // Mostrar WIP en lugar de la gráfica
+          statusCell.innerHTML = `
+              <div class="mini-gauge-container">
+                  <span class="wip-label">WIP</span>
+              </div>
+          `;
+      } else {
+          // Comportamiento normal: mostrar mini gráfica
+          // Configuramos valores para el mini-gráfico
+          const cumplimiento = nrcProgressValue !== undefined ? nrcProgressValue : 0;
+          // Usamos toFixed(1) para la mini gráfica
+          const compText = `${cumplimiento.toFixed(1)}%`;
+          
+          // Limpiamos y preparamos el HTML para la gráfica
+          statusCell.innerHTML = '';
+
+          // Inyectamos la estructura con el canvas y el texto
+          statusCell.innerHTML = `
+              <div class="mini-gauge-container">
+                  <canvas id="${miniGaugeCanvasId}" width="35" height="35"></canvas>
+                  <span class="mini-gauge-text" id="${miniGaugeCanvasId}_text">${compText}</span>
+              </div>
+          `;
+          
+          // 4. Dibujar el Mini Gauge en el Canvas recién creado (usamos setTimeout para asegurar renderizado)
+          setTimeout(() => {
+               drawMiniGauge(miniGaugeCanvasId, cumplimiento, suffix);
+               // Actualizar color del texto
+               const textEl = document.getElementById(miniGaugeCanvasId + '_text');
+               if(textEl) {
+                   let color;
+                   if (isTrafficLightOn) color = getTrafficLightColor(cumplimiento);
+                   else color = CONFIG.COLOR_V1_FILL;
+                   
+                   textEl.style.color = color;
+               }
+          }, 0);
+      }
   }
 }
 
@@ -3290,7 +3878,7 @@ function renderDashboard(data, targetState, suffix) {
   });
   
   // Las tablas se actualizan con los posibles overrides de V2
-  updateTable('nrcTargetCell' + suffix, 'nrcStatusCell' + suffix, nrcTarget, nrcStatus, suffix, nrcProgress);
+  updateTable('nrcTargetCell' + suffix, 'nrcStatusCell' + suffix, nrcTarget, nrcStatus, suffix, nrcProgress, country);
   
   // Aplicar la barra de cuartos a Lead Management, Share of Investment y GamePlan 360
   
@@ -3510,10 +4098,12 @@ function initEventListeners() {
 // Inicialización
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
+      loadDarkModePreference(); // Cargar preferencia de modo noche
       initEventListeners();
       autoLoadData(); // Iniciar carga automática
   });
 } else {
+  loadDarkModePreference(); // Cargar preferencia de modo noche
   initEventListeners();
   autoLoadData();
 }
