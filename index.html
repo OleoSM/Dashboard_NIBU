@@ -45,9 +45,98 @@ html,body{
   align-items: center;
   justify-content: space-between;
   padding: 10px 16px;
-  margin-top: 10px;
+  margin-top: 0;
   background: #fff;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  /* Fixed navbar - siempre visible */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  transition: box-shadow 0.3s ease;
+}
+
+/* Espaciador para compensar el navbar fixed */
+.navbar-spacer {
+  height: 70px; /* Altura aproximada del navbar */
+  width: 100%;
+}
+
+/* Efecto de sombra más pronunciada al hacer scroll */
+.brand-header.scrolled {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Indicador de contexto (País y Vista) */
+.navbar-country-selector {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 14px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 20px;
+  border: 1px solid #dee2e6;
+  font-size: 13px;
+  color: #495057;
+}
+
+.navbar-country-selector .context-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.navbar-country-selector .context-label {
+  font-weight: 400;
+  color: #6c757d;
+}
+
+.navbar-country-selector .context-value {
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
+.navbar-country-selector .separator {
+  width: 1px;
+  height: 16px;
+  background: #ced4da;
+}
+
+.navbar-country-selector .country-flag {
+  font-size: 18px;
+}
+
+.navbar-country-selector .view-icon {
+  font-size: 14px;
+}
+
+/* Estilos para el select en el navbar */
+.navbar-select {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid #ced4da;
+  background: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary-dark);
+  cursor: pointer;
+  min-width: 160px;
+  transition: all 0.2s ease;
+}
+
+.navbar-select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(195, 0, 47, 0.15);
+}
+
+.navbar-select:hover {
+  border-color: var(--primary);
+}
+
+.navbar-select.hidden {
+  display: none;
 }
 
 .header-buttons {
@@ -138,6 +227,32 @@ html,body{
   .screenshot-btn {
       display: none !important;
   }
+  
+  /* Ajustar selector en navbar en móvil */
+  .navbar-country-selector {
+    padding: 4px 10px;
+    font-size: 11px;
+    gap: 8px;
+  }
+  
+  .navbar-country-selector .country-flag,
+  .navbar-country-selector .view-icon {
+    font-size: 14px;
+  }
+  
+  .navbar-country-selector .separator {
+    height: 12px;
+  }
+  
+  .navbar-select {
+    min-width: 120px;
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+  
+  .navbar-spacer {
+    height: 60px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -149,6 +264,31 @@ html,body{
   .nibu-logo {
     height: 36px;
     max-width: 110px;
+  }
+  
+  /* Selector en navbar en pantallas muy pequeñas */
+  .navbar-country-selector {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 6px 10px;
+  }
+  
+  .navbar-country-selector .separator {
+    display: none;
+  }
+  
+  .navbar-country-selector .context-item {
+    justify-content: center;
+  }
+  
+  .navbar-select {
+    min-width: 140px;
+  }
+  
+  .navbar-spacer {
+    height: 160px; /* Mayor altura porque el navbar es vertical en móvil */
   }
 }
 
@@ -953,7 +1093,9 @@ body.screenshot-mode .brand-header,
 body.screenshot-mode .controls,
 body.screenshot-mode .instructions-box,
 body.screenshot-mode #status,
-body.screenshot-mode #status_V2 {
+body.screenshot-mode #status_V2,
+body.screenshot-mode .navbar-country-selector,
+body.screenshot-mode .navbar-spacer {
     display: none !important;
 }
 
@@ -1405,6 +1547,25 @@ body.screenshot-mode #screenshotToolbar {
       <!-- Importante: crossorigin="anonymous" para permitir exportación del canvas -->
       <img src="https://i.imgur.com/55NkFxP.png" alt="NIBU Logo" class="nibu-logo" crossorigin="anonymous">
       
+      <!-- SELECTOR DE PAÍS EN EL NAVBAR -->
+      <div class="navbar-country-selector">
+        <div class="context-item">
+          <span class="country-flag" id="countryFlag">🌎</span>
+          <select id="countrySelect" class="navbar-select">
+            <option value="">Select a Country</option>
+          </select>
+          <select id="countrySelect_V2" class="navbar-select hidden">
+            <option value="">Select a Country</option>
+          </select>
+        </div>
+        <span class="separator"></span>
+        <div class="context-item">
+          <span class="view-icon">📊</span>
+          <span class="context-label">View:</span>
+          <span class="context-value" id="currentViewDisplay">Full Year</span>
+        </div>
+      </div>
+      
       <!-- CONTENEDOR DE BOTONES DE CABECERA -->
       <div class="header-buttons">
           
@@ -1423,6 +1584,9 @@ body.screenshot-mode #screenshotToolbar {
           </button>
       </div>
     </div>
+    
+    <!-- Espaciador para compensar el navbar fixed -->
+    <div class="navbar-spacer"></div>
 
   <div class="wrapper">
     
@@ -1430,12 +1594,6 @@ body.screenshot-mode #screenshotToolbar {
     <div id="vista1">
         <h1 id="mainTitle">Indicators by Country (Reporte Full Year)</h1> <!-- CAMBIA NOMBRE AQUI -->
 
-        <div class="controls">
-            <!-- INPUTS REMOVIDOS PARA CARGA AUTOMÁTICA -->
-            <select id="countrySelect">
-                <option value="">Select a Country</option>
-            </select>
-        </div>
         <div id="status"></div>
 
         <!-- MANUAL DE USUARIO RESTAURADO Y ACTUALIZADO -->
@@ -1633,12 +1791,6 @@ body.screenshot-mode #screenshotToolbar {
     <div id="vista2" class="hidden">
         <h1 id="mainTitle_V2">Indicators by Country (Report Year To Date)</h1> <!-- CAMBIA NOMBRE AQUI -->
 
-        <div class="controls">
-            <!-- INPUTS REMOVIDOS PARA CARGA AUTOMÁTICA -->
-            <select id="countrySelect_V2">
-                <option value="">Select a Country</option>
-            </select>
-        </div>
         <div id="status_V2"></div>
 
         <!-- MANUAL DE USUARIO RESTAURADO Y ACTUALIZADO V2 -->
@@ -2194,21 +2346,90 @@ function toggleView() {
   const v1 = document.getElementById("vista1");
   const v2 = document.getElementById("vista2");
   const label = document.getElementById("viewLabel");
+  const selectV1 = document.getElementById('countrySelect');
+  const selectV2 = document.getElementById('countrySelect_V2');
 
   if (v1.classList.contains("hidden")) {
     v1.classList.remove("hidden");
     v2.classList.add("hidden");
     label.textContent = VIEW_CONFIG.NAME_V1; // Usa nombre configurado
+    // Mostrar selector V1, ocultar V2
+    selectV1.classList.remove('hidden');
+    selectV2.classList.add('hidden');
+    // Actualizar indicador de contexto con el país de V1
+    updateContextIndicator(selectV1.value || null, 'Full Year', 'As Of October');
   } else {
     v1.classList.add("hidden");
     v2.classList.remove("hidden");
     label.textContent = VIEW_CONFIG.NAME_V2; // Usa nombre configurado
+    // Mostrar selector V2, ocultar V1
+    selectV1.classList.add('hidden');
+    selectV2.classList.remove('hidden');
+    // Actualizar indicador de contexto con el país de V2
+    updateContextIndicator(selectV2.value || null, 'Year To Date', 'April - September');
   }
   // Re-renderizar si es necesario para aplicar semáforo correctamente
   toggleTrafficLight(); // Esto refresca la vista
   // Pero como toggleTrafficLight invierte el estado, necesitamos restaurarlo
   isTrafficLightOn = !isTrafficLightOn; 
   // Mejor llamar a un refresh manual o confiar en que los datos ya están renderizados
+}
+
+// ====================== FUNCIÓN PARA ACTUALIZAR INDICADOR DE CONTEXTO ======================
+/**
+ * Actualiza el indicador de contexto en el navbar con el país, vista y período actual
+ * @param {string|null} country - Nombre del país seleccionado o null si no hay selección
+ * @param {string} viewName - Nombre de la vista actual ('Full Year' o 'Year To Date')
+ * @param {string} periodName - Nombre del período actual ('As Of October' o 'April - September')
+ */
+function updateContextIndicator(country, viewName, periodName) {
+  const viewDisplay = document.getElementById('currentViewDisplay');
+  const periodDisplay = document.getElementById('currentPeriodDisplay');
+  const countryFlag = document.getElementById('countryFlag');
+  
+  if (viewDisplay) {
+    viewDisplay.textContent = viewName;
+  }
+  
+  if (periodDisplay) {
+    periodDisplay.textContent = periodName;
+  }
+  
+  // Mapeo de banderas por país (puedes agregar más según necesites)
+  const countryFlags = {
+    'Mexico': '🇲🇽',
+    'México': '🇲🇽',
+    'Brazil': '🇧🇷',
+    'Brasil': '🇧🇷',
+    'Argentina': '🇦🇷',
+    'Chile': '🇨🇱',
+    'Colombia': '🇨🇴',
+    'Peru': '🇵🇪',
+    'Perú': '🇵🇪',
+    'Ecuador': '🇪🇨',
+    'USA': '🇺🇸',
+    'Canada': '🇨🇦',
+    'Panama': '🇵🇦',
+    'Panamá': '🇵🇦',
+    'Costa Rica': '🇨🇷',
+    'Guatemala': '🇬🇹',
+    'El Salvador': '🇸🇻',
+    'Honduras': '🇭🇳',
+    'Nicaragua': '🇳🇮',
+    'Dominican Republic': '🇩🇴',
+    'República Dominicana': '🇩🇴',
+    'Puerto Rico': '🇵🇷',
+    'Jamaica': '🇯🇲',
+    'Trinidad and Tobago': '🇹🇹',
+    'Venezuela': '🇻🇪',
+    'Bolivia': '🇧🇴',
+    'Paraguay': '🇵🇾',
+    'Uruguay': '🇺🇾'
+  };
+  
+  if (countryFlag) {
+    countryFlag.textContent = country && countryFlags[country] ? countryFlags[country] : '🌎';
+  }
 }
 
 function mapRowToData(row) {
@@ -2252,8 +2473,8 @@ function mapRowToData(row) {
       : 'NA',
     gameplanTarget: 'Quarterly Template Format',
     // CAMBIO: Si está vacío o no es número, devuelve 'NA' en lugar de '0%'
-    gameplanReal: row[28] !== '' && !isNaN(row[28]) 
-      ? `${(parseFloat(row[28]) * 100).toFixed(1)}%` 
+    gameplanReal: row[29] !== '' && !isNaN(row[29]) 
+      ? `${(parseFloat(row[29]) * 100).toFixed(1)}%` 
       : 'NA',
     // CAMBIO: Quitar || 0 para permitir NaN si está vacío
     sellIn: parseFloat(row[32]), 
@@ -3152,7 +3373,7 @@ async function loadView1() {
     try {
         // Carga automática del archivo AP_OCT_A.xlsx
         stateV1.data = await loadExcelFromURLInternal(FILE_PATHS.V1, CONFIG.SHEET_NAME, mapRowToData, 3, 100, 'V1');
-        updateStatus('✅ Data loaded successfully.', '', '');
+        updateStatus('Data loaded successfully.', '', '');
         
         populateCountrySelector(stateV1, 'countrySelect');
         
@@ -3215,6 +3436,8 @@ function handleCountryChangeV1(e) {
     }
     // Deshabilitar botón si no hay país
     if(screenshotBtn) screenshotBtn.disabled = true;
+    // Actualizar indicador de contexto
+    updateContextIndicator(null, 'Full Year', 'As Of October');
     return;
   }
   
@@ -3232,6 +3455,9 @@ function handleCountryChangeV1(e) {
   
   // Habilitar botón al seleccionar país
   if(screenshotBtn) screenshotBtn.disabled = false;
+  
+  // Actualizar indicador de contexto
+  updateContextIndicator(country, 'Full Year', 'As Of October');
 }
 
 function handleCountryChangeV2(e) {
@@ -3247,6 +3473,8 @@ function handleCountryChangeV2(e) {
     }
     // Deshabilitar botón si no hay país
     if(screenshotBtn) screenshotBtn.disabled = true;
+    // Actualizar indicador de contexto
+    updateContextIndicator(null, 'Year To Date', 'April - September');
     return;
   }
   
@@ -3264,12 +3492,25 @@ function handleCountryChangeV2(e) {
   
   // Habilitar botón al seleccionar país
   if(screenshotBtn) screenshotBtn.disabled = false;
+  
+  // Actualizar indicador de contexto
+  updateContextIndicator(country, 'Year To Date', 'April - September');
 }
 
 function initEventListeners() {
   // Solo Listeners de Cambio de País (Inputs de archivo removidos)
   document.getElementById('countrySelect').addEventListener('change', handleCountryChangeV1);
   document.getElementById('countrySelect_V2').addEventListener('change', handleCountryChangeV2);
+  
+  // Listener para el efecto de scroll en el navbar
+  const navbar = document.querySelector('.brand-header');
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > 10) {
+      navbar.classList.add('scrolled');
+    } else {
+      navbar.classList.remove('scrolled');
+    }
+  });
 }
 
 // Inicialización
