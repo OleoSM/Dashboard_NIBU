@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Administración - Dashboard NIBU</title>
+  <style>
+    :root {
+      --primary: #C3002F;
+      --primary-dark: #8A0020;
+      --accent: #D71A28;
+      --ok: #4CAF50;
+      --warn: #FFC107;
+      --bad: #F44336;
+      --bg: #f4f7fa;
+      --card: #ffffff;
+      --text: #111111;
+      --text-secondary: #6b7280;
+      --border-color: #e5e7eb;
+      --border-radius: 12px;
+      --shadow: 0 2px 8px rgba(0,0,0,0.08);
+      --shadow-hover: 0 4px 16px rgba(0,0,0,0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      color: var(--text);
+    }
+
+    /* Header */
+    .admin-header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      padding: 20px 30px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .admin-header h1 {
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .admin-header .user-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: white;
+      color: var(--primary);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .btn-danger {
+      background: #dc3545;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #c82333;
+    }
+
+    .btn-success {
+      background: var(--ok);
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: #45a049;
+    }
+
+    .btn-warning {
+      background: var(--warn);
+      color: #333;
+    }
+
+    .btn-warning:hover {
+      background: #e0a800;
+    }
+
+    .btn-secondary {
+      background: #6c757d;
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #5a6268;
+    }
+
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 12px;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1400px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    /* Stats Cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border-radius: var(--border-radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      transition: all 0.3s ease;
+      border-left: 4px solid var(--primary);
+    }
+
+    .stat-card:hover {
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-3px);
+    }
+
+    .stat-card h3 {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-card .stat-value {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    /* Users Section */
+    .users-section {
+      background: var(--card);
+      border-radius: var(--border-radius);
+      padding: 30px;
+      box-shadow: var(--shadow);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--border-color);
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .section-header h2 {
+      font-size: 24px;
+      color: var(--text);
+    }
+
+    /* Table */
+    .users-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    .users-table thead {
+      background: #f9fafb;
+    }
+
+    .users-table th {
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+      color: #374151;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    .users-table td {
+      padding: 12px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .users-table tbody tr:hover {
+      background: #f9fafb;
+    }
+
+    .market-tag {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      margin: 2px;
+    }
+
+    .market-tag.empty {
+      background: #e5e7eb;
+      color: var(--text-secondary);
+    }
+
+    .badge {
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      background: #e3f2fd;
+      color: #1976d2;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 10000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 15px;
+      max-width: 800px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .modal-header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      padding: 20px 30px;
+      border-radius: 15px 15px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 28px;
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: background 0.3s ease;
+    }
+
+    .modal-close:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .modal-body {
+      padding: 30px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.3s ease;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .form-group small {
+      color: var(--text-secondary);
+      font-size: 12px;
+      margin-top: 4px;
+      display: block;
+    }
+
+    .markets-group {
+      margin-top: 20px;
+    }
+
+    .markets-group h3 {
+      font-size: 16px;
+      margin-bottom: 15px;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .markets-checkboxes {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 10px;
+      padding: 15px;
+      background: #f9fafb;
+      border-radius: 8px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .checkbox-item input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: var(--primary);
+    }
+
+    .checkbox-item label {
+      font-size: 13px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .modal-footer {
+      padding: 20px 30px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    /* Alert */
+    .alert {
+      padding: 16px 20px;
+      border-radius: var(--border-radius);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      animation: slideDown 0.3s ease-out;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .alert-success {
+      background: #d4edda;
+      color: #155724;
+      border-left: 4px solid #28a745;
+    }
+
+    .alert-error {
+      background: #f8d7da;
+      color: #721c24;
+      border-left: 4px solid #dc3545;
+    }
+
+    .alert-info {
+      background: #d1ecf1;
+      color: #0c5460;
+      border-left: 4px solid #17a2b8;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .admin-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .users-table {
+        font-size: 12px;
+      }
+
+      .users-table th,
+      .users-table td {
+        padding: 8px;
+      }
+
+      .modal-content {
+        width: 95%;
+      }
+
+      .markets-checkboxes {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div class="admin-header">
+    <div>
+      <h1>⚙️ Panel de Administración</h1>
+    </div>
+    <div class="user-info">
+      <span class="user-name" id="adminUserName">👤 Administrador</span>
+      <button class="btn btn-primary" onclick="goToDashboard()">📊 Dashboard</button>
+      <button class="btn btn-danger" onclick="handleLogout()">🚪 Salir</button>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <div class="container">
+    <!-- Alert Messages -->
+    <div id="alertContainer"></div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h3>Total de Usuarios</h3>
+        <div class="stat-value" id="totalUsers">0</div>
+        <div class="stat-label">Usuarios registrados</div>
+      </div>
+      <div class="stat-card">
+        <h3>Vista 1 - Mercados</h3>
+        <div class="stat-value" id="totalMarketsV1">0</div>
+        <div class="stat-label">Full Year Report</div>
+      </div>
+      <div class="stat-card">
+        <h3>Vista 2 - Mercados</h3>
+        <div class="stat-value" id="totalMarketsV2">0</div>
+        <div class="stat-label">Year To Date</div>
+      </div>
+      <div class="stat-card">
+        <h3>Último Acceso</h3>
+        <div class="stat-value" style="font-size: 18px;" id="lastAccess">--</div>
+        <div class="stat-label">Último inicio de sesión</div>
+      </div>
+    </div>
+
+    <!-- Users Management Section -->
+    <div class="users-section">
+      <div class="section-header">
+        <h2>👥 Gestión de Usuarios</h2>
+        <button class="btn btn-success" onclick="openCreateModal()">
+          ➕ Crear Nuevo Usuario
+        </button>
+      </div>
+
+      <table class="users-table" id="usersTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Usuario</th>
+            <th>Nombre</th>
+            <th>Vista 1 (Mercados)</th>
+            <th>Vista 2 (Mercados)</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="usersTableBody">
+          <!-- Users will be loaded here -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Modal Create/Edit User -->
+  <div class="modal" id="userModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitle">Crear Usuario</h2>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="userForm">
+          <input type="hidden" id="userId" value="">
+          
+          <div class="form-group">
+            <label for="userName">Nombre Completo *</label>
+            <input type="text" id="userName" required placeholder="Ej: Juan Pérez">
+          </div>
+
+          <div class="form-group">
+            <label for="userUsername">Nombre de Usuario *</label>
+            <input type="text" id="userUsername" required placeholder="Ej: jperez">
+            <small>Este será el usuario para iniciar sesión</small>
+          </div>
+
+          <div class="form-group">
+            <label for="userPassword">Contraseña *</label>
+            <input type="password" id="userPassword" required placeholder="Mínimo 6 caracteres">
+            <small id="passwordHint">Deja en blanco para mantener la contraseña actual</small>
+          </div>
+
+          <!-- Vista 1 Markets -->
+          <div class="markets-group">
+            <h3>
+              🌎 Vista 1 - Full Year Report
+              <button type="button" class="btn btn-sm btn-warning" onclick="toggleAllMarkets('vista1')">
+                ✅ Todos / ❌ Ninguno
+              </button>
+            </h3>
+            <div class="markets-checkboxes" id="marketsVista1">
+              <!-- Markets will be loaded here -->
+            </div>
+          </div>
+
+          <!-- Vista 2 Markets -->
+          <div class="markets-group">
+            <h3>
+              🌎 Vista 2 - Year To Date
+              <button type="button" class="btn btn-sm btn-warning" onclick="toggleAllMarkets('vista2')">
+                ✅ Todos / ❌ Ninguno
+              </button>
+            </h3>
+            <div class="markets-checkboxes" id="marketsVista2">
+              <!-- Markets will be loaded here -->
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+        <button type="button" class="btn btn-success" onclick="saveUser()">💾 Guardar Usuario</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="auth.js"></script>
+  <script>
+    // Proteger página
+    if (!auth.protectAdminPage()) {
+      throw new Error('Acceso denegado');
+    }
+
+    // Variables globales
+    let editingUserId = null;
+
+    // Cargar información del admin
+    const currentUser = auth.getCurrentUser();
+    if (currentUser) {
+      document.getElementById('adminUserName').textContent = `👤 ${currentUser.name}`;
+    }
+
+    // Cargar estadísticas
+    function loadStats() {
+      const result = auth.getAllUsers();
+      if (result.success) {
+        document.getElementById('totalUsers').textContent = result.users.length;
+      }
+      
+      document.getElementById('totalMarketsV1').textContent = auth.AVAILABLE_MARKETS_V1.length;
+      document.getElementById('totalMarketsV2').textContent = auth.AVAILABLE_MARKETS_V2.length;
+
+      const lastLogin = JSON.parse(localStorage.getItem('lastLogin') || '{}');
+      if (lastLogin.time) {
+        const date = new Date(lastLogin.time);
+        document.getElementById('lastAccess').textContent = 
+          date.toLocaleString('es', { 
+            day: '2-digit', 
+            month: '2-digit', 
+            year: 'numeric', 
+            hour: '2-digit', 
+            minute: '2-digit' 
+          });
+      }
+    }
+
+    // Cargar usuarios en tabla
+    function loadUsers() {
+      const result = auth.getAllUsers();
+      const tbody = document.getElementById('usersTableBody');
+
+      if (!result.success || result.users.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" style="text-align: center; padding: 40px; color: var(--text-secondary);">
+              <div style="font-size: 48px; margin-bottom: 10px;">👥</div>
+              <div>No hay usuarios registrados</div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = result.users.map(user => {
+        const v1Markets = user.allowedMarkets.vista1 || [];
+        const v2Markets = user.allowedMarkets.vista2 || [];
+        
+        const v1Tags = v1Markets.length > 0
+          ? v1Markets.slice(0, 3).map(m => `<span class="market-tag">${m}</span>`).join('') +
+            (v1Markets.length > 3 ? ` <span class="market-tag">+${v1Markets.length - 3}</span>` : '')
+          : '<span class="market-tag empty">Sin acceso</span>';
+          
+        const v2Tags = v2Markets.length > 0
+          ? v2Markets.slice(0, 3).map(m => `<span class="market-tag">${m}</span>`).join('') +
+            (v2Markets.length > 3 ? ` <span class="market-tag">+${v2Markets.length - 3}</span>` : '')
+          : '<span class="market-tag empty">Sin acceso</span>';
+
+        return `
+          <tr>
+            <td><span class="badge">${user.id}</span></td>
+            <td><strong>${user.username}</strong></td>
+            <td>${user.name}</td>
+            <td>${v1Tags}</td>
+            <td>${v2Tags}</td>
+            <td>
+              <button class="btn btn-sm btn-primary" onclick="openEditModal('${user.id}')" title="Editar">
+                ✏️ Editar
+              </button>
+              <button class="btn btn-sm btn-danger" onclick="confirmDelete('${user.id}', '${user.username}')" title="Eliminar">
+                🗑️ Eliminar
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // Abrir modal para crear usuario
+    function openCreateModal() {
+      editingUserId = null;
+      document.getElementById('modalTitle').textContent = '➕ Crear Nuevo Usuario';
+      document.getElementById('userId').value = '';
+      document.getElementById('userForm').reset();
+      document.getElementById('passwordHint').style.display = 'none';
+      
+      loadMarketsCheckboxes('vista1', []);
+      loadMarketsCheckboxes('vista2', []);
+      
+      document.getElementById('userModal').classList.add('active');
+    }
+
+    // Abrir modal para editar usuario
+    function openEditModal(userId) {
+      editingUserId = userId;
+      const user = auth.getUserById(userId);
+      
+      if (!user) {
+        showAlert('error', 'Usuario no encontrado');
+        return;
+      }
+
+      document.getElementById('modalTitle').textContent = '✏️ Editar Usuario';
+      document.getElementById('userId').value = user.id;
+      document.getElementById('userName').value = user.name;
+      document.getElementById('userUsername').value = user.username;
+      document.getElementById('userPassword').value = '';
+      document.getElementById('userPassword').required = false;
+      document.getElementById('passwordHint').style.display = 'block';
+      
+      loadMarketsCheckboxes('vista1', user.allowedMarkets.vista1 || []);
+      loadMarketsCheckboxes('vista2', user.allowedMarkets.vista2 || []);
+      
+      document.getElementById('userModal').classList.add('active');
+    }
+
+    // Cargar checkboxes de mercados
+    function loadMarketsCheckboxes(vista, selectedMarkets = []) {
+      const container = document.getElementById(`markets${vista.charAt(0).toUpperCase() + vista.slice(1)}`);
+      const markets = vista === 'vista1' ? auth.AVAILABLE_MARKETS_V1 : auth.AVAILABLE_MARKETS_V2;
+      
+      container.innerHTML = markets.map(market => {
+        const checked = selectedMarkets.includes(market) ? 'checked' : '';
+        return `
+          <div class="checkbox-item">
+            <input 
+              type="checkbox" 
+              id="${vista}_${market}" 
+              value="${market}"
+              data-vista="${vista}"
+              ${checked}
+            >
+            <label for="${vista}_${market}">${market}</label>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Toggle all markets en vista
+    function toggleAllMarkets(vista) {
+      const checkboxes = document.querySelectorAll(`input[data-vista="${vista}"]`);
+      const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+      
+      checkboxes.forEach(cb => {
+        cb.checked = !allChecked;
+      });
+    }
+
+    // Cerrar modal
+    function closeModal() {
+      document.getElementById('userModal').classList.remove('active');
+      document.getElementById('userForm').reset();
+      editingUserId = null;
+    }
+
+    // Guardar usuario (crear o actualizar)
+    function saveUser() {
+      const name = document.getElementById('userName').value.trim();
+      const username = document.getElementById('userUsername').value.trim();
+      const password = document.getElementById('userPassword').value;
+      
+      if (!name || !username) {
+        showAlert('error', 'El nombre y usuario son obligatorios');
+        return;
+      }
+
+      if (!editingUserId && !password) {
+        showAlert('error', 'La contraseña es obligatoria para nuevos usuarios');
+        return;
+      }
+
+      // Obtener mercados seleccionados
+      const vista1Markets = Array.from(
+        document.querySelectorAll('input[data-vista="vista1"]:checked')
+      ).map(cb => cb.value);
+      
+      const vista2Markets = Array.from(
+        document.querySelectorAll('input[data-vista="vista2"]:checked')
+      ).map(cb => cb.value);
+
+      const userData = {
+        name,
+        username,
+        allowedMarkets: {
+          vista1: vista1Markets,
+          vista2: vista2Markets
+        }
+      };
+
+      if (password) {
+        userData.password = password;
+      }
+
+      let result;
+      if (editingUserId) {
+        result = auth.updateUser(editingUserId, userData);
+      } else {
+        result = auth.createUser(userData);
+      }
+
+      if (result.success) {
+        showAlert('success', result.message);
+        closeModal();
+        loadUsers();
+        loadStats();
+      } else {
+        showAlert('error', result.message);
+      }
+    }
+
+    // Confirmar eliminación
+    function confirmDelete(userId, username) {
+      if (confirm(`¿Estás seguro de que deseas eliminar al usuario "${username}"?\n\nEsta acción no se puede deshacer.`)) {
+        const result = auth.deleteUser(userId);
+        
+        if (result.success) {
+          showAlert('success', result.message);
+          loadUsers();
+          loadStats();
+        } else {
+          showAlert('error', result.message);
+        }
+      }
+    }
+
+    // Mostrar alerta
+    function showAlert(type, message) {
+      const container = document.getElementById('alertContainer');
+      const alert = document.createElement('div');
+      alert.className = `alert alert-${type}`;
+      alert.textContent = message;
+      
+      container.innerHTML = '';
+      container.appendChild(alert);
+
+      setTimeout(() => {
+        alert.style.opacity = '0';
+        setTimeout(() => alert.remove(), 300);
+      }, 4000);
+    }
+
+    // Ir al Dashboard
+    function goToDashboard() {
+      window.location.href = 'index.html';
+    }
+
+    // Cerrar sesión
+    function handleLogout() {
+      if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+        auth.logout();
+      }
+    }
+
+    // Cerrar modal al hacer click fuera
+    document.getElementById('userModal').addEventListener('click', (e) => {
+      if (e.target.id === 'userModal') {
+        closeModal();
+      }
+    });
+
+    // Inicializar
+    loadStats();
+    loadUsers();
+  </script>
+</body>
+</html>

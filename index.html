@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard NIBU</title>
+  <!-- SISTEMA DE AUTENTICACIÓN -->
+  <script src="auth.js"></script>
   <!-- LIBRERÍAS EXTERNAS -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
@@ -11,6 +13,13 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <!-- LIBRERÍA PARA GENERAR PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  
+  <script>
+    // Proteger página - Verificar autenticación
+    if (!auth || !auth.protectPage()) {
+      throw new Error('Acceso no autorizado');
+    }
+  </script>
 
   <style>
 :root{
@@ -2089,6 +2098,13 @@ body.screenshot-mode #screenshotToolbar {
       
       <!-- CONTENEDOR DE BOTONES DE CABECERA -->
       <div class="header-buttons">
+          <!-- INFORMACIÓN DEL USUARIO -->
+          <span id="userInfo" style="color: var(--text); font-weight: 600; font-size: 14px; padding: 8px 12px; background: rgba(195, 0, 47, 0.1); border-radius: 8px;">👤 Usuario</span>
+          
+          <!-- BOTÓN ADMIN (Solo visible para administradores) -->
+          <button id="adminBtn" onclick="goToAdmin()" class="view-toggle-btn" style="display: none; background: #28a745; border-color: #28a745;">
+              ⚙️ Admin Panel
+          </button>
           
           <!-- BOTÓN SEMAFORO -->
           <button id="trafficToggle" onclick="toggleTrafficLight()" class="view-toggle-btn traffic-btn">
@@ -2102,6 +2118,11 @@ body.screenshot-mode #screenshotToolbar {
           
           <button onclick="toggleView()" class="view-toggle-btn">
             🔄 Change report: <span id="viewLabel" class="view-label">Full Year</span> 
+          </button>
+          
+          <!-- BOTÓN LOGOUT -->
+          <button onclick="handleLogout()" class="view-toggle-btn" style="background: #dc3545; border-color: #dc3545;">
+              🚪 Logout
           </button>
       </div>
     </div>
@@ -3427,12 +3448,36 @@ function populateCountrySelector(targetState, selectId) {
   const select = document.getElementById(selectId);
   select.innerHTML = '<option value="">Select a Country</option>';
   
+  // Determinar qué vista estamos poblando
+  const isVista2 = selectId.includes('_V2');
+  const currentView = isVista2 ? 'vista2' : 'vista1';
+  
+  // Obtener usuario actual y sus permisos para esta vista
+  const currentUser = auth.getCurrentUser();
+  const allowedMarkets = currentUser.role === 'admin'
+    ? (isVista2 ? auth.AVAILABLE_MARKETS_V2 : auth.AVAILABLE_MARKETS_V1)
+    : (currentUser.allowedMarkets[currentView] || []);
+  
+  console.log(`📍 Cargando mercados para ${currentView}:`, allowedMarkets);
+  
   targetState.data.forEach(d => {
-    const option = document.createElement('option');
-    option.value = d.country;
-    option.textContent = d.country;
-    select.appendChild(option);
+    // Mostrar solo los países que el usuario tiene permiso de ver en esta vista
+    if (allowedMarkets.includes(d.country)) {
+      const option = document.createElement('option');
+      option.value = d.country;
+      option.textContent = d.country;
+      select.appendChild(option);
+    }
   });
+  
+  // Si no hay países disponibles, mostrar mensaje
+  if (select.options.length === 1) {
+    const option = document.createElement('option');
+    option.value = '';
+    option.textContent = `No tienes acceso a mercados en ${isVista2 ? 'Vista 2' : 'Vista 1'}`;
+    option.disabled = true;
+    select.appendChild(option);
+  }
 }
 
 function calculateCompliance(value, target) {
@@ -4100,12 +4145,73 @@ if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
       loadDarkModePreference(); // Cargar preferencia de modo noche
       initEventListeners();
+      initializeUserInterface(); // Inicializar interfaz de usuario
       autoLoadData(); // Iniciar carga automática
   });
 } else {
   loadDarkModePreference(); // Cargar preferencia de modo noche
   initEventListeners();
+  initializeUserInterface(); // Inicializar interfaz de usuario
   autoLoadData();
+}
+
+// ============= FUNCIONES DE AUTENTICACIÓN Y UI =============
+
+/**
+ * Inicializar interfaz de usuario con información de sesión
+ */
+function initializeUserInterface() {
+  const currentUser = auth.getCurrentUser();
+  
+  if (!currentUser) {
+    auth.logout();
+    return;
+  }
+  
+  // Mostrar información del usuario en el navbar
+  const userInfoElement = document.getElementById('userInfo');
+  if (userInfoElement) {
+    userInfoElement.textContent = `👤 ${currentUser.name}`;
+    
+    // Tooltip con información detallada
+    const v1Count = currentUser.role === 'admin' 
+      ? auth.AVAILABLE_MARKETS_V1.length 
+      : (currentUser.allowedMarkets.vista1?.length || 0);
+    const v2Count = currentUser.role === 'admin' 
+      ? auth.AVAILABLE_MARKETS_V2.length 
+      : (currentUser.allowedMarkets.vista2?.length || 0);
+    
+    userInfoElement.title = `Usuario: ${currentUser.username}\nVista 1: ${v1Count} mercados\nVista 2: ${v2Count} mercados`;
+  }
+  
+  // Mostrar botón de admin solo si es administrador
+  if (currentUser.role === 'admin') {
+    const adminBtn = document.getElementById('adminBtn');
+    if (adminBtn) {
+      adminBtn.style.display = 'inline-flex';
+    }
+  }
+  
+  // Log de información (para debug)
+  console.log('🔐 Usuario autenticado:', currentUser.username);
+  console.log('📍 Vista 1 - Mercados:', currentUser.role === 'admin' ? 'TODOS' : currentUser.allowedMarkets.vista1);
+  console.log('📍 Vista 2 - Mercados:', currentUser.role === 'admin' ? 'TODOS' : currentUser.allowedMarkets.vista2);
+}
+
+/**
+ * Ir al panel de administración
+ */
+function goToAdmin() {
+  window.location.href = 'admin.html';
+}
+
+/**
+ * Cerrar sesión
+ */
+function handleLogout() {
+  if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
+    auth.logout();
+  }
 }
   </script>
 </body>

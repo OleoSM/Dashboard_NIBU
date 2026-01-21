@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Permisos - Dashboard NIBU</title>
+  <style>
+    body {
+      font-family: 'Courier New', monospace;
+      background: #1a1a1a;
+      color: #00ff00;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    
+    h1 {
+      color: #00ffff;
+      border-bottom: 2px solid #00ffff;
+      padding-bottom: 10px;
+    }
+    
+    h2 {
+      color: #ffff00;
+      margin-top: 30px;
+    }
+    
+    .section {
+      background: #2a2a2a;
+      padding: 15px;
+      margin: 15px 0;
+      border-left: 4px solid #00ff00;
+      border-radius: 5px;
+    }
+    
+    .error {
+      color: #ff0000;
+      background: #3a1a1a;
+      border-left-color: #ff0000;
+    }
+    
+    .success {
+      color: #00ff00;
+      background: #1a3a1a;
+      border-left-color: #00ff00;
+    }
+    
+    .warning {
+      color: #ffaa00;
+      background: #3a2a1a;
+      border-left-color: #ffaa00;
+    }
+    
+    pre {
+      background: #0a0a0a;
+      padding: 10px;
+      border-radius: 5px;
+      overflow-x: auto;
+    }
+    
+    button {
+      background: #00ff00;
+      color: #1a1a1a;
+      border: none;
+      padding: 10px 20px;
+      margin: 5px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    
+    button:hover {
+      background: #00ffff;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔍 Dashboard NIBU - Test de Permisos</h1>
+  
+  <div style="margin-bottom: 20px;">
+    <button onclick="runTests()">▶️ Ejecutar Tests</button>
+    <button onclick="location.href='login.html'">← Volver al Login</button>
+    <button onclick="location.href='reset-storage.html'">🗑️ Reset Storage</button>
+  </div>
+  
+  <div id="output"></div>
+  
+  <script src="auth.js"></script>
+  <script>
+    function log(message, type = 'info') {
+      const output = document.getElementById('output');
+      const div = document.createElement('div');
+      div.className = `section ${type}`;
+      div.innerHTML = message;
+      output.appendChild(div);
+    }
+    
+    function runTests() {
+      document.getElementById('output').innerHTML = '';
+      
+      log('<h2>📋 TEST 1: Verificar Usuarios Predefinidos</h2>', 'info');
+      
+      const users = ['admin', 'usuario1', 'usuario2', 'usuario3', 'usuario4', 'usuario5'];
+      users.forEach(username => {
+        const result = auth.getUserInfo(username);
+        if (result.success) {
+          log(`<strong>✓ ${username}:</strong><pre>${JSON.stringify(result.user, null, 2)}</pre>`, 'success');
+        } else {
+          log(`<strong>✗ ${username}:</strong> ${result.message}`, 'error');
+        }
+      });
+      
+      log('<h2>🔐 TEST 2: Verificar Sesión Actual</h2>', 'info');
+      const currentUser = auth.getCurrentUser();
+      if (currentUser) {
+        log(`<strong>Usuario logueado:</strong><pre>${JSON.stringify(currentUser, null, 2)}</pre>`, 'success');
+      } else {
+        log('<strong>⚠️ No hay sesión activa</strong><br>Debes hacer login primero.', 'warning');
+      }
+      
+      log('<h2>📍 TEST 3: Mercados Disponibles</h2>', 'info');
+      const availableMarkets = auth.AVAILABLE_MARKETS;
+      log(`<strong>Mercados en el sistema:</strong><pre>${JSON.stringify(availableMarkets, null, 2)}</pre>`, 'success');
+      
+      log('<h2>💾 TEST 4: LocalStorage</h2>', 'info');
+      const userPermissions = localStorage.getItem('userPermissions');
+      if (userPermissions) {
+        log(`<strong>Permisos guardados:</strong><pre>${JSON.stringify(JSON.parse(userPermissions), null, 2)}</pre>`, 'success');
+      } else {
+        log('<strong>⚠️ No hay permisos guardados en localStorage</strong>', 'warning');
+      }
+      
+      const lastLogin = localStorage.getItem('lastLogin');
+      if (lastLogin) {
+        log(`<strong>Último login:</strong><pre>${JSON.stringify(JSON.parse(lastLogin), null, 2)}</pre>`, 'success');
+      } else {
+        log('<strong>ℹ️ No hay registro de último login</strong>', 'info');
+      }
+      
+      log('<h2>🧪 TEST 5: Test de Login</h2>', 'info');
+      
+      // Test usuario1
+      const loginTest1 = auth.login('usuario1', 'pass123');
+      if (loginTest1.success) {
+        log(`<strong>✓ Login usuario1 exitoso</strong><pre>${JSON.stringify(loginTest1.user, null, 2)}</pre>`, 'success');
+        
+        // Verificar mercados permitidos
+        const allowedMarkets = auth.getAllowedMarkets();
+        log(`<strong>Mercados permitidos para usuario1:</strong><pre>${JSON.stringify(allowedMarkets, null, 2)}</pre>`, 'success');
+      } else {
+        log(`<strong>✗ Login usuario1 falló:</strong> ${loginTest1.message}`, 'error');
+      }
+      
+      log('<h2>✅ Tests completados</h2>', 'success');
+    }
+    
+    // Ejecutar automáticamente al cargar
+    window.onload = () => {
+      runTests();
+    };
+  </script>
+</body>
+</html>
