@@ -30,10 +30,10 @@ El sistema ahora incluye un **CRUD completo** para la gestión de usuarios con p
 
 ```javascript
 {
-  id: 'usuario1',              // ID interno (automático)
-  username: 'jperez',          // Usuario para login (editable)
-  password: 'mipassword',      // Contraseña (editable)
-  name: 'Juan Pérez',          // Nombre completo (editable)
+  id: 'Diego Suarez / Gustavo Careaga',              // ID interno (automático)
+  username: 'diego.suarez@nissan.com.mx',          // Usuario para login (editable)
+  password: 'hola123',      // Contraseña (editable)
+  name: 'Diego Suarez / Gustavo Careaga',          // Nombre completo (editable)
   role: 'user',                // Rol (siempre 'user', excepto admin)
   allowedMarkets: {
     vista1: ['COL', 'PLT'],    // Mercados en Vista 1
