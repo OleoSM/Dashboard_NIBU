@@ -862,8 +862,7 @@
       if (result.success) {
         showAlert('success', result.message);
         closeModal();
-        loadUsers();
-        loadStats();
+        // La actualización se hace automáticamente por el evento 'usersUpdated'
       } else {
         showAlert('error', result.message);
       }
@@ -876,8 +875,7 @@
         
         if (result.success) {
           showAlert('success', result.message);
-          loadUsers();
-          loadStats();
+          // La actualización se hace automáticamente por el evento 'usersUpdated'
         } else {
           showAlert('error', result.message);
         }
@@ -926,14 +924,16 @@
      */
     function exportUsersToJSON() {
       try {
-        const users = auth.getAllUsers();
+        // Obtener usuarios completos con contraseñas desde localStorage
+        const usersObject = auth.getStoredUsers();
+        const usersArray = Object.values(usersObject);
         
         // Crear objeto con metadata
         const exportData = {
           exportDate: new Date().toISOString(),
           version: '1.0',
-          totalUsers: users.length,
-          users: users
+          totalUsers: usersArray.length,
+          users: usersArray
         };
 
         // Convertir a JSON con formato bonito
@@ -953,12 +953,12 @@
         // Limpiar
         URL.revokeObjectURL(url);
         
-        showAlert('✅ Usuarios exportados exitosamente', 'success');
+        showAlert('success', '✅ Usuarios exportados exitosamente');
         console.log('📤 Exportación completada:', exportData.totalUsers, 'usuarios');
         
       } catch (error) {
         console.error('Error al exportar usuarios:', error);
-        showAlert('❌ Error al exportar usuarios: ' + error.message, 'error');
+        showAlert('error', '❌ Error al exportar usuarios: ' + error.message);
       }
     }
 
@@ -1016,15 +1016,16 @@
             return;
           }
 
-          // Guardar en localStorage
-          localStorage.setItem('dashboardUsers', JSON.stringify(importData.users));
-          
-          // Recargar la tabla y estadísticas
-          loadUsers();
-          loadStats();
+          // Guardar usando saveUsers() para disparar evento de sincronización
+          const usersObject = {};
+          importData.users.forEach(user => {
+            usersObject[user.id] = user;
+          });
+          auth.saveUsers(usersObject);
           
           showAlert(`✅ ${importData.users.length} usuarios importados correctamente`, 'success');
           console.log('📥 Importación completada:', importData.users.length, 'usuarios');
+          // La actualización se hace automáticamente por el evento 'usersUpdated'
           
         } catch (error) {
           console.error('Error al importar usuarios:', error);
@@ -1053,7 +1054,11 @@
       console.log('🔄 Actualizando lista de usuarios...', e.detail);
       loadUsers();
       loadStats();
-      showAlert('info', '✨ Datos actualizados desde otra pestaña');
+      
+      // Solo mostrar alerta si el cambio viene de otra pestaña
+      if (e.detail.source === 'storage') {
+        showAlert('info', '✨ Datos actualizados desde otra pestaña');
+      }
     });
 
     // ============= FIN SINCRONIZACIÓN =============

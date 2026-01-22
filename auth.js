@@ -113,6 +113,14 @@ function saveUsers(users) {
   
   // Notificar cambio con timestamp para forzar actualización en otras pestañas
   localStorage.setItem('dashboardUsersLastUpdate', Date.now().toString());
+  
+  // Emitir evento también en la pestaña actual (el evento 'storage' solo se dispara en otras pestañas)
+  window.dispatchEvent(new CustomEvent('usersUpdated', {
+    detail: {
+      source: 'local',
+      timestamp: Date.now()
+    }
+  }));
 }
 
 /**
@@ -474,6 +482,8 @@ window.auth = {
   
   // Utilidades
   resetToDefaults,
+  saveUsers,        // Exponer para importación de JSON
+  getStoredUsers,   // Exponer para importación de JSON
   
   // Constantes
   MARKETS_CONFIG,
