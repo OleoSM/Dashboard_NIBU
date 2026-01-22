@@ -106,10 +106,13 @@ function getStoredUsers() {
 }
 
 /**
- * Guardar usuarios en localStorage
+ * Guardar usuarios en localStorage y notificar cambios
  */
 function saveUsers(users) {
   localStorage.setItem('dashboardUsers', JSON.stringify(users));
+  
+  // Notificar cambio con timestamp para forzar actualización en otras pestañas
+  localStorage.setItem('dashboardUsersLastUpdate', Date.now().toString());
 }
 
 /**
@@ -417,6 +420,33 @@ function resetToDefaults() {
 
 // ============= INICIALIZACIÓN =============
 initializeUsers();
+
+// ============= SINCRONIZACIÓN ENTRE PESTAÑAS =============
+
+/**
+ * Escuchar cambios en localStorage desde otras pestañas
+ * Este evento se dispara cuando otra pestaña modifica el localStorage
+ */
+window.addEventListener('storage', function(e) {
+  // Detectar si cambió la base de datos de usuarios
+  if (e.key === 'dashboardUsersLastUpdate' || e.key === 'dashboardUsers') {
+    console.log('🔄 Detectado cambio en usuarios desde otra pestaña');
+    
+    // Emitir evento personalizado para que las páginas se actualicen
+    window.dispatchEvent(new CustomEvent('usersUpdated', {
+      detail: {
+        source: 'storage',
+        timestamp: Date.now()
+      }
+    }));
+  }
+  
+  // Detectar si cambió la sesión actual (logout desde otra pestaña)
+  if (e.key === 'currentUser' && e.newValue === null) {
+    console.log('🚪 Sesión cerrada desde otra pestaña');
+    window.location.href = 'login.html';
+  }
+});
 
 // ============= EXPORTAR API =============
 window.auth = {

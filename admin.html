@@ -119,6 +119,26 @@
       background: #5a6268;
     }
 
+    .btn-info {
+      background: #2196F3;
+      color: white;
+    }
+
+    .btn-info:hover {
+      background: #1976D2;
+      transform: translateY(-2px);
+    }
+
+    .btn-orange {
+      background: #FF9800;
+      color: white;
+    }
+
+    .btn-orange:hover {
+      background: #F57C00;
+      transform: translateY(-2px);
+    }
+
     .btn-sm {
       padding: 6px 12px;
       font-size: 12px;
@@ -532,9 +552,18 @@
     <div class="users-section">
       <div class="section-header">
         <h2>👥 Gestión de Usuarios</h2>
-        <button class="btn btn-success" onclick="openCreateModal()">
-          ➕ Crear Nuevo Usuario
-        </button>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button class="btn btn-success" onclick="openCreateModal()">
+            ➕ Crear Nuevo Usuario
+          </button>
+          <button class="btn btn-info" onclick="exportUsersToJSON()" title="Descargar backup de usuarios en formato JSON">
+            📤 Exportar JSON
+          </button>
+          <button class="btn btn-orange" onclick="document.getElementById('importFileInput').click()" title="Cargar usuarios desde archivo JSON">
+            📥 Importar JSON
+          </button>
+          <input type="file" id="importFileInput" accept=".json" style="display: none;" onchange="importUsersFromJSON(event)">
+        </div>
       </div>
 
       <table class="users-table" id="usersTable">
@@ -889,6 +918,145 @@
         closeModal();
       }
     });
+
+    // ============= FUNCIONES DE EXPORTAR/IMPORTAR JSON =============
+
+    /**
+     * Exportar todos los usuarios a un archivo JSON
+     */
+    function exportUsersToJSON() {
+      try {
+        const users = auth.getAllUsers();
+        
+        // Crear objeto con metadata
+        const exportData = {
+          exportDate: new Date().toISOString(),
+          version: '1.0',
+          totalUsers: users.length,
+          users: users
+        };
+
+        // Convertir a JSON con formato bonito
+        const jsonString = JSON.stringify(exportData, null, 2);
+        
+        // Crear blob y descargar
+        const blob = new Blob([jsonString], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        
+        // Nombre del archivo con fecha
+        const timestamp = new Date().toISOString().split('T')[0];
+        link.download = `dashboard-users-${timestamp}.json`;
+        link.href = url;
+        link.click();
+        
+        // Limpiar
+        URL.revokeObjectURL(url);
+        
+        showAlert('✅ Usuarios exportados exitosamente', 'success');
+        console.log('📤 Exportación completada:', exportData.totalUsers, 'usuarios');
+        
+      } catch (error) {
+        console.error('Error al exportar usuarios:', error);
+        showAlert('❌ Error al exportar usuarios: ' + error.message, 'error');
+      }
+    }
+
+    /**
+     * Importar usuarios desde un archivo JSON
+     */
+    function importUsersFromJSON(event) {
+      const file = event.target.files[0];
+      
+      if (!file) {
+        return;
+      }
+
+      // Validar que sea un archivo JSON
+      if (!file.name.endsWith('.json')) {
+        showAlert('❌ Por favor selecciona un archivo JSON válido', 'error');
+        return;
+      }
+
+      const reader = new FileReader();
+      
+      reader.onload = function(e) {
+        try {
+          const importData = JSON.parse(e.target.result);
+          
+          // Validar estructura del JSON
+          if (!importData.users || !Array.isArray(importData.users)) {
+            throw new Error('Formato de archivo inválido. Debe contener un array "users"');
+          }
+
+          // Validar que cada usuario tenga los campos requeridos
+          const requiredFields = ['id', 'username', 'password', 'name', 'role', 'allowedMarkets'];
+          
+          for (const user of importData.users) {
+            for (const field of requiredFields) {
+              if (!(field in user)) {
+                throw new Error(`Usuario inválido: falta el campo "${field}" en ${user.id || 'usuario sin ID'}`);
+              }
+            }
+            
+            // Validar estructura de allowedMarkets
+            if (!user.allowedMarkets.vista1 || !user.allowedMarkets.vista2) {
+              throw new Error(`Usuario ${user.id}: estructura de allowedMarkets inválida`);
+            }
+          }
+
+          // Confirmar importación
+          const confirmMsg = `¿Estás seguro de importar ${importData.users.length} usuarios?\n\n` +
+                            `⚠️ ADVERTENCIA: Esto reemplazará TODOS los usuarios actuales.\n` +
+                            `Fecha de exportación: ${new Date(importData.exportDate).toLocaleString()}\n` +
+                            `Versión: ${importData.version}`;
+          
+          if (!confirm(confirmMsg)) {
+            showAlert('❌ Importación cancelada', 'warning');
+            return;
+          }
+
+          // Guardar en localStorage
+          localStorage.setItem('dashboardUsers', JSON.stringify(importData.users));
+          
+          // Recargar la tabla y estadísticas
+          loadUsers();
+          loadStats();
+          
+          showAlert(`✅ ${importData.users.length} usuarios importados correctamente`, 'success');
+          console.log('📥 Importación completada:', importData.users.length, 'usuarios');
+          
+        } catch (error) {
+          console.error('Error al importar usuarios:', error);
+          showAlert('❌ Error al importar: ' + error.message, 'error');
+        }
+      };
+      
+      reader.onerror = function() {
+        showAlert('❌ Error al leer el archivo', 'error');
+      };
+      
+      reader.readAsText(file);
+      
+      // Resetear el input para permitir importar el mismo archivo de nuevo
+      event.target.value = '';
+    }
+
+    // ============= FIN FUNCIONES IMPORTAR/EXPORTAR =============
+
+    // ============= SINCRONIZACIÓN ENTRE PESTAÑAS =============
+    
+    /**
+     * Escuchar actualizaciones de usuarios desde otras pestañas
+     */
+    window.addEventListener('usersUpdated', function(e) {
+      console.log('🔄 Actualizando lista de usuarios...', e.detail);
+      loadUsers();
+      loadStats();
+      showAlert('info', '✨ Datos actualizados desde otra pestaña');
+    });
+
+    // ============= FIN SINCRONIZACIÓN =============
 
     // Inicializar
     loadStats();

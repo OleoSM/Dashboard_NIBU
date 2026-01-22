@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test de Sincronización - Dashboard NIBU</title>
+  <style>
+    :root {
+      --primary: #C3002F;
+      --bg: #f4f7fa;
+      --card: #ffffff;
+      --ok: #4CAF50;
+      --warn: #FFC107;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      padding: 20px;
+      color: #111;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      background: linear-gradient(135deg, var(--primary) 0%, #8A0020 100%);
+      color: white;
+      padding: 20px 30px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .header h1 {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      opacity: 0.9;
+      font-size: 14px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
+    }
+
+    .card h2 {
+      font-size: 18px;
+      margin-bottom: 16px;
+      color: var(--primary);
+    }
+
+    .info-box {
+      background: #e3f2fd;
+      border-left: 4px solid #2196F3;
+      padding: 16px;
+      border-radius: 8px;
+      margin: 16px 0;
+    }
+
+    .warning-box {
+      background: #fff3cd;
+      border-left: 4px solid var(--warn);
+      padding: 16px;
+      border-radius: 8px;
+      margin: 16px 0;
+    }
+
+    .success-box {
+      background: #d4edda;
+      border-left: 4px solid var(--ok);
+      padding: 16px;
+      border-radius: 8px;
+      margin: 16px 0;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #8A0020;
+      transform: translateY(-2px);
+    }
+
+    .btn-success {
+      background: var(--ok);
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: #45a049;
+    }
+
+    .log {
+      background: #1e1e1e;
+      color: #00ff00;
+      padding: 16px;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      max-height: 300px;
+      overflow-y: auto;
+      margin-top: 16px;
+    }
+
+    .log-entry {
+      margin-bottom: 8px;
+      padding: 4px;
+      border-left: 3px solid #00ff00;
+      padding-left: 8px;
+    }
+
+    .log-entry.info {
+      border-left-color: #2196F3;
+      color: #64b5f6;
+    }
+
+    .log-entry.success {
+      border-left-color: #4CAF50;
+      color: #4CAF50;
+    }
+
+    .log-entry.warning {
+      border-left-color: #FFC107;
+      color: #FFC107;
+    }
+
+    .users-list {
+      margin-top: 16px;
+    }
+
+    .user-item {
+      background: #f9fafb;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .user-info {
+      flex: 1;
+    }
+
+    .user-name {
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .user-username {
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, var(--primary) 0%, #8A0020 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    code {
+      background: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🔄 Test de Sincronización Entre Pestañas</h1>
+      <p>Prueba la sincronización en tiempo real de la base de datos de usuarios</p>
+    </div>
+
+    <div class="warning-box">
+      <strong>⚠️ INSTRUCCIONES:</strong><br>
+      1. Abre esta página en <strong>DOS pestañas diferentes</strong> del mismo navegador<br>
+      2. En una pestaña, presiona los botones de prueba<br>
+      3. Observa cómo la otra pestaña se actualiza automáticamente
+    </div>
+
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-value" id="totalUsers">0</div>
+        <div class="stat-label">Total de Usuarios</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="updateCounter">0</div>
+        <div class="stat-label">Actualizaciones Detectadas</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="lastUpdate">--</div>
+        <div class="stat-label">Última Actualización</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🎮 Controles de Prueba</h2>
+      <p style="margin-bottom: 16px;">Usa estos botones para simular cambios en los usuarios:</p>
+      
+      <button class="btn btn-primary" onclick="testCreateUser()">
+        ➕ Crear Usuario de Prueba
+      </button>
+      <button class="btn btn-success" onclick="testUpdateUser()">
+        ✏️ Actualizar Usuario Aleatorio
+      </button>
+      <button class="btn btn-primary" onclick="forceReload()">
+        🔄 Recargar Manualmente
+      </button>
+      <button class="btn btn-primary" onclick="clearLog()">
+        🗑️ Limpiar Log
+      </button>
+
+      <div class="info-box" style="margin-top: 16px;">
+        <strong>💡 Tip:</strong> Coloca esta pestaña y otra lado a lado para ver la sincronización en tiempo real
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>👥 Usuarios Actuales</h2>
+      <div class="users-list" id="usersList">
+        <!-- Users will be loaded here -->
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>📊 Log de Eventos</h2>
+      <div class="log" id="eventLog">
+        <div class="log-entry">Sistema iniciado. Esperando eventos...</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>📖 Cómo Funciona</h2>
+      <p>El sistema utiliza el <code>Storage Event API</code> de HTML5 que permite detectar cambios en <code>localStorage</code> entre pestañas del mismo origen.</p>
+      
+      <div class="info-box">
+        <strong>Flujo de Sincronización:</strong><br>
+        1. <strong>Pestaña A</strong> modifica un usuario → Guarda en <code>localStorage</code><br>
+        2. <strong>Navegador</strong> dispara evento <code>storage</code> en todas las demás pestañas<br>
+        3. <strong>Pestaña B</strong> detecta el evento → Recarga los datos automáticamente<br>
+        4. <strong>Usuario</strong> ve los cambios sin necesidad de refrescar
+      </div>
+
+      <p style="margin-top: 16px;">
+        <strong>Archivos modificados:</strong><br>
+        • <code>auth.js</code> - Línea 110: Función <code>saveUsers()</code><br>
+        • <code>auth.js</code> - Línea 419: Listener del evento <code>storage</code><br>
+        • <code>admin.html</code> - Línea 1048: Listener de <code>usersUpdated</code>
+      </p>
+    </div>
+  </div>
+
+  <script src="auth.js"></script>
+  <script>
+    let updateCounter = 0;
+
+    // Cargar usuarios
+    function loadUsers() {
+      const users = JSON.parse(localStorage.getItem('dashboardUsers') || '{}');
+      const usersList = document.getElementById('usersList');
+      const usersArray = Object.values(users);
+      
+      document.getElementById('totalUsers').textContent = usersArray.length;
+
+      if (usersArray.length === 0) {
+        usersList.innerHTML = '<div style="text-align: center; padding: 20px; color: #6b7280;">No hay usuarios registrados</div>';
+        return;
+      }
+
+      usersList.innerHTML = usersArray.map(user => `
+        <div class="user-item">
+          <div class="user-info">
+            <div class="user-name">${user.name}</div>
+            <div class="user-username">@${user.username} - ${user.id}</div>
+          </div>
+          <div>
+            <span style="background: #e3f2fd; color: #1976d2; padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: 600;">
+              ${user.role}
+            </span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Log de eventos
+    function addLog(message, type = 'info') {
+      const log = document.getElementById('eventLog');
+      const timestamp = new Date().toLocaleTimeString();
+      const entry = document.createElement('div');
+      entry.className = `log-entry ${type}`;
+      entry.textContent = `[${timestamp}] ${message}`;
+      log.insertBefore(entry, log.firstChild);
+      
+      // Limitar a 50 entradas
+      while (log.children.length > 50) {
+        log.removeChild(log.lastChild);
+      }
+    }
+
+    // Actualizar última actualización
+    function updateLastUpdate() {
+      const time = new Date().toLocaleTimeString();
+      document.getElementById('lastUpdate').textContent = time;
+    }
+
+    // Test: Crear usuario
+    function testCreateUser() {
+      const randomId = Math.floor(Math.random() * 10000);
+      const userData = {
+        name: `Usuario Test ${randomId}`,
+        username: `test${randomId}`,
+        password: 'test123',
+        allowedMarkets: {
+          vista1: ['COL', 'PLT'],
+          vista2: ['COL']
+        }
+      };
+
+      const result = auth.createUser(userData);
+      if (result.success) {
+        addLog(`✅ Usuario creado: ${userData.name}`, 'success');
+        loadUsers();
+        updateLastUpdate();
+      } else {
+        addLog(`❌ Error: ${result.message}`, 'warning');
+      }
+    }
+
+    // Test: Actualizar usuario aleatorio
+    function testUpdateUser() {
+      const users = Object.keys(JSON.parse(localStorage.getItem('dashboardUsers') || '{}'));
+      if (users.length === 0) {
+        addLog('⚠️ No hay usuarios para actualizar', 'warning');
+        return;
+      }
+
+      const randomUser = users[Math.floor(Math.random() * users.length)];
+      const randomName = `Usuario Actualizado ${Math.floor(Math.random() * 1000)}`;
+      
+      const result = auth.updateUser(randomUser, { name: randomName });
+      if (result.success) {
+        addLog(`✅ Usuario actualizado: ${randomUser} → ${randomName}`, 'success');
+        loadUsers();
+        updateLastUpdate();
+      } else {
+        addLog(`❌ Error: ${result.message}`, 'warning');
+      }
+    }
+
+    // Forzar recarga
+    function forceReload() {
+      loadUsers();
+      updateLastUpdate();
+      addLog('🔄 Recarga manual ejecutada', 'info');
+    }
+
+    // Limpiar log
+    function clearLog() {
+      document.getElementById('eventLog').innerHTML = '<div class="log-entry">Log limpiado. Esperando eventos...</div>';
+      addLog('🗑️ Log limpiado', 'info');
+    }
+
+    // Escuchar cambios de usuarios
+    window.addEventListener('usersUpdated', function(e) {
+      updateCounter++;
+      document.getElementById('updateCounter').textContent = updateCounter;
+      
+      addLog(`🔄 SINCRONIZACIÓN: Detectado cambio desde ${e.detail.source}`, 'success');
+      loadUsers();
+      updateLastUpdate();
+    });
+
+    // Inicializar
+    loadUsers();
+    updateLastUpdate();
+    addLog('✅ Sistema de sincronización iniciado', 'success');
+    addLog('👀 Esperando cambios en otras pestañas...', 'info');
+  </script>
+</body>
+</html>
