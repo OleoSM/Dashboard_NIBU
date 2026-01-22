@@ -27,7 +27,7 @@ const ADMIN_USER = {
 // ============= USUARIOS POR DEFECTO =============
 const DEFAULT_USERS = {
   usuario1: {
-    id: 'usuario1',
+    id: 'usuario1 ',
     username: 'usuario1',
     password: 'pass123',
     role: 'user',
@@ -38,11 +38,11 @@ const DEFAULT_USERS = {
     }
   },
   usuario2: {
-    id: 'usuario2',
-    username: 'usuario2',
-    password: 'pass123',
+    id: 'gaell',
+    username: 'gaell',
+    password: 'gaell',
     role: 'user',
-    name: 'Usuario Dos',
+    name: 'gaell',
     allowedMarkets: {
       vista1: ['PNM', 'URU', 'ELS', 'HND'],
       vista2: ['PNM', 'URU', 'ELS', 'HND']
