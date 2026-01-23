@@ -366,7 +366,7 @@
       margin-bottom: 8px;
       color: var(--nissan-black);
       font-weight: 600;
-      font-size: 14px;
+      font-size: 18px;
       display: flex;
       align-items: center;
       gap: 6px;
@@ -637,27 +637,7 @@
           <p>Ingresa tus credenciales para acceder</p>
         </div>
 
-        <!-- Demo Users Card -->
-        <div class="demo-card">
-          <div class="demo-card-header">
-            <span>👥</span>
-            <span>Usuarios de Prueba</span>
-          </div>
-          <div class="demo-users">
-            <div class="demo-user" onclick="quickLogin('admin', 'admin123')">
-              <span class="demo-user-name">🔑 admin</span>
-              <span class="demo-user-pass">admin123</span>
-            </div>
-            <div class="demo-user" onclick="quickLogin('usuario1', 'pass123')">
-              <span class="demo-user-name">👤 usuario1</span>
-              <span class="demo-user-pass">pass123</span>
-            </div>
-          </div>
-          <div class="demo-note">
-            💡 Haz clic en un usuario para login rápido<br>
-            🔧 Admin: Acceso completo y panel de gestión
-          </div>
-        </div>
+        
 
         <!-- Error Message -->
         <div class="error-message" id="errorMessage">
@@ -669,7 +649,7 @@
         <form id="loginForm" class="login-form">
           <div class="form-group">
             <label for="username">
-              <span>👤</span>
+              <span></span>
               <span>Usuario</span>
             </label>
             <input 
@@ -684,7 +664,7 @@
 
           <div class="form-group">
             <label for="password">
-              <span>🔒</span>
+              <span></span>
               <span>Contraseña</span>
             </label>
             <div class="password-wrapper">
