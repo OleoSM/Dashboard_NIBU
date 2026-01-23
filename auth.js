@@ -1,5 +1,5 @@
 /**
- * Sistema de Autenticación y Gestión de Permisos - CRUD Completo
+ * Sistema de Autenticación y Gestión de Permisos - MODO ESTÁTICO (Código manda)
  * Dashboard NIBU - 2026
  */
 
@@ -24,25 +24,27 @@ const ADMIN_USER = {
   }
 };
 
-// ============= USUARIOS POR DEFECTO =============
+// ============= ZONA DE EDICIÓN DE USUARIOS =============
+// ✏️ EDITA TUS USUARIOS AQUÍ DIRECTAMENTE
+// Al guardar y recargar la página, estos serán los usuarios activos.
 const DEFAULT_USERS = {
-  usuario1: {
-    id: 'usuario1 ',
-    username: 'usuario1',
+  juan_manuel: {
+    id: 'juan_manuel', // Quité el espacio extra que tenías aquí
+    username: 'juan_manuel',
     password: 'pass123',
     role: 'user',
-    name: 'Usuario Uno',
+    name: 'Juan Manuel',
     allowedMarkets: {
-      vista1: ['COL', 'PLT', 'CST', 'ECA'],
+      vista1: ['COL', 'PLT'],
       vista2: ['COL', 'PLT', 'CST', 'ECA']
     }
   },
-  usuario2: {
+  gaell: {
     id: 'gaell',
     username: 'gaell',
     password: 'gaell',
     role: 'user',
-    name: 'gaell',
+    name: 'Gaell',
     allowedMarkets: {
       vista1: ['PNM', 'URU', 'ELS', 'HND'],
       vista2: ['PNM', 'URU', 'ELS', 'HND']
@@ -59,42 +61,19 @@ const DEFAULT_USERS = {
       vista2: ['NIC', 'DOM', 'GUT', 'PRG']
     }
   },
-  usuario4: {
-    id: 'usuario4',
-    username: 'usuario4',
-    password: 'pass123',
-    role: 'user',
-    name: 'Usuario Cuatro',
-    allowedMarkets: {
-      vista1: ['BOL', 'MASSY', 'GEL', 'HIT'],
-      vista2: ['BOL', 'MASSY', 'GEL']
-    }
-  },
-  usuario5: {
-    id: 'usuario5',
-    username: 'usuario5',
-    password: 'pass123',
-    role: 'user',
-    name: 'Usuario Cinco',
-    allowedMarkets: {
-      vista1: ['ALB', 'BLZ', 'CUR'],
-      vista2: []
-    }
-  }
+  
 };
 
 // ============= FUNCIONES DE INICIALIZACIÓN =============
 
 /**
  * Inicializar sistema de usuarios
+ * MODIFICADO: Ahora fuerza la actualización desde el código siempre.
  */
 function initializeUsers() {
-  const savedUsers = localStorage.getItem('dashboardUsers');
-  if (!savedUsers) {
-    // Primera vez: guardar usuarios por defecto
-    localStorage.setItem('dashboardUsers', JSON.stringify(DEFAULT_USERS));
-    console.log('✅ Usuarios inicializados con valores por defecto');
-  }
+  // Eliminamos el "if (!savedUsers)" para que SIEMPRE tome los datos de este archivo
+  localStorage.setItem('dashboardUsers', JSON.stringify(DEFAULT_USERS));
+  console.log('✅ Usuarios actualizados desde el código auth.js');
 }
 
 /**
@@ -102,7 +81,7 @@ function initializeUsers() {
  */
 function getStoredUsers() {
   const users = localStorage.getItem('dashboardUsers');
-  return users ? JSON.parse(users) : {};
+  return users ? JSON.parse(users) : DEFAULT_USERS;
 }
 
 /**
@@ -114,7 +93,7 @@ function saveUsers(users) {
   // Notificar cambio con timestamp para forzar actualización en otras pestañas
   localStorage.setItem('dashboardUsersLastUpdate', Date.now().toString());
   
-  // Emitir evento también en la pestaña actual (el evento 'storage' solo se dispara en otras pestañas)
+  // Emitir evento también en la pestaña actual
   window.dispatchEvent(new CustomEvent('usersUpdated', {
     detail: {
       source: 'local',
@@ -145,6 +124,9 @@ function getUserById(identifier) {
 }
 
 // ============= FUNCIONES CRUD =============
+// Nota: Aunque estas funciones siguen existiendo, si usas "createUser" desde la web,
+// el nuevo usuario desaparecerá si recargas la página porque el código volverá a
+// imponer los usuarios de DEFAULT_USERS.
 
 /**
  * Crear nuevo usuario
@@ -155,28 +137,20 @@ function createUser(userData) {
     return { success: false, message: 'No tienes permisos para crear usuarios' };
   }
 
-  // Validaciones
   if (!userData.username || !userData.password || !userData.name) {
     return { success: false, message: 'Todos los campos son obligatorios' };
   }
 
   const users = getStoredUsers();
   
-  // Verificar si el username ya existe
   const usernameExists = Object.values(users).some(u => u.username === userData.username);
   if (usernameExists) {
     return { success: false, message: 'El nombre de usuario ya existe' };
   }
 
-  // Generar nuevo ID (usuario6, usuario7, etc.)
-  const existingIds = Object.keys(users).map(id => {
-    const match = id.match(/^usuario(\d+)$/);
-    return match ? parseInt(match[1]) : 0;
-  });
-  const maxId = existingIds.length > 0 ? Math.max(...existingIds) : 0;
-  const newId = `usuario${maxId + 1}`;
+  // Generar ID simple basado en timestamp para evitar conflictos al editar código
+  const newId = `user_${Date.now()}`;
 
-  // Crear nuevo usuario
   const newUser = {
     id: newId,
     username: userData.username,
@@ -192,8 +166,8 @@ function createUser(userData) {
   users[newId] = newUser;
   saveUsers(users);
 
-  console.log('✅ Usuario creado:', newId);
-  return { success: true, message: 'Usuario creado exitosamente', user: newUser };
+  console.log('⚠️ Usuario creado temporalmente (se borrará al recargar si no lo agregas al código):', newId);
+  return { success: true, message: 'Usuario creado (Nota: Agrégalo a auth.js para que sea permanente)', user: newUser };
 }
 
 /**
@@ -215,7 +189,6 @@ function updateUser(userId, userData) {
     return { success: false, message: 'Usuario no encontrado' };
   }
 
-  // Verificar si el nuevo username ya existe (excepto el mismo usuario)
   if (userData.username && userData.username !== users[userId].username) {
     const usernameExists = Object.values(users).some(
       u => u.username === userData.username && u.id !== userId
@@ -225,7 +198,6 @@ function updateUser(userId, userData) {
     }
   }
 
-  // Actualizar campos
   if (userData.username) users[userId].username = userData.username;
   if (userData.password) users[userId].password = userData.password;
   if (userData.name) users[userId].name = userData.name;
@@ -237,9 +209,7 @@ function updateUser(userId, userData) {
   }
 
   saveUsers(users);
-
-  console.log('✅ Usuario actualizado:', userId);
-  return { success: true, message: 'Usuario actualizado exitosamente', user: users[userId] };
+  return { success: true, message: 'Usuario actualizado temporalmente', user: users[userId] };
 }
 
 /**
@@ -265,15 +235,15 @@ function deleteUser(userId) {
   delete users[userId];
   saveUsers(users);
 
-  console.log('🗑️ Usuario eliminado:', userId);
-  return { success: true, message: `Usuario ${username} eliminado exitosamente` };
+  return { success: true, message: `Usuario ${username} eliminado temporalmente` };
 }
 
 /**
- * Obtener todos los usuarios (para listar en admin)
+ * Obtener todos los usuarios
  */
 function getAllUsers() {
   const currentUser = getCurrentUser();
+  // Permitimos ver usuarios si es admin
   if (!currentUser || currentUser.role !== 'admin') {
     return { success: false, message: 'Acceso denegado' };
   }
@@ -292,29 +262,20 @@ function getAllUsers() {
 
 // ============= FUNCIONES DE AUTENTICACIÓN =============
 
-/**
- * Login
- */
 function login(username, password) {
-  initializeUsers();
+  // RE-INICIALIZAMOS AQUÍ PARA ASEGURARNOS QUE LOS DATOS DEL CÓDIGO ESTÉN CARGADOS
+  initializeUsers(); 
 
   const user = getUserById(username);
 
   if (!user) {
-    return { 
-      success: false, 
-      message: 'Usuario no encontrado. Verifica tu nombre de usuario.' 
-    };
+    return { success: false, message: 'Usuario no encontrado.' };
   }
 
   if (user.password !== password) {
-    return { 
-      success: false, 
-      message: 'Contraseña incorrecta. Intenta nuevamente.' 
-    };
+    return { success: false, message: 'Contraseña incorrecta.' };
   }
 
-  // Crear sesión
   const sessionData = {
     id: user.id,
     username: user.username,
@@ -325,64 +286,36 @@ function login(username, password) {
   };
 
   sessionStorage.setItem('currentUser', JSON.stringify(sessionData));
-  localStorage.setItem('lastLogin', JSON.stringify({
-    username: user.username,
-    time: new Date().toISOString()
-  }));
-
-  console.log('✅ Login exitoso:', user.username);
+  
   return { success: true, user: sessionData, message: 'Login exitoso' };
 }
 
-/**
- * Logout
- */
 function logout() {
   sessionStorage.removeItem('currentUser');
   window.location.href = 'login.html';
 }
 
-/**
- * Obtener usuario actual
- */
 function getCurrentUser() {
   const userData = sessionStorage.getItem('currentUser');
-  if (!userData) return null;
-  return JSON.parse(userData);
+  return userData ? JSON.parse(userData) : null;
 }
 
-/**
- * Verificar autenticación
- */
 function isAuthenticated() {
   return getCurrentUser() !== null;
 }
 
-/**
- * Verificar si es admin
- */
 function isAdmin() {
   const user = getCurrentUser();
   return user && user.role === 'admin';
 }
 
-/**
- * Obtener mercados permitidos según vista
- */
 function getAllowedMarketsByView(view = 'vista1') {
   const user = getCurrentUser();
   if (!user) return [];
-  
-  if (user.role === 'admin') {
-    return [...MARKETS_CONFIG[view]];
-  }
-  
+  if (user.role === 'admin') return [...MARKETS_CONFIG[view]];
   return user.allowedMarkets[view] || [];
 }
 
-/**
- * Verificar acceso a mercado en vista específica
- */
 function hasMarketAccess(market, view = 'vista1') {
   const user = getCurrentUser();
   if (!user) return false;
@@ -390,9 +323,6 @@ function hasMarketAccess(market, view = 'vista1') {
   return user.allowedMarkets[view]?.includes(market) || false;
 }
 
-/**
- * Proteger página
- */
 function protectPage() {
   if (!isAuthenticated()) {
     window.location.href = 'login.html';
@@ -401,9 +331,6 @@ function protectPage() {
   return true;
 }
 
-/**
- * Proteger página admin
- */
 function protectAdminPage() {
   if (!isAuthenticated()) {
     window.location.href = 'login.html';
@@ -417,80 +344,34 @@ function protectAdminPage() {
   return true;
 }
 
-/**
- * Resetear sistema (volver a usuarios por defecto)
- */
 function resetToDefaults() {
   localStorage.setItem('dashboardUsers', JSON.stringify(DEFAULT_USERS));
-  console.log('🔄 Sistema reseteado a valores por defecto');
+  console.log('🔄 Sistema reseteado a valores del código');
   return { success: true, message: 'Sistema reseteado correctamente' };
 }
 
-// ============= INICIALIZACIÓN =============
+// ============= EJECUCIÓN INICIAL =============
+// Esto asegura que apenas cargue el script, los usuarios del código se guarden
 initializeUsers();
 
-// ============= SINCRONIZACIÓN ENTRE PESTAÑAS =============
-
-/**
- * Escuchar cambios en localStorage desde otras pestañas
- * Este evento se dispara cuando otra pestaña modifica el localStorage
- */
+// ============= SINCRONIZACIÓN =============
 window.addEventListener('storage', function(e) {
-  // Detectar si cambió la base de datos de usuarios
   if (e.key === 'dashboardUsersLastUpdate' || e.key === 'dashboardUsers') {
-    console.log('🔄 Detectado cambio en usuarios desde otra pestaña');
-    
-    // Emitir evento personalizado para que las páginas se actualicen
     window.dispatchEvent(new CustomEvent('usersUpdated', {
-      detail: {
-        source: 'storage',
-        timestamp: Date.now()
-      }
+      detail: { source: 'storage', timestamp: Date.now() }
     }));
   }
-  
-  // Detectar si cambió la sesión actual (logout desde otra pestaña)
   if (e.key === 'currentUser' && e.newValue === null) {
-    console.log('🚪 Sesión cerrada desde otra pestaña');
     window.location.href = 'login.html';
   }
 });
 
 // ============= EXPORTAR API =============
 window.auth = {
-  // CRUD
-  createUser,
-  updateUser,
-  deleteUser,
-  getAllUsers,
-  getUserById,
-  
-  // Auth
-  login,
-  logout,
-  getCurrentUser,
-  isAuthenticated,
-  isAdmin,
-  
-  // Permisos
-  getAllowedMarketsByView,
-  hasMarketAccess,
-  
-  // Protección
-  protectPage,
-  protectAdminPage,
-  
-  // Utilidades
-  resetToDefaults,
-  saveUsers,        // Exponer para importación de JSON
-  getStoredUsers,   // Exponer para importación de JSON
-  
-  // Constantes
-  MARKETS_CONFIG,
-  get AVAILABLE_MARKETS_V1() {
-    return [...MARKETS_CONFIG.vista1];
-  },
-  get AVAILABLE_MARKETS_V2() {
-    return [...MARKETS_CONFIG.vista2];
-  }
+  createUser, updateUser, deleteUser, getAllUsers, getUserById,
+  login, logout, getCurrentUser, isAuthenticated, isAdmin,
+  getAllowedMarketsByView, hasMarketAccess, protectPage, protectAdminPage,
+  resetToDefaults, saveUsers, getStoredUsers, MARKETS_CONFIG,
+  get AVAILABLE_MARKETS_V1() { return [...MARKETS_CONFIG.vista1]; },
+  get AVAILABLE_MARKETS_V2() { return [...MARKETS_CONFIG.vista2]; }
 };
