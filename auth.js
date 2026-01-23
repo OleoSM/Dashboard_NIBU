@@ -15,7 +15,7 @@ const MARKETS_CONFIG = {
 const ADMIN_USER = {
   id: 'admin',
   username: 'admin',
-  password: 'admin123',
+  password: 'nibufiscal26',
   role: 'admin',
   name: 'Administrador',
   allowedMarkets: {
