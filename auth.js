@@ -28,37 +28,110 @@ const ADMIN_USER = {
 // ✏️ EDITA TUS USUARIOS AQUÍ DIRECTAMENTE
 // Al guardar y recargar la página, estos serán los usuarios activos.
 const DEFAULT_USERS = {
-  juan_manuel: {
-    id: 'juan_manuel', // Quité el espacio extra que tenías aquí
-    username: 'juan_manuel',
-    password: 'pass123',
+  Diego_Suarez: {
+    id: 'Diego_Suarez', // Quité el espacio extra que tenías aquí
+    username: 'Diego_Suarez@nissan.com.mx',
+    password: 'p$9R&w2N',
     role: 'user',
-    name: 'Juan Manuel',
+    name: 'Diego Suárez',
     allowedMarkets: {
-      vista1: ['COL', 'PLT'],
-      vista2: ['COL', 'PLT', 'CST', 'ECA']
+      vista1: ['DOM', 'PLT', 'PRG', 'URU', 'BOL'], //SURINAME EN QUE GRUPO ESTÁ??
+      vista2: ['DOM', 'PLT', 'PRG', 'URU', 'BOL'] //SURINAME EN QUE GRUPO ESTÁ??
     }
   },
-  gaell: {
-    id: 'gaell',
-    username: 'gaell',
-    password: 'gaell',
+  
+  Gustavo_Careaga: {
+    id: 'Gustavo_Careaga', // Quité el espacio extra que tenías aquí
+    username: 'Gustavo_Careaga@nissan.com.mx',
+    password: '7#kL9@qV',
     role: 'user',
-    name: 'Gaell',
+    name: 'Gustavo Careaga',
     allowedMarkets: {
-      vista1: ['PNM', 'URU', 'ELS', 'HND'],
-      vista2: ['PNM', 'URU', 'ELS', 'HND']
+      vista1: ['DOM', 'PLT', 'PRG', 'URU'], //SURINAME EN QUE GRUPO ESTÁ??
+      vista2: ['DOM', 'PLT', 'PRG', 'URU'] //SURINAME EN QUE GRUPO ESTÁ??
     }
   },
-  usuario3: {
-    id: 'usuario3',
-    username: 'usuario3',
-    password: 'pass123',
+
+  Tomas_Arias: {
+    id: 'Tomas_Arias',
+    username: 'Tomas_Arias@nissan.com.mx',
+    password: '3@bWq6&Z',
     role: 'user',
-    name: 'Usuario Tres',
+    name: 'Tomas Arias',
     allowedMarkets: {
-      vista1: ['NIC', 'DOM', 'GUT', 'PRG'],
-      vista2: ['NIC', 'DOM', 'GUT', 'PRG']
+      vista1: ['ALB', 'BLZ', 'CUR', 'ECA', 'GUT', 'HIT', 'PNM'],
+      vista2: ['ALB', 'BLZ', 'CUR', 'ECA', 'GUT', 'HIT', 'PNM']
+    }
+  },
+  Fernando_Andres_Diaz: {
+    id: 'Fernando_Andres_Diaz',
+    username: 'Fernando_Andres_Diaz@nissan.com.mx',
+    password: 'y$2M9#rB',
+    role: 'user',
+    name: 'Fernando Andres Diaz',
+    allowedMarkets: {
+      vista1: ['ALB', 'BLZ', 'CUR', 'ECA', 'GUT', 'HIT', 'PNM'],
+      vista2: ['ALB', 'BLZ', 'CUR', 'ECA', 'GUT', 'HIT', 'PNM']
+    }
+  },
+
+  Begona_Madruga: {
+    id: 'Begona_Madruga',
+    username: 'Begona_Madruga@nissan.com.mx',
+    password: 'L1$wP5#z',
+    role: 'user',
+    name: 'Begoña Madruga',
+    allowedMarkets: {
+      vista1: ['BOL'],
+      vista2: ['BOL']
+    }
+  },
+
+  Pablo_Brito: {
+    id: 'Pablo_Brito',
+    username: 'Pablo_Brito@nissan.com.mx',
+    password: 'G7*fX1?p',
+    role: 'user',
+    name: 'Pablo Brito',
+    allowedMarkets: {
+      vista1: ['JAM', 'ELS', 'HND', 'NIC'],
+      vista2: ['JAM', 'ELS', 'HND', 'NIC'],
+    }
+  },
+
+  Mariana_Rios: {
+    id: 'Mariana_Rios',
+    username: 'Mariana_Rios@nissan.com.mx',
+    password: 'H5&tS4!k',
+    role: 'user',
+    name: 'Mariana Rios',
+    allowedMarkets: {
+      vista1: ['JAM', 'ELS', 'HND', 'NIC'],
+      vista2: ['JAM', 'ELS', 'HND', 'NIC'],
+    }
+  },
+
+  Wilson_Rincon: {
+    id: 'Wilson_Rincon',
+    username: 'Wilson_Rincon@nissan.com.mx',
+    password: 'B4*gK7?q',
+    role: 'user',
+    name: 'Wilson Rincon',
+    allowedMarkets: {
+      vista1: ['COL', 'CST'],
+      vista2: ['COL', 'CST']
+    }
+  },
+
+  Nubia_Medina: {
+    id: 'Nubia_Medina',
+    username: 'Nubia_Medina@nissan.com.mx',
+    password: 'x8!D6&mR',
+    role: 'user',
+    name: 'Nubia Medina',
+    allowedMarkets: {
+      vista1: ['COL', 'CST'],
+      vista2: ['COL', 'CST']
     }
   },
   
