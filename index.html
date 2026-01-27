@@ -2153,7 +2153,7 @@ body.screenshot-mode #screenshotToolbar {
                     <div class="step-number">1</div>
                     <div class="step-content">
                     <h3>Data Load (Auto)</h3>
-                    <p>File loaded automatically: <br><strong>AP_OCT_A.xlsx</strong></p>
+                    <p>File loaded automatically: <br><strong>AP_DEC_A.xlsx</strong></p>
                     </div>
                 </div>
                 
@@ -2508,7 +2508,7 @@ body.screenshot-mode #screenshotToolbar {
   <script>
 // ====================== ARCHIVOS DE CARGA AUTOMÁTICA ======================
 const FILE_PATHS = {
-    V1: 'AP_OCT_A.xlsx',
+    V1: 'AP_DEC_A.xlsx',
     V2: 'Annual_V2.xlsx'
 };
 
@@ -3998,7 +3998,7 @@ async function loadView1() {
     updateStatus('⏳ Auto-loading data...', '', '');
     
     try {
-        // Carga automática del archivo AP_OCT_A.xlsx
+        // Carga automática del archivo AP_DEC_A.xlsx
         stateV1.data = await loadExcelFromURLInternal(FILE_PATHS.V1, CONFIG.SHEET_NAME, mapRowToData, 3, 100, 'V1');
         updateStatus('✅ Data loaded successfully.', '', '');
         

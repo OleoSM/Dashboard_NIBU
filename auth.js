@@ -15,7 +15,7 @@ const MARKETS_CONFIG = {
 const ADMIN_USER = {
   id: 'admin',
   username: 'admin',
-  password: 'nibufiscal26',
+  password: 'admin',
   role: 'admin',
   name: 'Administrador',
   allowedMarkets: {
@@ -30,7 +30,7 @@ const ADMIN_USER = {
 const DEFAULT_USERS = {
   juan_manuel: {
     id: 'juan_manuel', // Quité el espacio extra que tenías aquí
-    username: 'juan_manuel',
+    username: 'Jose',
     password: 'pass123',
     role: 'user',
     name: 'Juan Manuel',
