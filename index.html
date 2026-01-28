@@ -2099,8 +2099,9 @@ body.screenshot-mode #screenshotToolbar {
       <!-- CONTENEDOR DE BOTONES DE CABECERA -->
       <div class="header-buttons">
           <!-- INFORMACIÓN DEL USUARIO -->
-          <span id="userInfo" style="color: var(--text); font-weight: 600; font-size: 14px; padding: 8px 12px; background: rgba(195, 0, 47, 0.1); border-radius: 8px;">👤 Usuario</span>
-          
+          <!--<span id="userInfo" style="color: var(--text); font-weight: 600; font-size: 14px; padding: 8px 12px; background: rgba(195, 0, 47, 0.1); border-radius: 8px;">👤 Usuario</span> --->
+      
+          <!--BOTON SEMAFORO CHECK-->
           <!-- BOTÓN ADMIN (Solo visible para administradores) -->
           <button id="adminBtn" onclick="goToAdmin()" class="view-toggle-btn" style="display: none; background: #28a745; border-color: #28a745;">
               ⚙️ Admin Panel
@@ -2122,7 +2123,11 @@ body.screenshot-mode #screenshotToolbar {
           
           <!-- BOTÓN LOGOUT -->
           <button onclick="handleLogout()" class="view-toggle-btn" style="background: #dc3545; border-color: #dc3545;">
-              🚪 Logout
+               Logout:
+          <span id="userInfo" style="color: var(--text);font-size: 14px; border-radius: 8px;">Usuario</span> 
+          <!--
+          <span id="userInfo" style="color: var(--text); font-weight: 600; font-size: 14px; padding: 8px 12px; background: rgba(195, 0, 47, 0.1); border-radius: 8px;">👤 Usuario</span> 
+ -->
           </button>
       </div>
     </div>
@@ -4171,7 +4176,7 @@ function initializeUserInterface() {
   // Mostrar información del usuario en el navbar
   const userInfoElement = document.getElementById('userInfo');
   if (userInfoElement) {
-    userInfoElement.textContent = `👤 ${currentUser.name}`;
+    userInfoElement.textContent = ` ${currentUser.name}`;
     
     // Tooltip con información detallada
     const v1Count = currentUser.role === 'admin' 

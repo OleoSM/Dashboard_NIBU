@@ -25,23 +25,23 @@ const ADMIN_USER = {
 };
 
 // ============= ZONA DE EDICIÓN DE USUARIOS =============
-// ✏️ EDITA TUS USUARIOS AQUÍ DIRECTAMENTE
+//  EDITA LOS USUARIOS AQUÍ DIRECTAMENTE
 // Al guardar y recargar la página, estos serán los usuarios activos.
 const DEFAULT_USERS = {
   Diego_Suarez: {
-    id: 'Diego_Suarez', // Quité el espacio extra que tenías aquí
+    id: 'Diego_Suarez', 
     username: 'Diego_Suarez@nissan.com.mx',
     password: 'p$9R&w2N',
     role: 'user',
     name: 'Diego Suárez',
     allowedMarkets: {
-      vista1: ['DOM', 'PLT', 'PRG', 'URU', 'BOL'], //SURINAME EN QUE GRUPO ESTÁ??
-      vista2: ['DOM', 'PLT', 'PRG', 'URU', 'BOL'] //SURINAME EN QUE GRUPO ESTÁ??
+      vista1: ['DOM', 'PLT', 'PRG', 'URU', 'BOL'], 
+      vista2: ['DOM', 'PLT', 'PRG', 'URU', 'BOL'] 
     }
   },
   
   Salvador_Alvarez: {
-    id: 'Salvador_Alvarez', // Quité el espacio extra que tenías aquí
+    id: 'Salvador_Alvarez', 
     username: 'Salvador_Alvarez@nissan.com.mx',
     password: 'W1A&w2N',
     role: 'user',
@@ -53,14 +53,14 @@ const DEFAULT_USERS = {
   },
   
   Gustavo_Careaga: {
-    id: 'Gustavo_Careaga', // Quité el espacio extra que tenías aquí
+    id: 'Gustavo_Careaga', 
     username: 'Gustavo_Careaga@nissan.com.mx',
     password: '7#kL9@qV',
     role: 'user',
     name: 'Gustavo Careaga',
     allowedMarkets: {
-      vista1: ['DOM', 'PLT', 'PRG', 'URU'], //SURINAME EN QUE GRUPO ESTÁ??
-      vista2: ['DOM', 'PLT', 'PRG', 'URU'] //SURINAME EN QUE GRUPO ESTÁ??
+      vista1: ['DOM', 'PLT', 'PRG', 'URU'], 
+      vista2: ['DOM', 'PLT', 'PRG', 'URU'] 
     }
   },
 
