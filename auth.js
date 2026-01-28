@@ -40,6 +40,18 @@ const DEFAULT_USERS = {
     }
   },
   
+  Salvador_Alvarez: {
+    id: 'Salvador_Alvarez', // Quité el espacio extra que tenías aquí
+    username: 'Salvador_Alvarez@nissan.com.mx',
+    password: 'W1A&w2N',
+    role: 'user',
+    name: 'Salvador Álvarez',
+    allowedMarkets: {
+      vista1: ['DOM', 'PLT', 'PRG', 'URU', 'ALB', 'BLZ', 'CUR', 'ECA', 'GUT', 'HIT', 'PNM', 'CST' ], //SURINAME EN QUE GRUPO ESTÁ??
+      vista2: ['DOM', 'PLT', 'PRG', 'URU', 'ALB', 'BLZ', 'CUR', 'ECA', 'GUT', 'HIT', 'PNM', 'CST' ], //SURINAME EN QUE GRUPO ESTÁ??
+    }
+  },
+  
   Gustavo_Careaga: {
     id: 'Gustavo_Careaga', // Quité el espacio extra que tenías aquí
     username: 'Gustavo_Careaga@nissan.com.mx',
@@ -86,6 +98,17 @@ const DEFAULT_USERS = {
       vista2: ['BOL']
     }
   },
+  Alberto_Saldana: {
+    id: 'Alberto_Saldana',
+    username: 'Alberto_Saldana@nissan.com.mx',
+    password: 'L1$wP5#z',
+    role: 'user',
+    name: 'Alberto Saldaña',
+    allowedMarkets: {
+      vista1: ['BOL'],
+      vista2: ['BOL']
+    }
+  },
 
   Pablo_Brito: {
     id: 'Pablo_Brito',
@@ -94,8 +117,8 @@ const DEFAULT_USERS = {
     role: 'user',
     name: 'Pablo Brito',
     allowedMarkets: {
-      vista1: ['JAM', 'ELS', 'HND', 'NIC'],
-      vista2: ['JAM', 'ELS', 'HND', 'NIC'],
+      vista1: ['JAM', 'ELS', 'HND', 'NIC', 'MASSY', 'GEL'],
+      vista2: ['JAM', 'ELS', 'HND', 'NIC', 'MASSY', 'GEL'],
     }
   },
 
@@ -106,10 +129,36 @@ const DEFAULT_USERS = {
     role: 'user',
     name: 'Mariana Rios',
     allowedMarkets: {
-      vista1: ['JAM', 'ELS', 'HND', 'NIC'],
-      vista2: ['JAM', 'ELS', 'HND', 'NIC'],
+      vista1: ['JAM', 'ELS', 'HND', 'NIC', 'MASSY', 'GEL'],
+      vista2: ['JAM', 'ELS', 'HND', 'NIC', 'MASSY', 'GEL'],
     }
   },
+
+  Eduardo_Trabado: {
+    id: 'Eduardo_Trabado',
+    username: 'Eduardo_Trabado@nissan.com.mx',
+    password: '2!za41z',
+    role: 'user',
+    name: 'Eduardo Trabado',
+    allowedMarkets: {
+      vista1: ['JAM', 'ELS', 'HND', 'NIC', 'MASSY', 'GEL', 'COL'],
+      vista2: ['JAM', 'ELS', 'HND', 'NIC', 'MASSY', 'GEL', 'COL'],
+    }
+  },
+
+  Angel_Figueroa: {
+    id: 'Angel_Figueroa',
+    username: 'Angeal_Figueroa@nissan.com.mx',
+    password: '1x!a7ax',
+    role: 'user',
+    name: 'Angel Figueroa',
+    allowedMarkets: {
+      vista1: [],
+      vista2: [],
+    }
+  },
+
+  
 
   Wilson_Rincon: {
     id: 'Wilson_Rincon',
