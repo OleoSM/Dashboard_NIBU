@@ -4612,39 +4612,7 @@
       closeMobileMenu();
     }
 
-    /**
-     * Toggle Traffic Light mode
-     */
-    let trafficLightEnabled = false;
 
-    function toggleTrafficLight() {
-      trafficLightEnabled = !trafficLightEnabled;
-      const trafficBtn = document.getElementById('trafficToggle');
-      const trafficBtnMobile = document.getElementById('trafficToggleMobile');
-
-      if (trafficLightEnabled) {
-        if (trafficBtn) {
-          trafficBtn.classList.add('active');
-          trafficBtn.innerHTML = '🚦 Traffic';
-        }
-        if (trafficBtnMobile) {
-          trafficBtnMobile.classList.add('active');
-          trafficBtnMobile.innerHTML = '🚦 Traffic Light: ON';
-        }
-        // Apply traffic light logic here (you can add your custom logic)
-        console.log('Traffic Light Mode: ON');
-      } else {
-        if (trafficBtn) {
-          trafficBtn.classList.remove('active');
-          trafficBtn.innerHTML = '🚦 Traffic';
-        }
-        if (trafficBtnMobile) {
-          trafficBtnMobile.classList.remove('active');
-          trafficBtnMobile.innerHTML = '🚦 Traffic Light: OFF';
-        }
-        console.log('Traffic Light Mode: OFF');
-      }
-    }
 
   </script>
 </body>
