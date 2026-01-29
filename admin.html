@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,8 +19,8 @@
       --text-secondary: #6b7280;
       --border-color: #e5e7eb;
       --border-radius: 12px;
-      --shadow: 0 2px 8px rgba(0,0,0,0.08);
-      --shadow-hover: 0 4px 16px rgba(0,0,0,0.12);
+      --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.12);
     }
 
     * {
@@ -40,7 +41,7 @@
       background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
       color: white;
       padding: 20px 30px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -75,12 +76,12 @@
     .btn-primary {
       background: white;
       color: var(--primary);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     }
 
     .btn-primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
 
     .btn-danger {
@@ -196,6 +197,35 @@
       box-shadow: var(--shadow);
     }
 
+    /* Table Wrapper with Scrollbar */
+    .table-wrapper {
+      max-height: 600px;
+      overflow-y: auto;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+
+    .table-wrapper::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    .table-wrapper::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 4px;
+    }
+
+    .table-wrapper::-webkit-scrollbar-thumb {
+      background: var(--primary);
+      border-radius: 4px;
+    }
+
+    .table-wrapper::-webkit-scrollbar-thumb:hover {
+      background: var(--primary-dark);
+    }
+
     .section-header {
       display: flex;
       justify-content: center;
@@ -216,7 +246,8 @@
     .users-table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 20px;
+      margin: 0;
+      min-width: 800px;
     }
 
     .users-table thead {
@@ -224,16 +255,95 @@
     }
 
     .users-table th {
-      padding: 12px;
+      padding: 12px 8px;
       text-align: left;
       font-weight: 600;
       color: #374151;
       border-bottom: 2px solid var(--border-color);
+      white-space: nowrap;
+      position: sticky;
+      top: 0;
+      background: #f9fafb;
+      z-index: 10;
+    }
+
+    /* Column widths */
+    .users-table th:nth-child(1),
+    .users-table td:nth-child(1) {
+      width: 80px;
+      max-width: 80px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .users-table th:nth-child(2),
+    .users-table td:nth-child(2) {
+      width: 150px;
+      max-width: 150px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .users-table th:nth-child(3),
+    .users-table td:nth-child(3) {
+      width: 180px;
+      max-width: 180px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .users-table th:nth-child(4),
+    .users-table td:nth-child(4),
+    .users-table th:nth-child(5),
+    .users-table td:nth-child(5) {
+      min-width: 200px;
+    }
+
+    /* Tooltip on hover for truncated text */
+    .users-table td:nth-child(1),
+    .users-table td:nth-child(2),
+    .users-table td:nth-child(3) {
+      cursor: default;
+      position: relative;
+    }
+
+    /* Custom Tooltip */
+    .users-table td[data-fulltext]:hover::after {
+      content: attr(data-fulltext);
+      position: absolute;
+      left: 0;
+      top: 100%;
+      background: #1a1a1a;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      white-space: nowrap;
+      z-index: 1000;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      margin-top: 4px;
+      pointer-events: none;
+    }
+
+    /* Tooltip arrow */
+    .users-table td[data-fulltext]:hover::before {
+      content: '';
+      position: absolute;
+      left: 12px;
+      top: 100%;
+      border: 6px solid transparent;
+      border-bottom-color: #1a1a1a;
+      z-index: 1001;
+      pointer-events: none;
     }
 
     .users-table td {
-      padding: 12px;
+      padding: 12px 8px;
       border-bottom: 1px solid var(--border-color);
+      vertical-align: top;
     }
 
     .users-table tbody tr:hover {
@@ -249,6 +359,7 @@
       font-size: 11px;
       font-weight: 600;
       margin: 2px;
+      white-space: nowrap;
     }
 
     .market-tag.empty {
@@ -274,7 +385,7 @@
       top: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.5);
+      background: rgba(0, 0, 0, 0.5);
       animation: fadeIn 0.3s ease;
     }
 
@@ -291,13 +402,18 @@
       width: 90%;
       max-height: 90vh;
       overflow-y: auto;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
       animation: slideUp 0.3s ease;
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
     }
 
     @keyframes slideUp {
@@ -305,6 +421,7 @@
         opacity: 0;
         transform: translateY(50px);
       }
+
       to {
         opacity: 1;
         transform: translateY(0);
@@ -343,7 +460,7 @@
     }
 
     .modal-close:hover {
-      background: rgba(255,255,255,0.2);
+      background: rgba(255, 255, 255, 0.2);
     }
 
     .modal-body {
@@ -451,6 +568,7 @@
         opacity: 0;
         transform: translateY(-10px);
       }
+
       to {
         opacity: 1;
         transform: translateY(0);
@@ -482,18 +600,40 @@
         align-items: flex-start;
       }
 
+      .admin-header h1 {
+        font-size: 22px;
+      }
+
       .section-header {
         flex-direction: column;
         align-items: flex-start;
       }
 
+      .container {
+        padding: 0 10px;
+      }
+
+      .users-section {
+        padding: 15px;
+      }
+
+      .table-wrapper {
+        max-height: 500px;
+      }
+
       .users-table {
-        font-size: 12px;
+        font-size: 11px;
+        min-width: 700px;
       }
 
       .users-table th,
       .users-table td {
-        padding: 8px;
+        padding: 8px 6px;
+      }
+
+      .market-tag {
+        font-size: 10px;
+        padding: 3px 6px;
       }
 
       .modal-content {
@@ -503,9 +643,46 @@
       .markets-checkboxes {
         grid-template-columns: repeat(2, 1fr);
       }
+
+      .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      }
+
+      .stat-card .stat-value {
+        font-size: 28px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .admin-header h1 {
+        font-size: 18px;
+      }
+
+      .users-section {
+        padding: 10px;
+      }
+
+      .table-wrapper {
+        max-height: 400px;
+      }
+
+      .users-table {
+        font-size: 10px;
+        min-width: 600px;
+      }
+
+      .users-table th,
+      .users-table td {
+        padding: 6px 4px;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
+
 <body>
   <!-- Header -->
   <div class="admin-header">
@@ -552,23 +729,25 @@
     <div class="users-section">
       <div class="section-header">
         <h2>Gestión de Usuarios</h2>
-       
+
       </div>
 
-      <table class="users-table" id="usersTable">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Usuario</th>
-            <th>Nombre</th>
-            <th>Vista 1 (Mercados)</th>
-            <th>Vista 2 (Mercados)</th>
-          </tr>
-        </thead>
-        <tbody id="usersTableBody">
-          <!-- Users will be loaded here -->
-        </tbody>
-      </table>
+      <div class="table-wrapper">
+        <table class="users-table" id="usersTable">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Usuario</th>
+              <th>Nombre</th>
+              <th>Vista 1 (Mercados)</th>
+              <th>Vista 2 (Mercados)</th>
+            </tr>
+          </thead>
+          <tbody id="usersTableBody">
+            <!-- Users will be loaded here -->
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 
@@ -582,7 +761,7 @@
       <div class="modal-body">
         <form id="userForm">
           <input type="hidden" id="userId" value="">
-          
+
           <div class="form-group">
             <label for="userName">Nombre Completo *</label>
             <input type="text" id="userName" required placeholder="Ej: Juan Pérez">
@@ -656,20 +835,20 @@
       if (result.success) {
         document.getElementById('totalUsers').textContent = result.users.length;
       }
-      
+
       document.getElementById('totalMarketsV1').textContent = auth.AVAILABLE_MARKETS_V1.length;
       document.getElementById('totalMarketsV2').textContent = auth.AVAILABLE_MARKETS_V2.length;
 
       const lastLogin = JSON.parse(localStorage.getItem('lastLogin') || '{}');
       if (lastLogin.time) {
         const date = new Date(lastLogin.time);
-        document.getElementById('lastAccess').textContent = 
-          date.toLocaleString('es', { 
-            day: '2-digit', 
-            month: '2-digit', 
-            year: 'numeric', 
-            hour: '2-digit', 
-            minute: '2-digit' 
+        document.getElementById('lastAccess').textContent =
+          date.toLocaleString('es', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
           });
       }
     }
@@ -694,22 +873,22 @@
       tbody.innerHTML = result.users.map(user => {
         const v1Markets = user.allowedMarkets.vista1 || [];
         const v2Markets = user.allowedMarkets.vista2 || [];
-        
+
         const v1Tags = v1Markets.length > 0
           ? v1Markets.slice(0, 3).map(m => `<span class="market-tag">${m}</span>`).join('') +
-            (v1Markets.length > 3 ? ` <span class="market-tag">+${v1Markets.length - 3}</span>` : '')
+          (v1Markets.length > 3 ? ` <span class="market-tag">+${v1Markets.length - 3}</span>` : '')
           : '<span class="market-tag empty">Sin acceso</span>';
-          
+
         const v2Tags = v2Markets.length > 0
           ? v2Markets.slice(0, 3).map(m => `<span class="market-tag">${m}</span>`).join('') +
-            (v2Markets.length > 3 ? ` <span class="market-tag">+${v2Markets.length - 3}</span>` : '')
+          (v2Markets.length > 3 ? ` <span class="market-tag">+${v2Markets.length - 3}</span>` : '')
           : '<span class="market-tag empty">Sin acceso</span>';
 
         return `
           <tr>
-            <td><span class="badge">${user.id}</span></td>
-            <td><strong>${user.username}</strong></td>
-            <td>${user.name}</td>
+            <td data-fulltext="${user.id}"><span class="badge">${user.id}</span></td>
+            <td data-fulltext="${user.username}"><strong>${user.username}</strong></td>
+            <td data-fulltext="${user.name}">${user.name}</td>
             <td>${v1Tags}</td>
             <td>${v2Tags}</td>
             <td>
@@ -727,10 +906,10 @@
       document.getElementById('userId').value = '';
       document.getElementById('userForm').reset();
       document.getElementById('passwordHint').style.display = 'none';
-      
+
       loadMarketsCheckboxes('vista1', []);
       loadMarketsCheckboxes('vista2', []);
-      
+
       document.getElementById('userModal').classList.add('active');
     }
 
@@ -738,7 +917,7 @@
     function openEditModal(userId) {
       editingUserId = userId;
       const user = auth.getUserById(userId);
-      
+
       if (!user) {
         showAlert('error', 'Usuario no encontrado');
         return;
@@ -751,10 +930,10 @@
       document.getElementById('userPassword').value = '';
       document.getElementById('userPassword').required = false;
       document.getElementById('passwordHint').style.display = 'block';
-      
+
       loadMarketsCheckboxes('vista1', user.allowedMarkets.vista1 || []);
       loadMarketsCheckboxes('vista2', user.allowedMarkets.vista2 || []);
-      
+
       document.getElementById('userModal').classList.add('active');
     }
 
@@ -762,7 +941,7 @@
     function loadMarketsCheckboxes(vista, selectedMarkets = []) {
       const container = document.getElementById(`markets${vista.charAt(0).toUpperCase() + vista.slice(1)}`);
       const markets = vista === 'vista1' ? auth.AVAILABLE_MARKETS_V1 : auth.AVAILABLE_MARKETS_V2;
-      
+
       container.innerHTML = markets.map(market => {
         const checked = selectedMarkets.includes(market) ? 'checked' : '';
         return `
@@ -784,7 +963,7 @@
     function toggleAllMarkets(vista) {
       const checkboxes = document.querySelectorAll(`input[data-vista="${vista}"]`);
       const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-      
+
       checkboxes.forEach(cb => {
         cb.checked = !allChecked;
       });
@@ -802,7 +981,7 @@
       const name = document.getElementById('userName').value.trim();
       const username = document.getElementById('userUsername').value.trim();
       const password = document.getElementById('userPassword').value;
-      
+
       if (!name || !username) {
         showAlert('error', 'El nombre y usuario son obligatorios');
         return;
@@ -817,7 +996,7 @@
       const vista1Markets = Array.from(
         document.querySelectorAll('input[data-vista="vista1"]:checked')
       ).map(cb => cb.value);
-      
+
       const vista2Markets = Array.from(
         document.querySelectorAll('input[data-vista="vista2"]:checked')
       ).map(cb => cb.value);
@@ -855,7 +1034,7 @@
     function confirmDelete(userId, username) {
       if (confirm(`¿Estás seguro de que deseas eliminar al usuario "${username}"?\n\nEsta acción no se puede deshacer.`)) {
         const result = auth.deleteUser(userId);
-        
+
         if (result.success) {
           showAlert('success', result.message);
           // La actualización se hace automáticamente por el evento 'usersUpdated'
@@ -871,7 +1050,7 @@
       const alert = document.createElement('div');
       alert.className = `alert alert-${type}`;
       alert.textContent = message;
-      
+
       container.innerHTML = '';
       container.appendChild(alert);
 
@@ -910,7 +1089,7 @@
         // Obtener usuarios completos con contraseñas desde localStorage
         const usersObject = auth.getStoredUsers();
         const usersArray = Object.values(usersObject);
-        
+
         // Crear objeto con metadata
         const exportData = {
           exportDate: new Date().toISOString(),
@@ -921,24 +1100,24 @@
 
         // Convertir a JSON con formato bonito
         const jsonString = JSON.stringify(exportData, null, 2);
-        
+
         // Crear blob y descargar
         const blob = new Blob([jsonString], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
-        
+
         // Nombre del archivo con fecha
         const timestamp = new Date().toISOString().split('T')[0];
         link.download = `dashboard-users-${timestamp}.json`;
         link.href = url;
         link.click();
-        
+
         // Limpiar
         URL.revokeObjectURL(url);
-        
+
         showAlert('success', '✅ Usuarios exportados exitosamente');
         console.log('📤 Exportación completada:', exportData.totalUsers, 'usuarios');
-        
+
       } catch (error) {
         console.error('Error al exportar usuarios:', error);
         showAlert('error', '❌ Error al exportar usuarios: ' + error.message);
@@ -950,7 +1129,7 @@
      */
     function importUsersFromJSON(event) {
       const file = event.target.files[0];
-      
+
       if (!file) {
         return;
       }
@@ -962,11 +1141,11 @@
       }
 
       const reader = new FileReader();
-      
-      reader.onload = function(e) {
+
+      reader.onload = function (e) {
         try {
           const importData = JSON.parse(e.target.result);
-          
+
           // Validar estructura del JSON
           if (!importData.users || !Array.isArray(importData.users)) {
             throw new Error('Formato de archivo inválido. Debe contener un array "users"');
@@ -974,14 +1153,14 @@
 
           // Validar que cada usuario tenga los campos requeridos
           const requiredFields = ['id', 'username', 'password', 'name', 'role', 'allowedMarkets'];
-          
+
           for (const user of importData.users) {
             for (const field of requiredFields) {
               if (!(field in user)) {
                 throw new Error(`Usuario inválido: falta el campo "${field}" en ${user.id || 'usuario sin ID'}`);
               }
             }
-            
+
             // Validar estructura de allowedMarkets
             if (!user.allowedMarkets.vista1 || !user.allowedMarkets.vista2) {
               throw new Error(`Usuario ${user.id}: estructura de allowedMarkets inválida`);
@@ -990,10 +1169,10 @@
 
           // Confirmar importación
           const confirmMsg = `¿Estás seguro de importar ${importData.users.length} usuarios?\n\n` +
-                            `⚠️ ADVERTENCIA: Esto reemplazará TODOS los usuarios actuales.\n` +
-                            `Fecha de exportación: ${new Date(importData.exportDate).toLocaleString()}\n` +
-                            `Versión: ${importData.version}`;
-          
+            `⚠️ ADVERTENCIA: Esto reemplazará TODOS los usuarios actuales.\n` +
+            `Fecha de exportación: ${new Date(importData.exportDate).toLocaleString()}\n` +
+            `Versión: ${importData.version}`;
+
           if (!confirm(confirmMsg)) {
             showAlert('❌ Importación cancelada', 'warning');
             return;
@@ -1005,23 +1184,23 @@
             usersObject[user.id] = user;
           });
           auth.saveUsers(usersObject);
-          
+
           showAlert(`✅ ${importData.users.length} usuarios importados correctamente`, 'success');
           console.log('📥 Importación completada:', importData.users.length, 'usuarios');
           // La actualización se hace automáticamente por el evento 'usersUpdated'
-          
+
         } catch (error) {
           console.error('Error al importar usuarios:', error);
           showAlert('❌ Error al importar: ' + error.message, 'error');
         }
       };
-      
-      reader.onerror = function() {
+
+      reader.onerror = function () {
         showAlert('❌ Error al leer el archivo', 'error');
       };
-      
+
       reader.readAsText(file);
-      
+
       // Resetear el input para permitir importar el mismo archivo de nuevo
       event.target.value = '';
     }
@@ -1029,15 +1208,15 @@
     // ============= FIN FUNCIONES IMPORTAR/EXPORTAR =============
 
     // ============= SINCRONIZACIÓN ENTRE PESTAÑAS =============
-    
+
     /**
      * Escuchar actualizaciones de usuarios desde otras pestañas
      */
-    window.addEventListener('usersUpdated', function(e) {
+    window.addEventListener('usersUpdated', function (e) {
       console.log('🔄 Actualizando lista de usuarios...', e.detail);
       loadUsers();
       loadStats();
-      
+
       // Solo mostrar alerta si el cambio viene de otra pestaña
       if (e.detail.source === 'storage') {
         showAlert('info', '✨ Datos actualizados desde otra pestaña');
@@ -1051,4 +1230,5 @@
     loadUsers();
   </script>
 </body>
+
 </html>
